@@ -28,7 +28,7 @@ prv[prv<0] = 0
 # a,b = 0.03468, 0.5869
 # a,b = 14.93, 0.83
 # rainrate = a*prv**b
-zdr = pd.read_csv(r"D:\data\zdr_zhangzheQC.csv", index_col = 0).fillna(-999)
+zdr = pd.read_csv(r"D:\data\zdr_zhangzheQC_dataset.csv", index_col = 0).fillna(-999)
 zdr.index = pd.to_datetime(zdr.index)
 zdr[zdr<0] = 0
 zdr = 10**(zdr/10)
