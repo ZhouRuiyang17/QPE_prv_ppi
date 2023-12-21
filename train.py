@@ -8,6 +8,8 @@ import my.ml as ml
 
 import torch
 from model import *
+import matplotlib.colors as colors
+import torch.nn as nn
 
 path = r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221'
 path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format(20231221)
@@ -20,6 +22,25 @@ def scaler(datas):
     for i, data in enumerate(datas):
         datas[i] = ml.min_max(data, mini[i], maxi[i])
     return datas
+
+class WeightedMSELoss(nn.Module):
+    def __init__(self, weights, edge):
+        super(WeightedMSELoss, self).__init__()
+        self.weights = weights  # 传入的权重
+        self.edge = edge
+
+    def forward(self, predicted, target):
+        edge = self.edge
+        for i, _ in enumerate(edge[:-1]):
+            loc = np.where((target > edge[i]) & (target <= edge[i+1]))[0]
+            if i == 0:
+                loss = self.weights[i] * (predicted[loc] - target[loc])**2
+            else:
+                loss = torch.cat([loss, self.weights[i] * (predicted[loc] - target[loc])**2])
+        # 计算每个样本的损失并加权求和
+        loss = torch.mean(loss)
+        return loss
+
 if __name__ == "__main__":
     
     train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)
@@ -33,20 +54,26 @@ if __name__ == "__main__":
     train_x[:, 0:2], train_x[:, 2:4], train_x[:, 4:6], train_x[:, 6:8], train_y = _ls
     _ls = scaler([vali_x[:, 0:2], vali_x[:, 2:4], vali_x[:, 4:6], vali_x[:, 6:8], vali_y])
     vali_x[:, 0:2], vali_x[:, 2:4], vali_x[:, 4:6], vali_x[:, 6:8], vali_y = _ls
+    _ls = scaler([test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8]])
+    test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8] = _ls
     
     train_x = torch.from_numpy(train_x)
     train_y = torch.from_numpy(train_y)
     vali_x = torch.from_numpy(vali_x)
     vali_y = torch.from_numpy(vali_y)
+    test_x = torch.from_numpy(test_x)
     
     # [1][2]
-    train = ml.loader(train_x, train_y)
-    vali = ml.loader(vali_x, vali_y)
-
+    train = ml.loader(train_x, train_y, 1024)
+    vali = ml.loader(vali_x, vali_y, 1024)
+    
     # [3]
     net = CNN()
     optimizer = torch.optim.Adam(net.parameters(),lr = 0.001)
     loss_func = torch.nn.MSELoss()
+    weights = np.load(path + '\\' + 'weights.npy')
+    edge = np.array(list(np.arange(0, 52, 2)) + [100])
+    loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
     
     # [5]
     plt.ion()
@@ -85,3 +112,56 @@ if __name__ == "__main__":
     
     # [6]
     torch.save(net.state_dict(), path_save + '\\' + "cnn.pth")
+    
+    #%%
+    # [7]
+    net = CNN()
+    net.load_state_dict(torch.load(path_save + '\\' + "cnn.pth"))
+    net.eval()
+    with torch.no_grad():
+        pred = net(test_x)
+    
+    pred = pred.view(-1).detach().numpy()
+    # pred = np.log(pred + 1)
+    pred = ml.min_max_rev(pred, mini[-1], maxi[-1])
+    # pred = 10**pred
+    
+    # metrics = []
+    # scatter = mytools.Scatter(y_test, zr300)
+    # scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0,100],[0,100]],draw_line = 1)
+    # metrics += [scatter.evaluate().copy()]
+    # df = pd.DataFrame(metrics)
+    
+    metrics_ml = {}
+    # metrics_300 = {}
+
+    # ----评估
+    scatter = mt.Scatter(test_y, pred)
+    metrics_ml['all'] = scatter.evaluate().copy()
+    scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'ML')
+    
+    # scatter = mytools.Scatter(y_test, zr300)
+    # metrics_300['all'] = scatter.evaluate().copy()
+    # scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[1,100],[1,100]],draw_line = 1,
+    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'Z-R relation')
+
+    
+    # ----分段评估
+    # edge = [0.1, 10, 20, 30, 40, 50, 100, 200]
+    # for i in range(len(edge) - 1):     
+    #     loc = np.where((y_test >= edge[i]) & (y_test < edge[i+1]))
+        
+    #     scatter = mytools.Scatter(y_test[loc], pred[loc])
+    #     metrics_ml['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
+
+        # scatter = mytools.Scatter(y_test[loc], zr300[loc])
+        # metrics_300['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
+       
+    # metrics_ml = pd.DataFrame(metrics_ml)
+    # metrics_300 = pd.DataFrame(metrics_300)
+    # metrics = pd.concat([metrics_ml, metrics_300], axis=0)
+
+    # metrics.to_excel( os.path.join(path_save, 'stat.xlsx'))
+    # metrics_ml.to_excel( os.path.join(path_save, 'statmlp.xlsx'))
+    # metrics_300.to_excel( os.path.join(path_save, 'stat300.xlsx'))

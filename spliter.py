@@ -63,26 +63,35 @@ labels = np.load(r"E:\QPE_prv_ppi_2_99\dataset聚合\labels.npy")
 edge = list(np.arange(0, 52, 2)) + [100]
 train_x, train_y = [], []
 vali_x, vali_y = [], []
-test_x, text_y = [], []
+test_x, test_y = [], []
+weights = []
 for i, _ in enumerate(edge[:-1]):
     loc = np.where((labels > edge[i]) & (labels <= edge[i+1]))[0]
     if len(loc) > 0:
         aaa = mt.spliter(features[loc], labels[loc], [7,1,2])
-        train_x += list(aaa[0]); train_y += list(aaa[3])
+        train_x += list(aaa[0]); train_y += list(aaa[3]); weights += [len(aaa[3])]
         vali_x += list(aaa[1]); vali_y += list(aaa[4])
-        test_x += list(aaa[2]); text_y += list(aaa[5])
+        test_x += list(aaa[2]); test_y += list(aaa[5])
     else:
         print(edge[i],edge[i+1])
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\train_x.npy', np.array(train_x))
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\train_y.npy', np.array(train_y))
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\vali_x.npy', np.array(vali_x))
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\vali_y.npy', np.array(vali_y))
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\test_x.npy', np.array(test_x))
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\test_y.npy', np.array(text_y))
+train_x = np.array(train_x);np.random.shuffle(train_x)
+train_y = np.array(train_y);np.random.shuffle(train_y)
+vali_x = np.array(vali_x);np.random.shuffle(vali_x)
+vali_y = np.array(vali_y);np.random.shuffle(vali_y)
+test_x = np.array(test_x);np.random.shuffle(test_x)
+test_y = np.array(test_y);np.random.shuffle(test_y)
+weights = np.array(weights/np.sum(weights))
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\train_x.npy', train_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\train_y.npy', train_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\vali_x.npy', vali_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\vali_y.npy', vali_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\test_x.npy', test_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\test_y.npy', test_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221\weights.npy', np.array(weights))
 dist, _, _ = plt.hist(train_y, bins = np.arange(0,102,2))
 plt.show()
 dist, _, _ = plt.hist(vali_y, bins = np.arange(0,102,2))
 plt.show()
-dist, _, _ = plt.hist(text_y, bins = np.arange(0,102,2))
+dist, _, _ = plt.hist(test_y, bins = np.arange(0,102,2))
 plt.show()
 
