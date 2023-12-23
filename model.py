@@ -33,9 +33,9 @@ class CNN(nn.Module):
 # =============================================================================
         
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=8, out_channels=8, kernel_size=3),
+            nn.Conv2d(in_channels=6, out_channels=8, kernel_size=3),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2),
+            nn.AvgPool2d(kernel_size=2),
             )
         self.flt = nn.Sequential(
             nn.Flatten(),

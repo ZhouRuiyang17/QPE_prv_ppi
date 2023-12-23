@@ -38,7 +38,8 @@ class WeightedMSELoss(nn.Module):
             else:
                 loss = torch.cat([loss, self.weights[i] * (predicted[loc] - target[loc])**2])
         # 计算每个样本的损失并加权求和
-        loss = torch.mean(loss)
+        loss = torch.sum(loss)
+        # loss = torch.mean((predicted - target)**2)
         return loss
 
 if __name__ == "__main__":
@@ -57,11 +58,11 @@ if __name__ == "__main__":
     _ls = scaler([test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8]])
     test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8] = _ls
     
-    train_x = torch.from_numpy(train_x)
+    train_x = torch.from_numpy(train_x[:, :6])
     train_y = torch.from_numpy(train_y)
-    vali_x = torch.from_numpy(vali_x)
+    vali_x = torch.from_numpy(vali_x[:, :6])
     vali_y = torch.from_numpy(vali_y)
-    test_x = torch.from_numpy(test_x)
+    test_x = torch.from_numpy(test_x[:, :6])
     
     # [1][2]
     train = ml.loader(train_x, train_y, 1024)
@@ -72,13 +73,13 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(net.parameters(),lr = 0.001)
     loss_func = torch.nn.MSELoss()
     weights = np.load(path + '\\' + 'weights.npy')
-    edge = np.array(list(np.arange(0, 52, 2)) + [100])
+    edge = np.load(path + '\\' + 'edge.npy')
     loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
     
     # [5]
     plt.ion()
     plt.show()
-    epochs = 100; loss = []; loss2 = []
+    epochs = 1000; loss = []; loss2 = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         aaaaa = ml.train(train, net, loss_func, optimizer)
@@ -86,7 +87,7 @@ if __name__ == "__main__":
         
         loss += [aaaaa[-1]]
         loss2 += [bbbbb[-1]]
-        if t % 10 == 0:
+        if t % 50 == 0:
             plt.cla()
             rainrate = np.array(aaaaa[1]).flatten(); prediction = np.array(aaaaa[2]).flatten()
             plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
