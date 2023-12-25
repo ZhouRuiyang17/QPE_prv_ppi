@@ -14,46 +14,46 @@ class CNN(nn.Module):
 #         self.net = nn.Sequential(
 #             # 卷积层
 #             nn.Conv2d(in_channels=8, out_channels=64, kernel_size=3, stride=1),
-#             nn.ReLU(),
+#             nn.LeakyReLU(),
 #             nn.AvgPool2d(kernel_size=2),
 #             # 拉平
 #             nn.Flatten(),
 #             # 全连接
 #             nn.Linear(6*6*64, 512),
-#             nn.ReLU(),
+#             nn.LeakyReLU(),
 #             nn.Dropout(),
 #             # 全连接
 #             nn.Linear(512, 32),
-#             nn.ReLU(),
+#             nn.LeakyReLU(),
 #             nn.Dropout(),
 #             # 输出
 #             nn.Linear(32, 1),
-#             nn.ReLU()
+#             nn.LeakyReLU()
 #             )
 # =============================================================================
         
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=6, out_channels=8, kernel_size=3),
-            nn.ReLU(),
+            nn.Conv2d(in_channels=8, out_channels=64, kernel_size=3),
+            nn.LeakyReLU(),
             nn.AvgPool2d(kernel_size=2),
             )
         self.flt = nn.Sequential(
             nn.Flatten(),
             )
         self.fc = nn.Sequential(
-            nn.Linear(8*3*3, 512),
-            nn.ReLU(),
+            nn.Linear(64*3*3, 512),
+            nn.LeakyReLU(),
             nn.Dropout(),
             )
         self.fc2 = nn.Sequential(
             # 全连接
             nn.Linear(512, 32),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Dropout(),
             )
         self.out = nn.Sequential(
             nn.Linear(32, 1),
-            nn.Sigmoid()
+            nn.ReLU()
             )
         
 

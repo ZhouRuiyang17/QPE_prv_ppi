@@ -53,16 +53,18 @@ if __name__ == "__main__":
     
     _ls = scaler([train_x[:, 0:2], train_x[:, 2:4], train_x[:, 4:6], train_x[:, 6:8], train_y])
     train_x[:, 0:2], train_x[:, 2:4], train_x[:, 4:6], train_x[:, 6:8], train_y = _ls
+    
     _ls = scaler([vali_x[:, 0:2], vali_x[:, 2:4], vali_x[:, 4:6], vali_x[:, 6:8], vali_y])
     vali_x[:, 0:2], vali_x[:, 2:4], vali_x[:, 4:6], vali_x[:, 6:8], vali_y = _ls
+    
     _ls = scaler([test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8]])
     test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8] = _ls
     
-    train_x = torch.from_numpy(train_x[:, :6])
+    train_x = torch.from_numpy(train_x[:, :])
     train_y = torch.from_numpy(train_y)
-    vali_x = torch.from_numpy(vali_x[:, :6])
+    vali_x = torch.from_numpy(vali_x[:, :])
     vali_y = torch.from_numpy(vali_y)
-    test_x = torch.from_numpy(test_x[:, :6])
+    test_x = torch.from_numpy(test_x[:, :])
     
     # [1][2]
     train = ml.loader(train_x, train_y, 1024)
@@ -71,7 +73,7 @@ if __name__ == "__main__":
     # [3]
     net = CNN()
     optimizer = torch.optim.Adam(net.parameters(),lr = 0.001)
-    loss_func = torch.nn.MSELoss()
+    # loss_func = torch.nn.MSELoss()
     weights = np.load(path + '\\' + 'weights.npy')
     edge = np.load(path + '\\' + 'edge.npy')
     loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     # [5]
     plt.ion()
     plt.show()
-    epochs = 1000; loss = []; loss2 = []
+    epochs = 500; loss = []; loss2 = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         aaaaa = ml.train(train, net, loss_func, optimizer)
@@ -87,18 +89,22 @@ if __name__ == "__main__":
         
         loss += [aaaaa[-1]]
         loss2 += [bbbbb[-1]]
-        if t % 50 == 0:
+        if t % 10 == 0:
             plt.cla()
             rainrate = np.array(aaaaa[1]).flatten(); prediction = np.array(aaaaa[2]).flatten()
-            plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
-            plt.xlim(0,2);plt.ylim(0,2);plt.plot([0,100],[0,100])
+            # plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
+            plt.scatter(rainrate, prediction)
+            # plt.xlim(0,2);plt.ylim(0,2);
+            plt.plot([0,1],[0,1])
             plt.title('training')
             plt.pause(0.5)
 
             plt.cla()
             rainrate = np.array(bbbbb[1]).flatten(); prediction = np.array(bbbbb[2]).flatten()
-            plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
-            plt.xlim(0,2);plt.ylim(0,2);plt.plot([0,100],[0,100])
+            # plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
+            plt.scatter(rainrate, prediction)
+            # plt.xlim(0,2);plt.ylim(0,2);
+            plt.plot([0,1],[0,1])
             plt.title('validating')
             plt.pause(0.5)
 
