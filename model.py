@@ -37,7 +37,7 @@ class CNN(nn.Module):
             )
         self.out = nn.Sequential(
             nn.Linear(16, 1),
-            nn.ReLU()
+            nn.LeakyReLU()
             )
         
 
