@@ -38,7 +38,7 @@ class WeightedMSELoss(nn.Module):
             else:
                 loss = torch.cat([loss, self.weights[i] * (predicted[loc] - target[loc])**2])
         # 计算每个样本的损失并加权求和
-        loss = torch.sum(loss)
+        loss = torch.sum(loss) / np.sum(weights)
         # loss = torch.mean((predicted - target)**2)
         return loss
 
@@ -60,11 +60,11 @@ if __name__ == "__main__":
     _ls = scaler([test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8]])
     test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8] = _ls
     
-    train_x = torch.from_numpy(train_x[:, :6])
+    train_x = torch.from_numpy(train_x[:, :])
     train_y = torch.from_numpy(train_y)
-    vali_x = torch.from_numpy(vali_x[:, :6])
+    vali_x = torch.from_numpy(vali_x[:, :])
     vali_y = torch.from_numpy(vali_y)
-    test_x = torch.from_numpy(test_x[:, :6])
+    test_x = torch.from_numpy(test_x[:, :])
     
     # [1][2]
     train = ml.loader(train_x, train_y, 1024)
@@ -73,10 +73,13 @@ if __name__ == "__main__":
     # [3]
     net = CNN()
     optimizer = torch.optim.Adam(net.parameters(),lr = 1e-4)
-    loss_func = torch.nn.MSELoss()
-    # weights = np.load(path + '\\' + 'weights_1225.npy')
-    # edge = np.load(path + '\\' + 'edge.npy')
-    # loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
+    # loss_func = torch.nn.MSELoss()
+    weights = np.load(path + '\\' + 'weights_1225.npy')
+    edge = np.load(path + '\\' + 'edge.npy')
+    # '''2023.12.26重写权重'''
+    # weights = np.array([0.5, 1.0, 1.1, 2.0, 5.0, 8.0])
+    # edge = np.array([     0,   3,   9,  15,  30,  50, 250])
+    loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
     
     # [5]
     plt.ion()
