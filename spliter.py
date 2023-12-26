@@ -74,6 +74,9 @@ for i, _ in enumerate(edge[:-1]):
         test_x += list(aaa[2]); test_y += list(aaa[5])
     else:
         print(edge[i],edge[i+1])
+
+random_seed = 42
+np.random.seed(random_seed)
 train_x = np.array(train_x);np.random.shuffle(train_x)
 train_y = np.array(train_y);np.random.shuffle(train_y)
 vali_x = np.array(vali_x);np.random.shuffle(vali_x)

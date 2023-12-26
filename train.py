@@ -76,12 +76,13 @@ if __name__ == "__main__":
     # loss_func = torch.nn.MSELoss()
     weights = np.load(path + '\\' + 'weights.npy')
     edge = np.load(path + '\\' + 'edge.npy')
+    weights = edge[:-1] + 2; weights = (weights**2); weights = weights/np.sum(weights)
     loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
     
     # [5]
     plt.ion()
     plt.show()
-    epochs = 500; loss = []; loss2 = []
+    epochs = 2000; loss = []; loss2 = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         aaaaa = ml.train(train, net, loss_func, optimizer)
@@ -89,7 +90,7 @@ if __name__ == "__main__":
         
         loss += [aaaaa[-1]]
         loss2 += [bbbbb[-1]]
-        if t % 10 == 0:
+        if t % 100 == 0:
             plt.cla()
             rainrate = np.array(aaaaa[1]).flatten(); prediction = np.array(aaaaa[2]).flatten()
             # plt.hist2d(rainrate, prediction,bins = np.arange(0,2,0.01), norm = colors.LogNorm())
@@ -118,7 +119,7 @@ if __name__ == "__main__":
     plt.show()
     
     # [6]
-    torch.save(net.state_dict(), path_save + '\\' + "cnn.pth")
+    # torch.save(net.state_dict(), path_save + '\\' + "cnn.pth")
     
     #%%
     # [7]
