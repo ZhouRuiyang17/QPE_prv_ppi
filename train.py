@@ -11,8 +11,8 @@ from model import *
 import matplotlib.colors as colors
 import torch.nn as nn
 
-path = r'E:\QPE_prv_ppi_2_99\dataset聚合\20231221'
-path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format(20231221)
+path = r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101'
+path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format(20240101)
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 maxi = [75, 7, 14, 1, 100]
@@ -42,6 +42,22 @@ class WeightedMSELoss(nn.Module):
         # loss = torch.mean((predicted - target)**2)
         return loss
 
+class WeightedMSELoss_ver2(nn.Module):
+    def __init__(self):
+        super(WeightedMSELoss_ver2, self).__init__()
+
+
+    def forward(self, predicted, target):
+        loss = []
+        for i in range(len(target)):
+            loss += [target[i]*100 * (predicted[i] - target[i])**2]
+        # 计算每个样本的损失并加权求和
+        loss = torch.Tensor(loss)
+        loss = (torch.mean(loss))
+        loss2 = torch.mean(target*100*(predicted - target)**2)
+        return loss2
+
+
 if __name__ == "__main__":
     
     train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)
@@ -67,19 +83,20 @@ if __name__ == "__main__":
     test_x = torch.from_numpy(test_x[:, :])
     
     # [1][2]
-    train = ml.loader(train_x, train_y, 1024)
-    vali = ml.loader(vali_x, vali_y, 1024)
+    train = ml.loader(train_x, train_y, 128)
+    vali = ml.loader(vali_x, vali_y, 128)
     
     # [3]
     net = CNN()
-    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-4)
+    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-6)
     # loss_func = torch.nn.MSELoss()
-    weights = np.load(path + '\\' + 'weights_1225.npy')
-    edge = np.load(path + '\\' + 'edge.npy')
+    # weights = np.load(path + '\\' + 'weights_1225.npy')
+    # edge = np.load(path + '\\' + 'edge.npy')
     # '''2023.12.26重写权重'''
     # weights = np.array([0.5, 1.0, 1.1, 2.0, 5.0, 8.0])
     # edge = np.array([     0,   3,   9,  15,  30,  50, 250])
-    loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
+    # loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
+    loss_func = WeightedMSELoss_ver2()
     
     # [5]
     plt.ion()
