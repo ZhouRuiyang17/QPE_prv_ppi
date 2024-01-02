@@ -11,8 +11,8 @@ from model import *
 import matplotlib.colors as colors
 import torch.nn as nn
 
-path = r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101'
-path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format(20240101)
+path = r'E:\QPE_prv_ppi_2_99\dataset20240101\20240101'
+path_save = r'E:\QPE_prv_ppi_2_99\dataset20240101\{}'.format(20240101)
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 maxi = [75, 7, 14, 1, 100]
@@ -83,8 +83,8 @@ if __name__ == "__main__":
     test_x = torch.from_numpy(test_x[:, :])
     
     # [1][2]
-    train = ml.loader(train_x, train_y, 128)
-    vali = ml.loader(vali_x, vali_y, 128)
+    train = ml.loader(train_x, train_y, 1024)
+    vali = ml.loader(vali_x, vali_y, 1024)
     
     # [3]
     net = CNN()
@@ -93,10 +93,10 @@ if __name__ == "__main__":
     # weights = np.load(path + '\\' + 'weights_1225.npy')
     # edge = np.load(path + '\\' + 'edge.npy')
     # '''2023.12.26重写权重'''
-    # weights = np.array([0.5, 1.0, 1.1, 2.0, 5.0, 8.0])
-    # edge = np.array([     0,   3,   9,  15,  30,  50, 250])
-    # loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
-    loss_func = WeightedMSELoss_ver2()
+    edge = np.array(list(range(0, 52, 2)) + [100])
+    weights = edge[:-1]+1
+    loss_func = WeightedMSELoss(torch.tensor(weights), ml.min_max(edge, mini[-1], maxi[-1]))
+    # loss_func = WeightedMSELoss_ver2()
     
     # [5]
     plt.ion()
