@@ -13,31 +13,31 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3),
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3),
             nn.BatchNorm2d(16),
             nn.LeakyReLU(),
             )
         self.conv2 = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
+            nn.BatchNorm2d(32),
             nn.LeakyReLU(),            
             )
         self.conv3 = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+            nn.BatchNorm2d(64),
             nn.LeakyReLU(),
             )
         self.conv4 = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
+            nn.BatchNorm2d(128),
             nn.LeakyReLU(),
             )
         self.flt = nn.Sequential(
             nn.Flatten()
             )
         self.out = nn.Sequential(
-            nn.Linear(16, 1),
-            nn.LeakyReLU()
+            nn.Linear(128, 1),
+            nn.ReLU()
             )
         
 

@@ -12,7 +12,7 @@ import matplotlib.colors as colors
 import torch.nn as nn
 
 path = r'E:\QPE_prv_ppi_2_99\dataset20240101\20240101'
-path_save = r'E:\QPE_prv_ppi_2_99\dataset20240101\{}'.format(20240101)
+path_save = r'E:\QPE_prv_ppi_2_99\dataset20240101\{}'.format(20240103)
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 maxi = [75, 7, 14, 1, 100]
@@ -76,19 +76,19 @@ if __name__ == "__main__":
     _ls = scaler([test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8]])
     test_x[:, 0:2], test_x[:, 2:4], test_x[:, 4:6], test_x[:, 6:8] = _ls
     
-    train_x = torch.from_numpy(train_x[:, :])
+    train_x = torch.from_numpy(train_x[:, :6])
     train_y = torch.from_numpy(train_y)
-    vali_x = torch.from_numpy(vali_x[:, :])
+    vali_x = torch.from_numpy(vali_x[:, :6])
     vali_y = torch.from_numpy(vali_y)
-    test_x = torch.from_numpy(test_x[:, :])
+    test_x = torch.from_numpy(test_x[:, :6])
     
     # [1][2]
-    train = ml.loader(train_x, train_y, 1024)
-    vali = ml.loader(vali_x, vali_y, 1024)
+    train = ml.loader(train_x, train_y, 32)
+    vali = ml.loader(vali_x, vali_y, 32)
     
     # [3]
     net = CNN()
-    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-6)
+    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-3, weight_decay = 1e-3)
     # loss_func = torch.nn.MSELoss()
     # weights = np.load(path + '\\' + 'weights_1225.npy')
     # edge = np.load(path + '\\' + 'edge.npy')
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # [5]
     plt.ion()
     plt.show()
-    epochs = 100; loss = []; loss2 = []
+    epochs = 500; loss = []; loss2 = []
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         aaaaa = ml.train(train, net, loss_func, optimizer)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         
         loss += [aaaaa[-1]]
         loss2 += [bbbbb[-1]]
-        if t % 10 == 0:
+        if t % 50 == 0:
             plt.cla()
             rainrate = np.array(aaaaa[1]).flatten(); prediction = np.array(aaaaa[2]).flatten()
             plt.hist2d(rainrate, prediction,bins = 100, norm = colors.LogNorm())
