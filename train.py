@@ -88,7 +88,7 @@ if __name__ == "__main__":
     
     # [3]
     net = CNN()
-    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-3, weight_decay = 1e-3)
+    optimizer = torch.optim.Adam(net.parameters(),lr = 1e-3, weight_decay = 1e-4)
     # loss_func = torch.nn.MSELoss()
     # weights = np.load(path + '\\' + 'weights_1225.npy')
     # edge = np.load(path + '\\' + 'edge.npy')
