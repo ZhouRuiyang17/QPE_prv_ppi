@@ -13,7 +13,7 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3),
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3),
             nn.BatchNorm2d(16),
             nn.LeakyReLU(),
             )
