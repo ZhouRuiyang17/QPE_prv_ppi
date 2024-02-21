@@ -11,11 +11,11 @@ from model import *
 import matplotlib.colors as colors
 import torch.nn as nn
 
-path = r'E:\QPE_prv_ppi_2_99\dataset20240101\20240101'
-path_save = r'E:\QPE_prv_ppi_2_99\dataset20240101\{}'.format(20240103)
+path = r'D:\data\dataset\prv_ppi\dataset20240101\20240221'
+path_save = r'E:\QPE_prv_ppi_2_99\model\20240101-20240221\{}'.format(20240221)
 if not os.path.exists(path_save):
     os.makedirs(path_save)
-maxi = [75, 7, 14, 1, 100]
+maxi = [70, 7, 7, 1, 100]
 mini = [ 0, 0,  0, 0,   0]
 
 def scaler(datas):

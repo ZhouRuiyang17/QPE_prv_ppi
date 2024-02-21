@@ -63,13 +63,13 @@ import datetime
 # dist, _, _ = plt.hist(labels, bins = np.arange(0,102,2))
 # plt.show()
 # 
-# np.save(r"E:\QPE_prv_ppi_2_99\dataset聚合20240101\features.npy", features)
-# np.save(r"E:\QPE_prv_ppi_2_99\dataset聚合20240101\labels.npy", labels)
+# np.save(r"D:\dataset\prv_ppi\dataset20240101\features.npy", features)
+# np.save(r"D:\dataset\prv_ppi\dataset20240101\labels.npy", labels)
 # =============================================================================
 
 # ----划分
-features = np.load(r"E:\QPE_prv_ppi_2_99\dataset聚合20240101\features.npy")
-labels = np.load(r"E:\QPE_prv_ppi_2_99\dataset聚合20240101\labels.npy")
+features = np.load(r"D:\data\dataset\prv_ppi\dataset20240101\features.npy")
+labels = np.load(r"D:\data\dataset\prv_ppi\dataset20240101\labels.npy")
 edge = list(np.arange(0, 52, 2)) + [100]
 train_x, train_y = [], []
 vali_x, vali_y = [], []
@@ -95,14 +95,14 @@ test_x = np.array(test_x);np.random.shuffle(test_x)
 test_y = np.array(test_y);np.random.shuffle(test_y)
 # weights = np.array(weights/np.sum(weights))[::-1]
 
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\train_x.npy', train_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\train_y.npy', train_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\vali_x.npy', vali_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\vali_y.npy', vali_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\test_x.npy', test_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\test_y.npy', test_y)
-# np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\weights.npy', weights)
-# np.save(r'E:\QPE_prv_ppi_2_99\dataset聚合20240101\20240101\edge.npy', np.array(edge))
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\train_x.npy', train_x)
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\train_y.npy', train_y)
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\vali_x.npy', vali_x)
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\vali_y.npy', vali_y)
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\test_x.npy', test_x)
+np.save(r'D:\data\dataset\prv_ppi\dataset20240101\20240221\test_y.npy', test_y)
+# np.save(r'D:\dataset\prv_ppi\dataset20240101\20240221\weights.npy', weights)
+# np.save(r'D:\dataset\prv_ppi\dataset20240101\20240221\edge.npy', np.array(edge))
 
 dist, _, _ = plt.hist(train_y, bins = np.arange(0,102,2))
 plt.show()
