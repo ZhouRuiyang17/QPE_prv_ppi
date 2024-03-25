@@ -1,5 +1,5 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 import matplotlib.pyplot as plt
 from tools import ml
 import tqdm
@@ -35,7 +35,8 @@ if __name__ == '__main__':
 
     batch_size = 64
     num_epochs = 200
-    device = 'cuda'
+    # device = 'cuda'
+    device = 'cpu'
     save_loss_min = 100
 
     weights_path = './weights'
@@ -63,15 +64,18 @@ if __name__ == '__main__':
     total_steps = len(train_loader)
     train_loss_all, val_loss_all = [], []
     for epoch in range(num_epochs):
+        print(epoch)
         dt_size = len(train_loader.dataset)
         dt_size_val = len(val_loader.dataset)
         epoch_loss = 0
-        pbar = tqdm.tqdm(
-            total=dt_size // batch_size,
-            desc=f'Epoch {epoch + 1} / {num_epochs}',
-            postfix=dict,
-            miniters=.3
-        )
+# =============================================================================
+#         pbar = tqdm.tqdm(
+#             total=dt_size // batch_size,
+#             desc=f'Epoch {epoch + 1} / {num_epochs}',
+#             postfix=dict,
+#             miniters=.3
+#         )
+# =============================================================================
         model.train()
         for i, (images, labels) in enumerate(train_loader):
             images = images.to(device)
@@ -86,20 +90,24 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
 
-            pbar.set_postfix(**{
-                'train_loss': epoch_loss / (i + 1),
-            })
-            pbar.update(1)
+# =============================================================================
+#             pbar.set_postfix(**{
+#                 'train_loss': epoch_loss / (i + 1),
+#             })
+#             pbar.update(1)
+# =============================================================================
         train_loss.write(str(epoch_loss / i))
         train_loss.write('\n')
         train_loss_all.append(epoch_loss / i)
-        pbar.close()
-        pbar = tqdm.tqdm(
-            total=dt_size_val // batch_size,
-            desc=f'Val_Epoch {epoch + 1} / {num_epochs}',
-            postfix=dict,
-            miniters=.3
-        )
+# =============================================================================
+#         pbar.close()
+#         pbar = tqdm.tqdm(
+#             total=dt_size_val // batch_size,
+#             desc=f'Val_Epoch {epoch + 1} / {num_epochs}',
+#             postfix=dict,
+#             miniters=.3
+#         )
+# =============================================================================
         epoch_loss_val = 0
         model.eval()
         for i, (images, labels) in enumerate(val_loader):
@@ -110,20 +118,23 @@ if __name__ == '__main__':
                 outputs = model(images)
                 loss = criterion(outputs, labels)
             epoch_loss_val += loss.item()
-            pbar.set_postfix(**{
-                'val_loss': epoch_loss_val / (i + 1),
-            })
-            pbar.update(1)
-        pbar.close()
+# =============================================================================
+#             pbar.set_postfix(**{
+#                 'val_loss': epoch_loss_val / (i + 1),
+#             })
+#             pbar.update(1)
+#         pbar.close()
+# =============================================================================
         val_loss.write(str(epoch_loss_val / i))
         val_loss.write('\n')
         val_loss_all.append(epoch_loss_val / i)
-        plt.figure(figsize=(12, 12))
-        plt.plot(train_loss_all, label='train loss')
-        plt.plot(val_loss_all, label='vali loss')
-        plt.legend()
-        plt.savefig(weights_path + '/loss.png')
+
         if save_loss_min > epoch_loss_val / i:
             save_loss_min = epoch_loss_val / i
             torch.save(model.state_dict(), weights_path + '/weights.pth')
     print("训练完成！")
+    plt.figure(figsize=(12, 12))
+    plt.plot(train_loss_all, label='train loss')
+    plt.plot(val_loss_all, label='vali loss')
+    plt.legend()
+    plt.savefig(weights_path + '/loss.png')

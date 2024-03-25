@@ -9,7 +9,7 @@ from torch.utils import data
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 if __name__ == '__main__':
-    device = 'cuda'
+    device = 'cpu'
 
     weights_path = './weights'
     model = models.CNN(1, False).to(device)
