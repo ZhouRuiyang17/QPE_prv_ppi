@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import my.mytools as mt
+import my.ml as ml
 import datetime
 
 # ----雷达
@@ -78,7 +78,7 @@ test_x, test_y = [], []
 for i, _ in enumerate(edge[:-1]):
     loc = np.where((labels > edge[i]) & (labels <= edge[i+1]))[0]
     if len(loc) > 0:
-        aaa = mt.spliter(features[loc], labels[loc], [7,1,2])
+        aaa = ml.spliter(features[loc], labels[loc], [7,1,2])
         train_x += list(aaa[0]); train_y += list(aaa[3]);# weights += [len(aaa[3])]
         vali_x += list(aaa[1]); vali_y += list(aaa[4])
         test_x += list(aaa[2]); test_y += list(aaa[5])
