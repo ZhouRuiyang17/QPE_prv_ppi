@@ -71,12 +71,12 @@ np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\vali_y.npy', vali_y)
 np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_x.npy', test_x)
 np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_y.npy', test_y)
 
-# dist, _, _ = plt.hist(train_y, bins = np.arange(0,102,2)/100)
-# plt.show()
-# dist, _, _ = plt.hist(vali_y, bins = np.arange(0,102,2)/100)
-# plt.show()
-# dist, _, _ = plt.hist(test_y, bins = np.arange(0,102,2)/100)
-# plt.show()
+dist, _, _ = plt.hist(train_y, bins = np.arange(0,102,2)/100)
+plt.show()
+dist, _, _ = plt.hist(vali_y, bins = np.arange(0,102,2)/100)
+plt.show()
+dist, _, _ = plt.hist(test_y, bins = np.arange(0,102,2)/100)
+plt.show()
 
 
 

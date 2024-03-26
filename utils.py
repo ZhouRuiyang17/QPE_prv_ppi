@@ -42,3 +42,14 @@ def loader(x, y, batch_size = 64):
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle = 1)
     
     return dataloader
+
+def early_stop(loss_vali, num_check):
+    x = np.arange(num_check)
+    y = loss_vali[-num_check:]
+    from scipy.stats import linregress
+    slope, intercept, r_value, p_value, std_err = linregress(x, y)
+    
+    if slope > 0:
+        return 1
+    else:
+        return 0
