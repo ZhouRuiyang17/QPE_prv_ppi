@@ -15,22 +15,22 @@ class CNN(nn.Module):
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3),
             nn.BatchNorm2d(16),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             )
         self.conv2 = nn.Sequential(
             nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
             nn.BatchNorm2d(32),
-            nn.LeakyReLU(),            
+            nn.ReLU(),            
             )
         self.conv3 = nn.Sequential(
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
             nn.BatchNorm2d(64),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             )
         self.conv4 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
             nn.BatchNorm2d(128),
-            nn.LeakyReLU(),
+            nn.ReLU(),
             )
         self.flt = nn.Sequential(
             nn.Flatten()
@@ -47,10 +47,53 @@ class CNN(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.flt(x)
-        # x = self.fc(x)
-        # x = self.fc2(x)
         pred = self.out(x)
         return pred
+
+# =============================================================================
+# class CNN(nn.Module):
+#     def __init__(self):
+#         super(CNN, self).__init__()
+#         self.conv = nn.Sequential(
+#             nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3),
+#             nn.BatchNorm2d(16),
+#             nn.LeakyReLU(),
+#             )
+#         self.conv2 = nn.Sequential(
+#             nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
+#             nn.BatchNorm2d(32),
+#             nn.LeakyReLU(),            
+#             )
+#         self.conv3 = nn.Sequential(
+#             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+#             nn.BatchNorm2d(64),
+#             nn.LeakyReLU(),
+#             )
+#         self.conv4 = nn.Sequential(
+#             nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
+#             nn.BatchNorm2d(128),
+#             nn.LeakyReLU(),
+#             )
+#         self.flt = nn.Sequential(
+#             nn.Flatten()
+#             )
+#         self.out = nn.Sequential(
+#             nn.Linear(128, 1),
+#             nn.ReLU()
+#             )
+#         
+# 
+#     def forward(self, x):        
+#         x = self.conv(x)
+#         x = self.conv2(x)
+#         x = self.conv3(x)
+#         x = self.conv4(x)
+#         x = self.flt(x)
+#         # x = self.fc(x)
+#         # x = self.fc2(x)
+#         pred = self.out(x)
+#         return pred
+# =============================================================================
 
 # ----ver6
 # class CNN(nn.Module):
