@@ -11,7 +11,9 @@ path = r'E:\QPE_prv_ppi_2_99\dataset\20240326'
 path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format('20240326')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
-
+# 检查 GPU 是否可用
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("使用的设备:", device)
 
 # =============================================================================
 # maxi = [70, 7, 7, 1, 100]
@@ -68,11 +70,11 @@ if __name__ == "__main__":
     test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)
     test_y = np.load(os.path.join(path,'test_y.npy'), allow_pickle=True).astype(np.float32)
     
-    train = utils.loader(train_x, train_y, 64)
-    vali = utils.loader(vali_x, vali_y, 64)
+    train = utils.loader(train_x, train_y, device, 64)
+    vali = utils.loader(vali_x, vali_y, device, 64)
     
     # ----训练
-    model = CNN()
+    model = CNN().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-3, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
 

@@ -35,9 +35,9 @@ def spliter(x, y, ratio):
     return [x_train, x_vali, x_test, y_train, y_vali, y_test]
 
 '''训练'''
-def loader(x, y, batch_size = 64):
+def loader(x, y, device, batch_size = 64):
     x, y = x.copy().astype(np.float32), y.copy().astype(np.float32)
-    x, y = torch.from_numpy(x), torch.from_numpy(y)
+    x, y = torch.from_numpy(x).to(device), torch.from_numpy(y).to(device)
     dataset = TensorDataset(x,y)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle = 1)
     
