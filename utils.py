@@ -43,6 +43,39 @@ def loader(x, y, batch_size = 64):
     
     return dataloader
 
+def trainer(train, vali,
+            model, loss_function, optimizer):
+    
+    model.train()
+    xxx_train, yyy_train, ppp_train, lll_train = [], [], [], []
+    for batch, (x, y) in enumerate(train):
+        pred = model(x)
+        loss = loss_function(pred, y)
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
+        
+        xxx_train += x.tolist()
+        yyy_train += y.tolist()
+        ppp_train += pred.tolist()
+        lll_train += [loss.item()]
+    lll_train = sum(lll_train)/len(lll_train)
+    
+    model.eval()
+    xxx_vali, yyy_vali, ppp_vali, lll_vali = [], [], [], []
+    with torch.no_grad():
+        for batch, (x, y) in enumerate(vali):
+            pred = model(x)
+            loss = loss_function(pred, y)
+            
+            xxx_vali += x.tolist()
+            yyy_vali += y.tolist()
+            ppp_vali += pred.tolist()
+            lll_vali += [loss.item()]
+    lll_vali = sum(lll_vali)/len(lll_vali)
+    
+    return [xxx_train, yyy_train, ppp_train, lll_train], [xxx_vali, yyy_vali, ppp_vali, lll_vali]
+        
 def early_stop(loss_vali, num_check):
     x = np.arange(num_check)
     y = loss_vali[-num_check:]
