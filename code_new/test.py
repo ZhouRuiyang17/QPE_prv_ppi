@@ -13,7 +13,9 @@ if __name__ == '__main__':
 
     weights_path = './weights'
     model = models.CNN(1, False).to(device)
-    key = model.load_state_dict(torch.load(weights_path + '/weights.pth'))
+    # key = model.load_state_dict(torch.load(r"E:\QPE_prv_ppi_2_99\code_new\weights\best\weights\weights.pth",
+    #                                        map_location=torch.device('cpu')))
+    key = model.load_state_dict(torch.load(weights_path + "/weights.pth"))
     print(key)
     model.eval()
 
@@ -37,7 +39,7 @@ if __name__ == '__main__':
         pres_all.append(outputs.flatten())
     pres_all = np.concatenate(pres_all, axis=0).flatten()
     labels_all = np.concatenate(labels_all, axis=0).flatten()
-    plt.hist2d(labels_all, pres_all, bins=100, norm=colors.LogNorm())
+    plt.hist2d(labels_all, pres_all, bins=[np.arange(0,1,0.01)]*2, norm=colors.LogNorm())
     plt.plot([0, 1], [0, 1])
     plt.title('test')
     plt.pause(0.5)
