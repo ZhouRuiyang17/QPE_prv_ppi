@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import torch
+
 from model import CNN
 import utils
 
