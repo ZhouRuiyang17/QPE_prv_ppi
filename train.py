@@ -1,15 +1,9 @@
 import numpy as np
-import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import my.mytools as mt
-import datetime
-import my.ml as ml
-
+import matplotlib.colors as colors
 import torch
 from model import CNN
-import matplotlib.colors as colors
-import torch.nn as nn
 import utils
 
 path = r'E:\QPE_prv_ppi_2_99\dataset\20240326'
