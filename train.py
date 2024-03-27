@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-15-try2-wmae')
+path_save = './model/{}'.format('20240327-15-try3-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -46,7 +46,7 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
 
 edge = np.array([0,0.1,10,20,30,40,50,100])
-weights = np.array([0.1,1,2,3,4,5,10])
+weights = np.array([0.1,1,2,4,8,16,32])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
                   fpath = path_save + '/' + 'test-zr.png')
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
+    scatter = utils.Scatter(np.log10(test_y), np.log10(pred_zr))
     scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
                   fpath = path_save + '/' + 'test-zr-log.png')
