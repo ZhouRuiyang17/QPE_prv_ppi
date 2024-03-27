@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-15-try3-wmae')
+path_save = './model/{}'.format('20240327-15-try2-wmae again2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -45,8 +45,8 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.legend()
     plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
 
-edge = np.array([0,0.1,10,20,30,40,50,100])
-weights = np.array([0.1,1,2,4,8,16,32])
+edge = np.array([0,10,20,30,40,50,100])
+weights = np.array([1,2,3,4,5,10])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
