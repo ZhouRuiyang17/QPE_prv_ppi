@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-19-cnn_fc')
+path_save = './model/{}'.format('20240327-19-cnn_bn')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -43,7 +43,7 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.plot(loss_vali, label = 'vali loss')
     ax.set_aspect('auto')
     plt.legend()
-    plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
+    plt.savefig(path_save + '/loss.png')
 
 edge = np.array([0,10,20,30,40,50,100])
 weights = np.array([1,2,3,4,5,10])
