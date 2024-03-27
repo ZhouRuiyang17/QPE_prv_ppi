@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-10-try3-dropout0.7')
+path_save = './model/{}'.format('20240327-15-try-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -45,6 +45,31 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.legend()
     plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
 
+edge = np.array([0,0.1,10,20,30,40,50,100])
+weights = np.array([0.1,1,2,3,4,5,10])
+class wmaeloss(nn.Module):  
+    def __init__(self, weights, edge):  
+        super(wmaeloss, self).__init__()  
+        self.weights = weights
+        self.edge = edge
+  
+    def forward(self, y, p):  
+        '''
+        y and p is deviced
+        diff and loss_list need to be deviced
+        '''
+        diff = torch.abs(p-y).to(device)
+        loss_list = torch.tensor([]).to(device)
+        for i in range(len(self.weights)):
+            loc = (y >= self.edge[i]) & (y < self.edge[i+1])
+            # print(loc)
+            loss_list = torch.cat([loss_list, self.weights[i] * diff[loc]])
+            # print(loss_list)
+        loss = torch.sum(loss_list) / len(loss_list)
+
+        # return diff, loss_list, loss
+        return loss
+
 if __name__ == "__main__":
     
     # ----封装
@@ -61,46 +86,47 @@ if __name__ == "__main__":
     test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
 
     
-    # # ----训练
-    # model = CNN_tian().to(device)
-    # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    # loss_func = torch.nn.L1Loss()
+    # ----训练
+    model = CNN_tian().to(device)
+    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    loss_func = torch.nn.L1Loss()
+    loss_func = wmaeloss(weights, edge)
 
     # plt.ion()
     # plt.show()
-    # epochs = 500
-    # loss_train = []; loss_vali = []
-    # params = []; positive_counter = 0
-    # for t in range(epochs):
-    #     print(f"Epoch {t+1}\n-------------------------------")
+    epochs = 500
+    loss_train = []; loss_vali = []
+    params = []; positive_counter = 0
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
         
-    #     res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
+        res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
         
-    #     loss_train += [res1[-1]]
-    #     loss_vali += [res2[-1]]
-    #     if t % 50 == 0:           
-    #         plot(res1, res2, loss_train, loss_vali)
+        loss_train += [res1[-1]]
+        loss_vali += [res2[-1]]
+        if t % 50 == 0:           
+            plot(res1, res2, loss_train, loss_vali)
             
-    #     if len(params) < epochs/10:
-    #         params.append(model.state_dict())
-    #     else:
-    #         params.append(model.state_dict())
-    #         params = params[1:]
-    #         positive_counter += utils.early_stop(loss_vali, int(epochs/10))
-    #         if positive_counter == 20:
-    #             torch.save(params[-1], path_save + '/' + "cnn.pth")
-    #             print('early stop at epoch:{}'.format(t))
-    #             plot(res1, res2, loss_train, loss_vali)
-    #             break
+        if len(params) < epochs/10:
+            params.append(model.state_dict())
+        else:
+            params.append(model.state_dict())
+            params = params[1:]
+            positive_counter += utils.early_stop(loss_vali, int(epochs/10))
+            if positive_counter == 20:
+                torch.save(params[-1], path_save + '/' + "cnn.pth")
+                print('early stop at epoch:{}'.format(t))
+                plot(res1, res2, loss_train, loss_vali)
+                break
     
-    # print("Done!")
+    print("Done!")
     # plt.ioff()
     # plt.show()
     
-    # # [6]
-    # if positive_counter != 20:
-    #     torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-    #     print('finish all epochs:{}'.format(epochs))  
+    # [6]
+    if positive_counter != 20:
+        torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
+        print('finish all epochs:{}'.format(epochs))  
 
 
 
