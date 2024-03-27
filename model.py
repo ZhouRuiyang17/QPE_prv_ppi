@@ -23,11 +23,13 @@ class CNN_tian(nn.Module):
             )
         self.fc1 = nn.Sequential(
             nn.Linear(32*7*7, 1024),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.Dropout(0.7)
             )
         self.fc2 = nn.Sequential(
             nn.Linear(1024, 256),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.Dropout(0.7)
             )
         self.out = nn.Sequential(
             nn.Linear(256, 1),

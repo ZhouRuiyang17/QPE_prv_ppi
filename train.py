@@ -8,78 +8,40 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-10-try')
+path_save = './model/{}'.format('20240327-10-try2-dropout0.7')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("使用的设备:", device)
 
-# =============================================================================
-# maxi = [70, 7, 7, 1, 100]
-# mini = [ 0, 0,  0, 0,   0]
-# 
-# def scaler(datas):
-#     for i, data in enumerate(datas):
-#         datas[i] = ml.min_max(data, mini[i], maxi[i])
-#     return datas
-# 
-# class WeightedMSELoss(nn.Module):
-#     def __init__(self, weights, edge):
-#         super(WeightedMSELoss, self).__init__()
-#         self.weights = weights  # 传入的权重
-#         self.edge = edge
-# 
-#     def forward(self, predicted, target):
-#         edge = self.edge
-#         for i, _ in enumerate(edge[:-1]):
-#             loc = np.where((target > edge[i]) & (target <= edge[i+1]))[0]
-#             if i == 0:
-#                 loss = self.weights[i] * (predicted[loc] - target[loc])**2
-#             else:
-#                 loss = torch.cat([loss, self.weights[i] * (predicted[loc] - target[loc])**2])
-#         # 计算每个样本的损失并加权求和
-#         loss = torch.sum(loss) / np.sum(weights)
-#         # loss = torch.mean((predicted - target)**2)
-#         return loss
-# 
-# class WeightedMSELoss_ver2(nn.Module):
-#     def __init__(self):
-#         super(WeightedMSELoss_ver2, self).__init__()
-# 
-# 
-#     def forward(self, predicted, target):
-#         loss = []
-#         for i in range(len(target)):
-#             loss += [target[i]*100 * (predicted[i] - target[i])**2]
-#         # 计算每个样本的损失并加权求和
-#         loss = torch.Tensor(loss)
-#         loss = (torch.mean(loss))
-#         loss2 = torch.mean(target*100*(predicted - target)**2)
-#         return loss2
-# =============================================================================
-
 
 def plot(res1, res2, loss_train, loss_vali):
     t = len(loss_train)
 
     plt.cla()
+    fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
     rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
-    plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-    plt.plot([0,1],[0,1])
-    plt.title('train')
+    ax.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+    ax.plot([0,1],[0,1])
+    ax.set_title('train')
+    ax.set_aspect('equal')
     plt.savefig(path_save + '/train_epoch{}.png'.format(t))
 
     plt.cla()
+    fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
     rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
-    plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-    plt.plot([0,1],[0,1])
-    plt.title('vali')
+    ax.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+    ax.plot([0,1],[0,1])
+    ax.set_title('vali')
+    ax.set_aspect('equal')
     plt.savefig(path_save + '/vali_epoch{}.png'.format(t))
 
     plt.cla()
-    plt.plot(loss_train, label = 'train loss')
-    plt.plot(loss_vali, label = 'vali loss')
+    fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
+    ax.plot(loss_train, label = 'train loss')
+    ax.plot(loss_vali, label = 'vali loss')
+    ax.set_aspect('auto')
     plt.legend()
     plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
 
@@ -113,28 +75,7 @@ if __name__ == "__main__":
         
         loss_train += [res1[-1]]
         loss_vali += [res2[-1]]
-        if t % 50 == 0:
-            # plt.cla()
-            # rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
-            # plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-            # plt.plot([0,1],[0,1])
-            # plt.title('training')
-            # plt.pause(0.5)
-
-            # plt.cla()
-            # rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
-            # plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-            # plt.plot([0,1],[0,1])
-            # plt.title('training')
-            # plt.pause(0.5)
-
-            # plt.cla()
-            # plt.plot(loss_train, label = 'train loss')
-            # plt.plot(loss_vali, label = 'vali loss')
-            # plt.legend()
-            # plt.pause(0.5)
-            # plt.savefig('./loss_epoch{}.png'.format(t))
-            
+        if t % 50 == 0:           
             plot(res1, res2, loss_train, loss_vali)
             
         if len(params) < epochs/10:
@@ -146,13 +87,9 @@ if __name__ == "__main__":
             if positive_counter == 20:
                 torch.save(params[-1], path_save + '/' + "cnn.pth")
                 print('early stop at epoch:{}'.format(t))
-                # plt.cla()
-                # plt.plot(loss_train, label = 'train loss')
-                # plt.plot(loss_vali, label = 'vali loss')
-                # plt.legend()
-                # plt.savefig('./loss_epoch{}.png'.format(t))
                 plot(res1, res2, loss_train, loss_vali)
                 break
+    
     print("Done!")
     plt.ioff()
     plt.show()
@@ -163,57 +100,51 @@ if __name__ == "__main__":
         print('finish all epochs:{}'.format(epochs))  
 
 
-    #%%
-# =============================================================================
-#     # [7]
-#     net = CNN()
-#     net.load_state_dict(torch.load(path_save + '\\' + "cnn.pth"))
-#     net.eval()
-#     with torch.no_grad():
-#         pred = net(test_x)
-#     
-#     pred = pred.view(-1).detach().numpy()
-#     # pred = np.log(pred + 1)
-#     pred = ml.min_max_rev(pred, mini[-1], maxi[-1])
-#     # pred = 10**pred
-#     
-#     # metrics = []
-#     # scatter = mytools.Scatter(y_test, zr300)
-#     # scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0,100],[0,100]],draw_line = 1)
-#     # metrics += [scatter.evaluate().copy()]
-#     # df = pd.DataFrame(metrics)
-#     
-#     metrics_ml = {}
-#     # metrics_300 = {}
-# 
-#     # ----评估
-#     scatter = mt.Scatter(test_y, pred)
-#     metrics_ml['all'] = scatter.evaluate().copy()
-#     scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
-#                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'ML')
-#     
-#     # scatter = mytools.Scatter(y_test, zr300)
-#     # metrics_300['all'] = scatter.evaluate().copy()
-#     # scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[1,100],[1,100]],draw_line = 1,
-#     #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'Z-R relation')
-# 
-#     
-#     # ----分段评估
-#     # edge = [0.1, 10, 20, 30, 40, 50, 100, 200]
-#     # for i in range(len(edge) - 1):     
-#     #     loc = np.where((y_test >= edge[i]) & (y_test < edge[i+1]))
-#         
-#     #     scatter = mytools.Scatter(y_test[loc], pred[loc])
-#     #     metrics_ml['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
-# 
-#         # scatter = mytools.Scatter(y_test[loc], zr300[loc])
-#         # metrics_300['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
-#        
-#     # metrics_ml = pd.DataFrame(metrics_ml)
-#     # metrics_300 = pd.DataFrame(metrics_300)
-#     # metrics = pd.concat([metrics_ml, metrics_300], axis=0)
-# 
-#     # metrics.to_excel( os.path.join(path_save, 'stat.xlsx'))
-#     # metrics_ml.to_excel( os.path.join(path_save, 'statmlp.xlsx'))
-#     # metrics_300.to_excel( os.path.join(path_save, 'stat300.xlsx'))
-# =============================================================================
+
+    # [7]
+    test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
+    ### model
+    model = CNN_tian()
+    model.load_state_dict(torch.load(path_save + '\\' + "cnn.pth"))
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+    pred = pred.view(-1).detach().numpy()
+    pred = utils.scaler(pred, 'rr', 1)
+    metrics_ml = {}
+    scatter = utils.Scatter(test_y, pred)
+    metrics_ml['all'] = scatter.evaluate().copy()
+    scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'ML',
+                  fpath = path_save + '\\' + 'test-cnn.png')
+    
+    ### zr300
+    ref = utils.scaler(test_x, 'ref', 1)[:,1,4,4]
+    ref = 10**(ref*0.1)
+    pred_zr = 0.0576 * (ref)**0.557
+    metrics_zr = {}
+    scatter = utils.Scatter(test_y, pred_zr)
+    metrics_zr['all'] = scatter.evaluate().copy()
+    scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
+                  fpath = path_save + '\\' + 'test-zr.png')
+
+    
+    # ----分段评估
+    # edge = [0.1, 10, 20, 30, 40, 50, 100, 200]
+    # for i in range(len(edge) - 1):     
+    #     loc = np.where((y_test >= edge[i]) & (y_test < edge[i+1]))
+        
+    #     scatter = mytools.Scatter(y_test[loc], pred[loc])
+    #     metrics_ml['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
+
+        # scatter = mytools.Scatter(y_test[loc], zr300[loc])
+        # metrics_300['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
+       
+    # metrics_ml = pd.DataFrame(metrics_ml)
+    # metrics_300 = pd.DataFrame(metrics_300)
+    # metrics = pd.concat([metrics_ml, metrics_300], axis=0)
+
+    # metrics.to_excel( os.path.join(path_save, 'stat.xlsx'))
+    # metrics_ml.to_excel( os.path.join(path_save, 'statmlp.xlsx'))
+    # metrics_300.to_excel( os.path.join(path_save, 'stat300.xlsx'))
