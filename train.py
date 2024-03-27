@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-15-try-wmae')
+path_save = './model/{}'.format('20240327-15-try2-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
