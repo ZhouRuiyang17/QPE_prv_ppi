@@ -7,6 +7,25 @@ import datetime
 import torch
 import torch.nn as nn
 
+class CNN_tian(nn.Module):
+    def __init__(self):
+        super(CNN_tian, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1, padding=0)
+        self.flt = nn.Flatten()
+        self.fc3 = nn.Linear(32*7*7, 1024)
+        self.fc5 = nn.Linear(1024, 256)
+        self.fc6 = nn.Linear(256, 1)
+
+
+    def forward(self, x):        
+        x = nn.ReLU(self.conv1(x))
+        x = nn.ReLU(self.conv2(x))
+        x = nn.Flatten(x)
+        x = nn.ReLU(self.fc3(x))
+        x = nn.ReLU(self.fc5(x))
+        x = self.fc6(x)
+        return x
 
 class CNN(nn.Module):
     def __init__(self):

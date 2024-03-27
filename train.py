@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import torch
 
-from model import CNN
+from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240326-20-try2')
+path_save = './model/{}'.format('20240327-10-try')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -86,19 +86,19 @@ def plot(res1, res2, loss_train, loss_vali):
 if __name__ == "__main__":
     
     # ----封装
-    train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)
+    train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
     train_y = np.load(os.path.join(path,'train_y.npy'), allow_pickle=True).reshape(-1, 1).astype(np.float32)
-    vali_x = np.load(os.path.join(path,'vali_x.npy'), allow_pickle=True).astype(np.float32)
+    vali_x = np.load(os.path.join(path,'vali_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
     vali_y = np.load(os.path.join(path,'vali_y.npy'), allow_pickle=True).reshape(-1, 1).astype(np.float32)
-    test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)
+    test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
     test_y = np.load(os.path.join(path,'test_y.npy'), allow_pickle=True).astype(np.float32)
     
     train = utils.loader(train_x, train_y, device, 64)
     vali = utils.loader(vali_x, vali_y, device, 64)
     
     # ----训练
-    model = CNN().to(device)
-    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-3, weight_decay = 1e-4)
+    model = CNN_tian().to(device)
+    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
 
     plt.ion()
