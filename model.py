@@ -90,31 +90,30 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1),
             nn.ReLU(),
             )
         self.conv2 = nn.Sequential(
             nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
-            nn.BatchNorm2d(32),
             nn.ReLU(),            
             )
         self.conv3 = nn.Sequential(
             nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
-            nn.BatchNorm2d(64),
             nn.ReLU(),
             )
         self.conv4 = nn.Sequential(
             nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
-            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            )
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3),
             nn.ReLU(),
             )
         self.flt = nn.Sequential(
             nn.Flatten()
             )
         self.out = nn.Sequential(
-            nn.Linear(128, 1),
-            nn.ReLU()
+            nn.Linear(256, 1),
             )
         
 
@@ -123,9 +122,127 @@ class CNN(nn.Module):
         x = self.conv2(x)
         x = self.conv3(x)
         x = self.conv4(x)
+        x = self.conv5(x)
         x = self.flt(x)
-        pred = self.out(x)
-        return pred
+        x = self.out(x)
+        return x
+
+class CNN2(nn.Module):
+    def __init__(self):
+        super(CNN2, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
+            nn.ReLU(),            
+            )
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+            nn.ReLU(),
+            )
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
+            nn.ReLU(),
+            )
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3),
+            nn.ReLU(),
+            )
+        self.flt = nn.Sequential(
+            nn.Flatten()
+            )
+        self.fc1 = nn.Sequential(
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            )
+        self.fc2 = nn.Sequential(
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            )
+        self.out = nn.Sequential(
+            nn.Linear(64, 1),
+            )
+        
+
+    def forward(self, x):        
+        x = self.conv(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.flt(x)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.out(x)
+        return x
+
+class CNN_pad_ave(nn.Module):
+    def __init__(self):
+        super(CNN_pad_ave, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),            
+            )
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv6 = nn.Sequential(
+            nn.Conv2d(in_channels=256, out_channels=512, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv7 = nn.Sequential(
+            nn.Conv2d(in_channels=512, out_channels=1024, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.conv8 = nn.Sequential(
+            nn.Conv2d(in_channels=1024, out_channels=1024, kernel_size=3, padding=1),
+            nn.AvgPool2d(2, 1),
+            nn.ReLU(),
+            )
+        self.flt = nn.Sequential(
+            nn.Flatten()
+            )
+        self.out = nn.Sequential(
+            nn.Linear(1024, 1),
+            )
+        
+
+    def forward(self, x):        
+        x = self.conv(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
+        x = self.conv7(x)
+        x = self.conv8(x)
+        x = self.flt(x)
+        x = self.out(x)
+        return x
 
 # =============================================================================
 # class CNN(nn.Module):
