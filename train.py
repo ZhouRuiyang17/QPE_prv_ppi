@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-15-try2-wmae again2')
+path_save = './model/{}'.format('20240327-16-cnn_tian_re-conv3-tune fc')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     
     # ----训练
-    model = CNN_tian().to(device)
+    model = CNN_tian_re().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # [7]
     ### model
-    model = CNN_tian()
+    model = CNN_tian_re()
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))
     model.eval()
     with torch.no_grad():
