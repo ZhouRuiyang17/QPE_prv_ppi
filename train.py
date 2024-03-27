@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-10-try2-dropout0.7')
+path_save = './model/{}'.format('20240327-10-try3-dropout0.7')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -61,46 +61,46 @@ if __name__ == "__main__":
     test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
 
     
-    # ----训练
-    model = CNN_tian().to(device)
-    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    loss_func = torch.nn.L1Loss()
+    # # ----训练
+    # model = CNN_tian().to(device)
+    # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    # loss_func = torch.nn.L1Loss()
 
-    plt.ion()
-    plt.show()
-    epochs = 500
-    loss_train = []; loss_vali = []
-    params = []; positive_counter = 0
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
+    # plt.ion()
+    # plt.show()
+    # epochs = 500
+    # loss_train = []; loss_vali = []
+    # params = []; positive_counter = 0
+    # for t in range(epochs):
+    #     print(f"Epoch {t+1}\n-------------------------------")
         
-        res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
+    #     res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
         
-        loss_train += [res1[-1]]
-        loss_vali += [res2[-1]]
-        if t % 50 == 0:           
-            plot(res1, res2, loss_train, loss_vali)
+    #     loss_train += [res1[-1]]
+    #     loss_vali += [res2[-1]]
+    #     if t % 50 == 0:           
+    #         plot(res1, res2, loss_train, loss_vali)
             
-        if len(params) < epochs/10:
-            params.append(model.state_dict())
-        else:
-            params.append(model.state_dict())
-            params = params[1:]
-            positive_counter += utils.early_stop(loss_vali, int(epochs/10))
-            if positive_counter == 20:
-                torch.save(params[-1], path_save + '/' + "cnn.pth")
-                print('early stop at epoch:{}'.format(t))
-                plot(res1, res2, loss_train, loss_vali)
-                break
+    #     if len(params) < epochs/10:
+    #         params.append(model.state_dict())
+    #     else:
+    #         params.append(model.state_dict())
+    #         params = params[1:]
+    #         positive_counter += utils.early_stop(loss_vali, int(epochs/10))
+    #         if positive_counter == 20:
+    #             torch.save(params[-1], path_save + '/' + "cnn.pth")
+    #             print('early stop at epoch:{}'.format(t))
+    #             plot(res1, res2, loss_train, loss_vali)
+    #             break
     
-    print("Done!")
-    plt.ioff()
-    plt.show()
+    # print("Done!")
+    # plt.ioff()
+    # plt.show()
     
-    # [6]
-    if positive_counter != 20:
-        torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-        print('finish all epochs:{}'.format(epochs))  
+    # # [6]
+    # if positive_counter != 20:
+    #     torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
+    #     print('finish all epochs:{}'.format(epochs))  
 
 
 
@@ -113,23 +113,27 @@ if __name__ == "__main__":
         pred = model(test_x)
     pred = pred.view(-1).detach().numpy()
     pred = utils.scaler(pred, 'rr', 1)
-    metrics_ml = {}
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
-    metrics_ml['all'] = scatter.evaluate().copy()
-    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+    scatter = utils.Scatter((test_y), (pred))
+    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
                   fpath = path_save + '/' + 'test-cnn.png')
+    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
+    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+                  fpath = path_save + '/' + 'test-cnn-log.png')
     
     ### zr300
     test_x = test_x.numpy()
     ref = utils.scaler(test_x, 'ref', 1)[:,0,4,4]
     ref = 10**(ref*0.1)
     pred_zr = 0.0576 * (ref)**0.557
-    metrics_zr = {}
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred_zr))
-    metrics_zr['all'] = scatter.evaluate().copy()
-    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+    scatter = utils.Scatter((test_y), (pred_zr))
+    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
                   fpath = path_save + '/' + 'test-zr.png')
+    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
+    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
+                  fpath = path_save + '/' + 'test-zr-log.png')
 
     
