@@ -186,8 +186,7 @@ class Scatter:
             ax.set_ylim(lim[1])
         if title != None:
             plt.title(title)  
-        if fpath != None:
-            plt.savefig(fpath)
+
         
         if show_metrics:
             ax.text(lim[1][0],0.95*lim[1][1],'NUM = {:.0f}'.format(self.metrics['total num']))
@@ -205,6 +204,9 @@ class Scatter:
         if lines != None:
             ax.scatter(lines[0], lines[1], c='black')
         
+
+        if fpath != None:
+            plt.savefig(fpath)
         plt.show() 
         
     def plot4(self, bins=None, label = None, lim = None, title = None, fpath = None,
@@ -249,8 +251,7 @@ class Scatter:
             ax.set_ylim(lim[1])
         if title != None:
             plt.title(title)  
-        if fpath != None:
-            plt.savefig(fpath)
+
         
         if show_metrics:
             ax.text(lim[1][0],0.95*lim[1][1],'NUM = {:.0f}'.format(self.metrics['total num']))
@@ -268,5 +269,8 @@ class Scatter:
         if lines != None:
             ax.scatter(lines[0], lines[1], c='black')
         
+        
+        if fpath != None:
+            plt.savefig(fpath)
         plt.show() 
 

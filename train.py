@@ -57,6 +57,9 @@ if __name__ == "__main__":
     
     train = utils.loader(train_x, train_y, device, 64)
     vali = utils.loader(vali_x, vali_y, device, 64)
+    test_x = torch.from_numpy(test_x)
+    test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
+
     
     # ----训练
     model = CNN_tian().to(device)
@@ -102,49 +105,31 @@ if __name__ == "__main__":
 
 
     # [7]
-    test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
     ### model
     model = CNN_tian()
-    model.load_state_dict(torch.load(path_save + '\\' + "cnn.pth"))
+    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))
     model.eval()
     with torch.no_grad():
         pred = model(test_x)
     pred = pred.view(-1).detach().numpy()
     pred = utils.scaler(pred, 'rr', 1)
     metrics_ml = {}
-    scatter = utils.Scatter(test_y, pred)
+    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
     metrics_ml['all'] = scatter.evaluate().copy()
-    scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'ML',
-                  fpath = path_save + '\\' + 'test-cnn.png')
+    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+                  fpath = path_save + '/' + 'test-cnn.png')
     
     ### zr300
-    ref = utils.scaler(test_x, 'ref', 1)[:,1,4,4]
+    test_x = test_x.numpy()
+    ref = utils.scaler(test_x, 'ref', 1)[:,0,4,4]
     ref = 10**(ref*0.1)
     pred_zr = 0.0576 * (ref)**0.557
     metrics_zr = {}
-    scatter = utils.Scatter(test_y, pred_zr)
+    scatter = utils.Scatter(np.log10(test_y), np.log10(pred_zr))
     metrics_zr['all'] = scatter.evaluate().copy()
-    scatter.plot3(bins = [np.arange(100), np.arange(100)], lim=[[0.1,100],[0.1,100]],draw_line = 1,
+    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
-                  fpath = path_save + '\\' + 'test-zr.png')
+                  fpath = path_save + '/' + 'test-zr.png')
 
     
-    # ----分段评估
-    # edge = [0.1, 10, 20, 30, 40, 50, 100, 200]
-    # for i in range(len(edge) - 1):     
-    #     loc = np.where((y_test >= edge[i]) & (y_test < edge[i+1]))
-        
-    #     scatter = mytools.Scatter(y_test[loc], pred[loc])
-    #     metrics_ml['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
-
-        # scatter = mytools.Scatter(y_test[loc], zr300[loc])
-        # metrics_300['{}-{}'.format(str(edge[i]), str(edge[i+1]))] = scatter.evaluate().copy()
-       
-    # metrics_ml = pd.DataFrame(metrics_ml)
-    # metrics_300 = pd.DataFrame(metrics_300)
-    # metrics = pd.concat([metrics_ml, metrics_300], axis=0)
-
-    # metrics.to_excel( os.path.join(path_save, 'stat.xlsx'))
-    # metrics_ml.to_excel( os.path.join(path_save, 'statmlp.xlsx'))
-    # metrics_300.to_excel( os.path.join(path_save, 'stat300.xlsx'))
