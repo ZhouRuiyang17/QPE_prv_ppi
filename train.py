@@ -7,8 +7,8 @@ import torch
 from model import CNN
 import utils
 
-path = r'E:\QPE_prv_ppi_2_99\dataset\20240326'
-path_save = r'E:\QPE_prv_ppi_2_99\model\{}'.format('20240326')
+path = './dataset/20240326'
+path_save = './model/{}'.format('20240326-20-try2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -60,6 +60,29 @@ print("使用的设备:", device)
 # =============================================================================
 
 
+def plot(res1, res2, loss_train, loss_vali):
+    t = len(loss_train)
+
+    plt.cla()
+    rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
+    plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+    plt.plot([0,1],[0,1])
+    plt.title('train')
+    plt.savefig(path_save + '/train_epoch{}.png'.format(t))
+
+    plt.cla()
+    rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
+    plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+    plt.plot([0,1],[0,1])
+    plt.title('vali')
+    plt.savefig(path_save + '/vali_epoch{}.png'.format(t))
+
+    plt.cla()
+    plt.plot(loss_train, label = 'train loss')
+    plt.plot(loss_vali, label = 'vali loss')
+    plt.legend()
+    plt.savefig(path_save + '/loss_epoch{}.png'.format(t))
+
 if __name__ == "__main__":
     
     # ----封装
@@ -91,25 +114,28 @@ if __name__ == "__main__":
         loss_train += [res1[-1]]
         loss_vali += [res2[-1]]
         if t % 50 == 0:
-            plt.cla()
-            rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
-            plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-            plt.plot([0,1],[0,1])
-            plt.title('training')
-            plt.pause(0.5)
+            # plt.cla()
+            # rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
+            # plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+            # plt.plot([0,1],[0,1])
+            # plt.title('training')
+            # plt.pause(0.5)
 
-            plt.cla()
-            rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
-            plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
-            plt.plot([0,1],[0,1])
-            plt.title('training')
-            plt.pause(0.5)
+            # plt.cla()
+            # rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
+            # plt.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
+            # plt.plot([0,1],[0,1])
+            # plt.title('training')
+            # plt.pause(0.5)
 
-            plt.cla()
-            plt.plot(loss_train, label = 'train loss')
-            plt.plot(loss_vali, label = 'vali loss')
-            plt.legend()
-            plt.pause(0.5)
+            # plt.cla()
+            # plt.plot(loss_train, label = 'train loss')
+            # plt.plot(loss_vali, label = 'vali loss')
+            # plt.legend()
+            # plt.pause(0.5)
+            # plt.savefig('./loss_epoch{}.png'.format(t))
+            
+            plot(res1, res2, loss_train, loss_vali)
             
         if len(params) < epochs/10:
             params.append(model.state_dict())
@@ -120,9 +146,12 @@ if __name__ == "__main__":
             if positive_counter == 20:
                 torch.save(params[-1], path_save + '/' + "cnn.pth")
                 print('early stop at epoch:{}'.format(t))
-                plt.plot(loss_train, label = 'train loss')
-                plt.plot(loss_vali, label = 'vali loss')
-                plt.legend()
+                # plt.cla()
+                # plt.plot(loss_train, label = 'train loss')
+                # plt.plot(loss_vali, label = 'vali loss')
+                # plt.legend()
+                # plt.savefig('./loss_epoch{}.png'.format(t))
+                plot(res1, res2, loss_train, loss_vali)
                 break
     print("Done!")
     plt.ioff()
@@ -131,7 +160,9 @@ if __name__ == "__main__":
     # [6]
     if positive_counter != 20:
         torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-        print('finish all epochs:{}'.format(epochs))    
+        print('finish all epochs:{}'.format(epochs))  
+
+
     #%%
 # =============================================================================
 #     # [7]
