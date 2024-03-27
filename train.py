@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-19-cnn_bn')
+path_save = './model/{}'.format('20240327-19-cnn 6prv again')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -73,11 +73,11 @@ class wmaeloss(nn.Module):
 if __name__ == "__main__":
     
     # ----封装
-    train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
+    train_x = np.load(os.path.join(path,'train_x.npy'), allow_pickle=True).astype(np.float32)#[:,1].reshape(-1,1,9,9)
     train_y = np.load(os.path.join(path,'train_y.npy'), allow_pickle=True).reshape(-1, 1).astype(np.float32)
-    vali_x = np.load(os.path.join(path,'vali_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
+    vali_x = np.load(os.path.join(path,'vali_x.npy'), allow_pickle=True).astype(np.float32)#[:,1].reshape(-1,1,9,9)
     vali_y = np.load(os.path.join(path,'vali_y.npy'), allow_pickle=True).reshape(-1, 1).astype(np.float32)
-    test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)[:,1].reshape(-1,1,9,9)
+    test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)#[:,1].reshape(-1,1,9,9)
     test_y = np.load(os.path.join(path,'test_y.npy'), allow_pickle=True).astype(np.float32)
     
     train = utils.loader(train_x, train_y, device, 64)
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     
     # ----训练
-    model = CNN2().to(device)
+    model = CNN().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # [7]
     ### model
-    model = CNN2()
+    model = CNN()
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))
     model.eval()
     with torch.no_grad():
@@ -148,18 +148,18 @@ if __name__ == "__main__":
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
                   fpath = path_save + '/' + 'test-cnn-log.png')
     
-    ### zr300
-    test_x = test_x.numpy()
-    ref = utils.scaler(test_x, 'ref', 1)[:,0,4,4]
-    ref = 10**(ref*0.1)
-    pred_zr = 0.0576 * (ref)**0.557
-    scatter = utils.Scatter((test_y), (pred_zr))
-    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
-                  fpath = path_save + '/' + 'test-zr.png')
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred_zr))
-    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
-                  fpath = path_save + '/' + 'test-zr-log.png')
+    # ### zr300
+    # test_x = test_x.numpy()
+    # ref = utils.scaler(test_x[:,0], 'ref', 1)[:,4,4]
+    # ref = 10**(ref*0.1)
+    # pred_zr = 0.0576 * (ref)**0.557
+    # scatter = utils.Scatter((test_y), (pred_zr))
+    # scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
+    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
+    #               fpath = path_save + '/' + 'test-zr.png')
+    # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_zr))
+    # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
+    #               fpath = path_save + '/' + 'test-zr-log.png')
 
     
