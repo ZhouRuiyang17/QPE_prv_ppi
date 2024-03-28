@@ -103,6 +103,22 @@ def early_stop_ptrend(loss_vali, num_check):
     
     return np.all(slopes > 0)
 
+def early_stop_trend(loss_vali, num_check):
+    '''
+    check the slopes of the LAST num_check groups
+    if all abs < 1e-4, stop
+    '''
+    x = np.arange(num_check)
+    slopes = []
+    from scipy.stats import linregress
+    for i in range(1,1+num_check)[::-1]:
+        y = loss_vali[-10-i:-i]
+        slope, intercept, r_value, p_value, std_err = linregress(x, y)
+        slopes += [slope]
+    slopes = np.array(slopes)
+    
+    return np.all(abs(slopes) < 1e-6)
+
 '''other'''
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors

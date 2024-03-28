@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240328-9-cnn 6prv-vlr02-ptrend stop')
+path_save = './model/{}'.format('20240328-9-cnn 6prv-vlr02-trend stop 6')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -139,13 +139,11 @@ if __name__ == "__main__":
             #     print(slopes)
             #     print(positive_position)
             #     break
-            flag_stop = utils.early_stop_ptrend(loss_vali, 10)
+            flag_stop = utils.early_stop_trend(loss_vali, 10)
             if flag_stop:
                 torch.save(params[-1], path_save + '/' + "cnn.pth")
                 print('early stop at epoch:{}'.format(t))
                 plot(res1, res2, loss_train, loss_vali)
-                print(slopes)
-                print(positive_position)
                 break
     
     print("Done!")
