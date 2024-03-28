@@ -81,11 +81,11 @@ def early_stop(loss_vali, num_check):
     y = loss_vali[-num_check:]
     from scipy.stats import linregress
     slope, intercept, r_value, p_value, std_err = linregress(x, y)
-    
+
     if slope > 0:
-        return 1
+        return 1, slope
     else:
-        return 0
+        return 0, slope
     
 '''other'''
 import matplotlib.pyplot as plt
