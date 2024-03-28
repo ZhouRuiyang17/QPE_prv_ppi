@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240328-9-cnn 6prv-new wmae2')
+path_save = './model/{}'.format('20240328-9-cnn 6prv-new wmae2-vlr02')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -27,6 +27,7 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.set_title('train')
     ax.set_aspect('equal')
     plt.savefig(path_save + '/train_epoch{}.png'.format(t))
+    plt.close()
 
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
@@ -36,6 +37,7 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.set_title('vali')
     ax.set_aspect('equal')
     plt.savefig(path_save + '/vali_epoch{}.png'.format(t))
+    plt.close()
 
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
@@ -44,6 +46,7 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.set_aspect('auto')
     plt.legend()
     plt.savefig(path_save + '/loss.png')
+    plt.close()
 
 edge = np.array([0,1,10,20,30,40,50,100])
 weights = np.array([0.1,1,5,10,15,20,50])
@@ -91,6 +94,8 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
+    from torch.optim.lr_scheduler import StepLR
+    scheduler = StepLR(optimizer, step_size=50, gamma=0.2)
 
     # plt.ion()
     # plt.show()
@@ -98,9 +103,13 @@ if __name__ == "__main__":
     loss_train = []; loss_vali = []
     params = []; positive_counter = 0
     for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
+        print(f"-------------------------------\nEpoch {t+1}")
         
         res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
+        scheduler.step()
+        print(f"Epoch {t + 1}, Learning Rate:")
+        for param_group in optimizer.param_groups:
+            print(param_group['lr']) # 打印更新后的学习率
         
         loss_train += [res1[-1]]
         loss_vali += [res2[-1]]
