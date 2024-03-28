@@ -117,7 +117,7 @@ def early_stop_trend(loss_vali, num_check):
         slopes += [slope]
     slopes = np.array(slopes)
     
-    return np.all(abs(slopes) < 1e-6)
+    return np.all(abs(slopes) < 1e-5)
 
 '''other'''
 import matplotlib.pyplot as plt
