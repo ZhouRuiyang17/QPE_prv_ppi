@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240327-19-cnn 6prv again')
+path_save = './model/{}'.format('20240328-9-cnn 6prv-new wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -45,8 +45,8 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.legend()
     plt.savefig(path_save + '/loss.png')
 
-edge = np.array([0,10,20,30,40,50,100])
-weights = np.array([1,2,3,4,5,10])
+edge = np.array([0,1,10,20,30,40,50,100])
+weights = np.array([0.1,1,5,10,15,20,30])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
@@ -150,9 +150,9 @@ if __name__ == "__main__":
     
     # ### zr300
     # test_x = test_x.numpy()
-    # ref = utils.scaler(test_x[:,0], 'ref', 1)[:,4,4]
+    # ref = utils.scaler(test_x[:,1], 'ref', 1)[:,4,4]
     # ref = 10**(ref*0.1)
-    # pred_zr = 0.0576 * (ref)**0.557
+    # pred_zr = 0.0374 * (ref)**0.587
     # scatter = utils.Scatter((test_y), (pred_zr))
     # scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'zr relation',
