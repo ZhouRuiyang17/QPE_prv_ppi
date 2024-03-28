@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/{}'.format('20240328-9-cnn 6prv-new wmae')
+path_save = './model/{}'.format('20240328-9-cnn 6prv-new wmae2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -46,7 +46,7 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.savefig(path_save + '/loss.png')
 
 edge = np.array([0,1,10,20,30,40,50,100])
-weights = np.array([0.1,1,5,10,15,20,30])
+weights = np.array([0.1,1,5,10,15,20,50])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
