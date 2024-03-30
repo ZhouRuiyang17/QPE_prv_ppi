@@ -62,20 +62,26 @@ def QPE(features):
     return pred
 
 def main(fpath):
+    fps = fpath.replace('prv','rr')
+    if os.path.exists(fps):
+        return 1
+    
     # import my.mytools as mt
     # info = mt.BJXSY
     scan = np.load(fpath)
     features, azis, gates = lookup(scan)
-    pred = QPE(features)
-    
     rr = np.zeros((360,1000))*1.
-    rr[azis, gates] = pred
+    if features.size > 0:
+        pred = QPE(features)
+        rr[azis, gates] = pred
+        print('CNN-QPE')
+    
     # mt.RADAR(rr, 'rr', *info, eles=[1.45]).ppi(0, [75, 15])
     # import my.radarsys as rds
     # rd = rds.radar(scan[0],scan[1],scan[2],scan[3],scan[4])
     # rd.qpe_mayu(1)
     # mt.RADAR(rd.rr, 'rr', *info, eles=[1.45]).ppi(0, [75, 15])
-    fps = fpath.replace('prv','rr')
+
     print(f"QPE: {fps}")
     np.save(fps, rr)
 
@@ -92,4 +98,5 @@ if __name__ == "__main__":
             if '2019' in file and 'prv' in file:
                 ls += [os.path.join(root, file)]
                 main(os.path.join(root, file))
-
+                
+    # main(r'D:\data\beijing\radar\测试radarsys\for_cnn_test-20240328\BJXSY.20190526.073711.prv.npy')
