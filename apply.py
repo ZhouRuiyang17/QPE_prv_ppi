@@ -14,6 +14,7 @@ def lookup(scan):
     right = scan[:, :, :4, :]
     scan = np.append(left, scan, axis = 2)
     scan = np.append(scan, right, axis= 2)
+    scan[np.isnan(scan)] = -999.
     
     container = np.zeros((6,9,9))*1.
     features = []; azis = []; gates = []
@@ -24,14 +25,12 @@ def lookup(scan):
             container[2:4] = scan[1,:,pst-4:pst+5, gate-4:gate+5]
             container[4:6] = scan[3,:,pst-4:pst+5, gate-4:gate+5]
 
-            # ref = container[1]; refup = 10**(ref/10)
-            # meanup = np.mean(refup); mean = 10*np.log10(meanup)
-            # mean1 = 10*np.log10(np.mean(10**(container[0]/10)))
-            # mean2 = 10*np.log10(np.mean(10**(container[1]/10)))
-            # if container[1,4,4] > 0 or container[0,4,4] > 0:
-            features += [container.copy()]
-            azis += [azi]
-            gates += [gate]
+            mean1 = 10*np.log10(np.mean(10**(container[0]/10)))
+            mean2 = 10*np.log10(np.mean(10**(container[1]/10)))
+            if mean1 > 0 or mean2 > 0:
+                features += [container.copy()]
+                azis += [azi]
+                gates += [gate]
     features = np.array(features).astype(np.float32)
     azis = np.array(azis)
     gates = np.array(gates)
@@ -72,21 +71,20 @@ def main(fpath):
     features, azi_gate = lookup(scan)
     t2 = datetime.datetime.now()
     rr = np.zeros((360,1000))*1.
-    # if features.size > 0:
-    #     pred = QPE(features)
-    #     rr[azi_gate[:,0], azi_gate[:,1]] = pred
-    #     print('CNN-QPE')
+    if features.size > 0:
+        pred = QPE(features)
+        rr[azi_gate[:,0], azi_gate[:,1]] = pred
+        print('CNN-QPE')
     t3 = datetime.datetime.now()
     print(t2-t1, t3-t2)
     
     import my.mytools as mt
     info = mt.BJXSY
-    # mt.RADAR(rr, 'rr', *info, eles=[1.45]).ppi(0, [75, 15])
+    mt.RADAR(rr, 'rr', *info, eles=[1.45]).ppi(0, [75, 15])
     import my.radarsys as rds
     rd = rds.radar(scan[0],scan[1],scan[2],scan[3],scan[4])
-    # rd.qpe_mayu(1)
-    mt.RADAR(rd.phidp[0], 'phidp2', *info, eles=[0.5]).ppi(0, [75, 15])
-    mt.RADAR(rd.phidp[1], 'phidp2', *info, eles=[1.45]).ppi(0, [75, 15])
+    rd.qpe_mayu(1)
+    mt.RADAR(rd.rr, 'rr', *info, eles=[1.45]).ppi(0, [75, 15])
 
     # print(f"QPE: {fps}")
     # np.save(fps, rr)
