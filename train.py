@@ -7,8 +7,8 @@ import torch
 from model import *
 import utils
 
-path = './dataset/20240326'
-path_save = './model/{}'.format('20240328-9-cnn 6prv-vlr02-check stop when 100 epoch')
+path = './dataset/20240401'
+path_save = './model/based_on_20240401/{}'.format('20240401-1125-cnn 6prv wmae 10dlr2 100')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -112,73 +112,71 @@ if __name__ == "__main__":
     test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
 
     
-# =============================================================================
-#     # ----训练
-#     model = CNN().to(device)
-#     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-#     loss_func = torch.nn.L1Loss()
-#     loss_func = wmaeloss(weights, edge)
-#     from torch.optim.lr_scheduler import StepLR
-#     scheduler = StepLR(optimizer, step_size=50, gamma=0.2)
-# 
-#     # plt.ion()
-#     # plt.show()
-#     epochs = 500
-#     loss_train = []; loss_vali = []
-#     params = []; slopes = []; positive_counter = 0; positive_position = []
-#     for t in range(epochs):
-#         print(f"-------------------------------\nEpoch {t+1}")
-#         
-#         res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
-#         scheduler.step()
-#         print(f"Epoch {t + 1}, Learning Rate:")
-#         for param_group in optimizer.param_groups:
-#             print(param_group['lr']) # 打印更新后的学习率
-#         
-#         loss_train += [res1[-1]]
-#         loss_vali += [res2[-1]]
-#         if t % 50 == 0:           
-#             plot(res1, res2, loss_train, loss_vali)
-#         
-#         '''
-#         always store the LAST epochs/10 groups of params
-#         check the slope of the LAST epochs/10 loss_vali
-#         when slope > 0, count, and record the SLOPE and POSITION
-#         when counter == 20, stop
-#         '''
-#         if len(params) < epochs/10:
-#             params.append(model.state_dict())
-#         else:
-#             params.append(model.state_dict())
-#             params = params[1:]
-#             flag, slope = utils.early_stop(loss_vali, int(epochs/10))
-#             positive_counter += flag
-#             if flag and t >= 100:
-#                 slopes += [slope]
-#                 positive_position += [t]
-#             if positive_counter == 20:
-#                 torch.save(params[-1], path_save + '/' + "cnn.pth")
-#                 print('early stop at epoch:{}'.format(t))
-#                 plot(res1, res2, loss_train, loss_vali)
-#                 print(slopes)
-#                 print(positive_position)
-#                 break
-#             # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
-#             # if flag_stop:
-#             #     torch.save(params[-1], path_save + '/' + "cnn.pth")
-#             #     print('early stop at epoch:{}'.format(t))
-#             #     plot(res1, res2, loss_train, loss_vali)
-#             #     break
-#     
-#     print("Done!")
-#     # plt.ioff()
-#     # plt.show()
-#     
-#     
-#     if positive_counter != 20:
-#         torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-#         print('finish all epochs:{}'.format(epochs))  
-# =============================================================================
+    # ----训练
+    model = CNN().to(device)
+    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    loss_func = torch.nn.L1Loss()
+    loss_func = wmaeloss(weights, edge)
+    from torch.optim.lr_scheduler import StepLR
+    scheduler = StepLR(optimizer, step_size=10, gamma=0.2)
+
+    # plt.ion()
+    # plt.show()
+    epochs = 500
+    loss_train = []; loss_vali = []
+    params = []; slopes = []; positive_counter = 0; positive_position = []
+    for t in range(epochs):
+        print(f"-------------------------------\nEpoch {t+1}")
+        
+        res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
+        scheduler.step()
+        print(f"Epoch {t + 1}, Learning Rate:")
+        for param_group in optimizer.param_groups:
+            print(param_group['lr']) # 打印更新后的学习率
+        
+        loss_train += [res1[-1]]
+        loss_vali += [res2[-1]]
+        if t % 50 == 0:           
+            plot(res1, res2, loss_train, loss_vali)
+        
+        '''
+        always store the LAST epochs/10 groups of params
+        check the slope of the LAST epochs/10 loss_vali
+        when slope > 0, count, and record the SLOPE and POSITION
+        when counter == 20, stop
+        '''
+        if len(params) < epochs/10:
+            params.append(model.state_dict())
+        else:
+            params.append(model.state_dict())
+            params = params[1:]
+            flag, slope = utils.early_stop(loss_vali, int(epochs/10))
+            if flag and t >= 100:
+                slopes += [slope]
+                positive_position += [t]
+                positive_counter += flag
+            if positive_counter == 20:
+                torch.save(params[-1], path_save + '/' + "cnn.pth")
+                print('early stop at epoch:{}'.format(t))
+                plot(res1, res2, loss_train, loss_vali)
+                print(slopes)
+                print(positive_position)
+                break
+            # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
+            # if flag_stop:
+            #     torch.save(params[-1], path_save + '/' + "cnn.pth")
+            #     print('early stop at epoch:{}'.format(t))
+            #     plot(res1, res2, loss_train, loss_vali)
+            #     break
+    
+    print("Done!")
+    # plt.ioff()
+    # plt.show()
+    
+    
+    if positive_counter != 20:
+        torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
+        print('finish all epochs:{}'.format(epochs))  
 
 
 
