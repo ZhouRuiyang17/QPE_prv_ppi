@@ -20,7 +20,7 @@ plt.hist(labels, bins = np.arange(100)/100);plt.show()
 
 
 # ----分类、划分、合并
-edge = list(np.arange(0, 1, 0.1)) + [1]
+edge = list(np.arange(0, 1, 0.1)) + [1]; edge[0] = 0.01
 train_x, train_y = [], []
 vali_x, vali_y = [], []
 test_x, test_y = [], []
@@ -63,36 +63,36 @@ np.random.shuffle(index)
 test_x = np.array(test_x)[index]
 test_y = np.array(test_y)[index]
 
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\train_x.npy', train_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\train_y.npy', train_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\vali_x.npy', vali_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\vali_y.npy', vali_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_x.npy', test_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_y.npy', test_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\train_x.npy', train_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\train_y.npy', train_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\vali_x.npy', vali_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\vali_y.npy', vali_y)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\test_x.npy', test_x)
+np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240401\test_y.npy', test_y)
 
 #%%
 
 # ----审视
-train_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\train_x.npy')
-train_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\train_y.npy')
-vali_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\vali_x.npy')
-vali_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\vali_y.npy')
-test_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_x.npy')
-test_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240326\test_y.npy')
+# train_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\train_x.npy')
+train_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\train_y.npy')
+# vali_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\vali_x.npy')
+# vali_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\vali_y.npy')
+# test_x = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\test_x.npy')
+# test_y = np.load(r'E:\QPE_prv_ppi_2_99\dataset\20240401\test_y.npy')
 
 # dist, _, _ = plt.hist(train_y, bins = np.arange(0,102,10)/100)
 # plt.show()
-# dist, _, _ = plt.hist(train_y, bins = np.array([0,1,3,5,10,20,30,40,50,70,100])/100)
+dist, _, _ = plt.hist(train_y*100, bins = np.array([0,1,10,20,30,40,50,100]))
+plt.show()
+# dist, _, _ = plt.hist(np.log10(utils.scaler(train_y, 'rr', 1)), bins = np.arange(-2,2,0.1))
 # plt.show()
-dist, _, _ = plt.hist(np.log10(utils.scaler(train_y, 'rr', 1)), bins = np.arange(-2,2,0.1))
-plt.show()
 
-dist, _, _ = plt.hist(train_x[:,1,4,4], bins = np.arange(0,102,2)/100)
-plt.show()
-dist, _, _ = plt.hist(train_x[:,3,4,4], bins = np.arange(0,10,0.5)/10)
-plt.show()
-dist, _, _ = plt.hist(train_x[:,5,4,4], bins = np.arange(0,10,0.5)/10)
-plt.show()
+# dist, _, _ = plt.hist(train_x[:,1,4,4], bins = np.arange(0,102,2)/100)
+# plt.show()
+# dist, _, _ = plt.hist(train_x[:,3,4,4], bins = np.arange(0,10,0.5)/10)
+# plt.show()
+# dist, _, _ = plt.hist(train_x[:,5,4,4], bins = np.arange(0,10,0.5)/10)
+# plt.show()
 
 # utils.Scatter(train_x[:,1,4,4],train_x[:,5,4,4]).plot3(bins = [np.arange(0,1,0.05)]*2)
 # utils.Scatter(train_x[:,1,4,4],train_y).plot3(bins = [np.arange(0,1,0.05)]*2)
