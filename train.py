@@ -7,8 +7,8 @@ import torch
 from model import *
 import utils
 
-path = './dataset/20240401'
-path_save = './model/based_on_20240401/{}'.format('20240401-1125-cnn 6prv wmae 10dlr2 100')
+path = './dataset/20240326'
+path_save = './model/based_on_20240326/{}'.format('20240403-940-cnn 6prv-wmae vlr02per10-check stop when 100 epoch')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -120,8 +120,7 @@ if __name__ == "__main__":
     from torch.optim.lr_scheduler import StepLR
     scheduler = StepLR(optimizer, step_size=10, gamma=0.2)
 
-    # plt.ion()
-    # plt.show()
+
     epochs = 500
     loss_train = []; loss_vali = []
     params = []; slopes = []; positive_counter = 0; positive_position = []
@@ -170,8 +169,7 @@ if __name__ == "__main__":
             #     break
     
     print("Done!")
-    # plt.ioff()
-    # plt.show()
+
     
     
     if positive_counter != 20:

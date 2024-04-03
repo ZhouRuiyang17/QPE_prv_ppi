@@ -183,7 +183,7 @@ class Scatter:
             xxx = self.x
             yyy = self.y 
         
-        fig = plt.figure(figsize=(10,10),dpi=600)
+        fig = plt.figure(figsize=(5,5),dpi=600)
         ax = fig.add_subplot(111)
 
 
