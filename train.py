@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/based_on_20240326/{}'.format('20240403-10-cnn ver3')
+path_save = './model/based_on_20240326/{}'.format('20240328-9-cnn 6prv-vlr02-check stop when 100 epoch')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
     
     # # ----训练
-    # model = CNN_ver3().to(device)
+    # model = CNN().to(device)
     # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     # loss_func = torch.nn.L1Loss()
     # loss_func = wmaeloss(weights, edge)
@@ -180,8 +180,8 @@ if __name__ == "__main__":
 
     
     ### model
-    model = CNN_ver3()
-    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))
+    model = CNN()
+    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth",map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
         pred = model(test_x)
@@ -191,10 +191,10 @@ if __name__ == "__main__":
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
                   fpath = path_save + '/' + 'test-cnn.png')
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
-    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
-                  fpath = path_save + '/' + 'test-cnn-log.png')
+    # scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
+    # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+    #               fpath = path_save + '/' + 'test-cnn-log.png')
     
     mbrs_model = {}
     edge = [0,1,10,20,30,40,50,100]
@@ -217,10 +217,10 @@ if __name__ == "__main__":
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
                   fpath = path_save + '/' + 'test-prv.png')
-    scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
-    scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
-                  fpath = path_save + '/' + 'test-prv-log.png')
+    # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
+    # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
+    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
+    #               fpath = path_save + '/' + 'test-prv-log.png')
     
     mbrs_prv = {}
     edge = [0,1,10,20,30,40,50,100]

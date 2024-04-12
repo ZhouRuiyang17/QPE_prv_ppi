@@ -134,7 +134,9 @@ class Scatter:
 
         
     def evaluate(self):
-        delta = self.y-self.x
+        x = self.x.copy()
+        y = self.y.copy()
+        diff = y-x
         # self.metrics['sum_x'] = np.nansum(self.x)
         # self.metrics['sum_y'] = np.nansum(self.y)
         # self.metrics['avg_x'] = np.nanmean(self.x)
@@ -142,20 +144,24 @@ class Scatter:
         # self.metrics['std_x'] = np.nanmean(self.x)
         # self.metrics['std_y'] = np.nanmean(self.y)
         
-        self.metrics['total num'] = len(delta)
-        # self.metrics['bias'] = np.nansum(abs(delta))/np.nansum(self.x)*100
-        self.metrics['ME'] = np.nanmean(delta)
-        self.metrics['MRE'] = np.nanmean(abs(delta/self.x))
+        self.metrics['RMB'] = np.nansum(diff) / np.nansum(x)
+        self.metrics['MAE'] = np.nanmean(abs(diff))
+        self.metrics['RMAE'] = np.nansum(abs(diff)) / np.nansum(x)
+        self.metrics['CC'] = np.corrcoef(x, y)[0,1]
+        
+        self.metrics['total num'] = len(diff)
+        # self.metrics['bias'] = np.nansum(abs(diff))/np.nansum(self.x)*100
+        self.metrics['ME'] = np.nanmean(diff)
+        self.metrics['MRE'] = np.nanmean(abs(diff/self.x))
         self.metrics['MBR'] = np.nansum(self.y) / np.nansum(self.x)
-        self.metrics['MAE'] = np.nanmean(abs(delta))
-        self.metrics['RMSE'] = (np.nanmean(delta**2))**0.5
-        self.metrics['STD'] = np.nanstd(delta)
-        x = self.x.copy()
-        y = self.y.copy()
+        self.metrics['RMSE'] = (np.nanmean(diff**2))**0.5
+        self.metrics['STD'] = np.nanstd(diff)
+        # x = self.x.copy()
+        # y = self.y.copy()
         # loc = np.where( (np.isnan(x) == False) & (np.isnan(y) == False))
         # x = x[loc]
         # y = y[loc]
-        self.metrics['CC'] = np.corrcoef(x, y)[0,1]
+        # self.metrics['CC'] = np.corrcoef(x, y)[0,1]
         return self.metrics
     
     def fit(self, lim):
@@ -218,12 +224,13 @@ class Scatter:
             ax.set_ylim(lim[1])
         if title != None:
             plt.title(title)  
-
+        if fpath != None:
+            plt.savefig(fpath)
         
         if show_metrics:
             ax.text(lim[1][0],0.95*lim[1][1],'NUM = {:.0f}'.format(self.metrics['total num']))
-            ax.text(lim[1][0],0.90*lim[1][1],'MBR = {:.2f}'.format(self.metrics['MBR']))
-            ax.text(lim[1][0],0.85*lim[1][1],'MAE = {:.2f}'.format(self.metrics['MAE']))
+            ax.text(lim[1][0],0.90*lim[1][1],'RMB = {:.2f}'.format(self.metrics['RMB']))
+            ax.text(lim[1][0],0.85*lim[1][1],'RMAE = {:.2f}'.format(self.metrics['RMAE']))
             # ax.text(lim[1][0],0.75*lim[1][1],'RMSE = {:.2f}'.format(self.metrics['RMSE']))
             ax.text(lim[1][0],0.80*lim[1][1],'CORR = {:.2f}'.format(self.metrics['CC']))
             # ax.text(lim[1][0],0.65*lim[1][1],'STD = {:.2f}'.format(self.metrics['STD']))
@@ -236,9 +243,6 @@ class Scatter:
         if lines != None:
             ax.scatter(lines[0], lines[1], c='black')
         
-
-        if fpath != None:
-            plt.savefig(fpath)
         plt.show() 
         
     def plot4(self, bins=None, label = None, lim = None, title = None, fpath = None,
@@ -283,7 +287,8 @@ class Scatter:
             ax.set_ylim(lim[1])
         if title != None:
             plt.title(title)  
-
+        if fpath != None:
+            plt.savefig(fpath)
         
         if show_metrics:
             ax.text(lim[1][0],0.95*lim[1][1],'NUM = {:.0f}'.format(self.metrics['total num']))
@@ -301,8 +306,4 @@ class Scatter:
         if lines != None:
             ax.scatter(lines[0], lines[1], c='black')
         
-        
-        if fpath != None:
-            plt.savefig(fpath)
         plt.show() 
-
