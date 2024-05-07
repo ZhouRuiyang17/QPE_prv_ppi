@@ -224,13 +224,12 @@ class Scatter:
             ax.set_ylim(lim[1])
         if title != None:
             plt.title(title)  
-        if fpath != None:
-            plt.savefig(fpath)
+
         
         if show_metrics:
             ax.text(lim[1][0],0.95*lim[1][1],'NUM = {:.0f}'.format(self.metrics['total num']))
-            ax.text(lim[1][0],0.90*lim[1][1],'RMB = {:.2f}'.format(self.metrics['RMB']))
-            ax.text(lim[1][0],0.85*lim[1][1],'RMAE = {:.2f}'.format(self.metrics['RMAE']))
+            ax.text(lim[1][0],0.90*lim[1][1],'ME = {:.2f}'.format(self.metrics['ME']))
+            ax.text(lim[1][0],0.85*lim[1][1],'MAE = {:.2f}'.format(self.metrics['MAE']))
             # ax.text(lim[1][0],0.75*lim[1][1],'RMSE = {:.2f}'.format(self.metrics['RMSE']))
             ax.text(lim[1][0],0.80*lim[1][1],'CORR = {:.2f}'.format(self.metrics['CC']))
             # ax.text(lim[1][0],0.65*lim[1][1],'STD = {:.2f}'.format(self.metrics['STD']))
@@ -244,7 +243,8 @@ class Scatter:
             ax.scatter(lines[0], lines[1], c='black')
         
         plt.show() 
-        
+        if fpath != None:
+            plt.savefig(fpath)
     def plot4(self, bins=None, label = None, lim = None, title = None, fpath = None,
               show_metrics = False, draw_line = False, equal = 1, mores = None, 
               showsome = False, scatters = None, lines = None):

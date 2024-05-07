@@ -8,13 +8,14 @@ from model import *
 import utils
 
 path = './dataset/20240326'
-path_save = './model/based_on_20240326/{}'.format('20240328-9-cnn 6prv-vlr02-check stop when 100 epoch')
+path_save = './model/based_on_20240326/{}'.format('240507-cnn 3prv-best setting')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("使用的设备:", device)
 
+input(f'res will be stored in:\n{path_save}\nshall we go on?')
 
 def plot(res1, res2, loss_train, loss_vali):
     t = len(loss_train)
@@ -105,6 +106,10 @@ if __name__ == "__main__":
     vali_y = np.load(os.path.join(path,'vali_y.npy'), allow_pickle=True).reshape(-1, 1).astype(np.float32)
     test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)#[:,1].reshape(-1,1,9,9)
     test_y = np.load(os.path.join(path,'test_y.npy'), allow_pickle=True).astype(np.float32)
+
+    train_x = train_x[:, 1::2]
+    vali_x = vali_x[:, 1::2]
+    test_x = test_x[:, 1::2]
     
     train = utils.loader(train_x, train_y, device, 64)
     vali = utils.loader(vali_x, vali_y, device, 64)
@@ -113,12 +118,12 @@ if __name__ == "__main__":
 
     
     # # ----训练
-    # model = CNN().to(device)
+    # model = CNN_3prv().to(device)
     # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     # loss_func = torch.nn.L1Loss()
     # loss_func = wmaeloss(weights, edge)
     # from torch.optim.lr_scheduler import StepLR
-    # scheduler = StepLR(optimizer, step_size=10, gamma=0.2)
+    # scheduler = StepLR(optimizer, step_size=50, gamma=0.2)
 
 
     # epochs = 500
@@ -135,12 +140,12 @@ if __name__ == "__main__":
         
     #     loss_train += [res1[-1]]
     #     loss_vali += [res2[-1]]
-    #     if t % 50 == 0:           
+    #     if t % 50 == 0 or t == 5:           
     #         plot(res1, res2, loss_train, loss_vali)
         
     #     '''
-    #     always store the LAST epochs/10 groups of params
-    #     check the slope of the LAST epochs/10 loss_vali
+    #     always store the LAST epochs/10 of params
+    #     check the slope of the loss_vali of the LAST epochs/10 
     #     when slope > 0, count, and record the SLOPE and POSITION
     #     when counter == 20, stop
     #     '''
@@ -180,8 +185,8 @@ if __name__ == "__main__":
 
     
     ### model
-    model = CNN()
-    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth",map_location=torch.device('cpu')))
+    model = CNN_3prv()
+    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
         pred = model(test_x)
@@ -189,8 +194,8 @@ if __name__ == "__main__":
     pred = utils.scaler(pred, 'rr', 1)
     scatter = utils.Scatter((test_y), (pred))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
-                  fpath = path_save + '/' + 'test-cnn.png')
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+                  fpath = path_save + '/' + 'test-cnn 20240507.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
@@ -201,65 +206,69 @@ if __name__ == "__main__":
 
     ### zr300
     test_x = test_x.numpy()
-    ref = utils.scaler(test_x[:,1], 'ref', 1)[:,4,4]
-    zdr = utils.scaler(test_x[:,3], 'zdr', 1)[:,4,4]
-    kdp = utils.scaler(test_x[:,5], 'kdp', 1)[:,4,4]
+    # ref = utils.scaler(test_x[:,1], 'ref', 1)[:,4,4]
+    # zdr = utils.scaler(test_x[:,3], 'zdr', 1)[:,4,4]
+    # kdp = utils.scaler(test_x[:,5], 'kdp', 1)[:,4,4]
+    ref = utils.scaler(test_x[:,0], 'ref', 1)[:,4,4]
+    zdr = utils.scaler(test_x[:,1], 'zdr', 1)[:,4,4]
+    kdp = utils.scaler(test_x[:,2], 'kdp', 1)[:,4,4]
     pred_prv = qpe_mayu(ref, zdr, kdp)
     scatter = utils.Scatter((test_y), (pred_prv))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
-                  fpath = path_save + '/' + 'test-prv.png')
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
+                  fpath = path_save + '/' + 'test-prv 20240507.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
     #               fpath = path_save + '/' + 'test-prv-log.png')
 
     
-    plt.figure(figsize=(3,3),dpi=600)
-    plt.boxplot([pred_prv-test_y, pred-test_y], labels=['prv', 'cnn'], showfliers=0,showmeans=1)
-    plt.grid()
-    plt.title('BIAS')
-    plt.show()
-    
-    rmaes_model = {}
-    edge = [0,1,10,20,30,40,50,100]
-    for i in range(len(edge)-1):
-        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
-        if len(loc) > 0:
-            key = '{} - {}'.format(edge[i], edge[i+1])
-            rmaes_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMAE']
-    rmaes_prv = {}
-    edge = [0,1,10,20,30,40,50,100]
-    for i in range(len(edge)-1):
-        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
-        if len(loc) > 0:
-            key = '{} - {}'.format(edge[i], edge[i+1])
-            rmaes_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMAE']
+    # plt.figure(figsize=(3,3),dpi=600)
+    # plt.boxplot([pred_prv-test_y, pred-test_y], labels=['prv', 'cnn'], showfliers=0,showmeans=1)
+    # plt.grid()
+    # plt.title('BIAS')
+    # plt.show()
+    # plt.close()
+
+    # rmaes_model = {}
+    # edge = [0,1,10,20,30,40,50,100]
+    # for i in range(len(edge)-1):
+    #     loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+    #     if len(loc) > 0:
+    #         key = '{} - {}'.format(edge[i], edge[i+1])
+    #         rmaes_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMAE']
+    # rmaes_prv = {}
+    # edge = [0,1,10,20,30,40,50,100]
+    # for i in range(len(edge)-1):
+    #     loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+    #     if len(loc) > 0:
+    #         key = '{} - {}'.format(edge[i], edge[i+1])
+    #         rmaes_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMAE']
             
-    rmbs_model = {}
-    edge = [0,1,10,20,30,40,50,100]
-    for i in range(len(edge)-1):
-        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
-        if len(loc) > 0:
-            key = '{} - {}'.format(edge[i], edge[i+1])
-            rmbs_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMB']
-    rmbs_prv = {}
-    edge = [0,1,10,20,30,40,50,100]
-    for i in range(len(edge)-1):
-        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
-        if len(loc) > 0:
-            key = '{} - {}'.format(edge[i], edge[i+1])
-            rmbs_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMB']
+    # rmbs_model = {}
+    # edge = [0,1,10,20,30,40,50,100]
+    # for i in range(len(edge)-1):
+    #     loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+    #     if len(loc) > 0:
+    #         key = '{} - {}'.format(edge[i], edge[i+1])
+    #         rmbs_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMB']
+    # rmbs_prv = {}
+    # edge = [0,1,10,20,30,40,50,100]
+    # for i in range(len(edge)-1):
+    #     loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+    #     if len(loc) > 0:
+    #         key = '{} - {}'.format(edge[i], edge[i+1])
+    #         rmbs_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMB']
             
-    plt.rcParams.update({'font.size': 12})
-    fig, ax = plt.subplots()
-    ax.plot(rmbs_prv.values(),c='blue')
-    ax.plot(rmbs_model.values(),c='red')
-    ax2 = ax.twinx()
-    ax2.plot(rmaes_prv.values(),c='blue',linestyle='--')
-    ax2.plot(rmaes_model.values(),c='red',linestyle='--')
-    ax.set_ylabel('RMB (solid)')
-    ax2.set_ylabel('RMAE (dashed)')
-    plt.xticks(range(len(edge)-1),rmaes_model.keys())
-    ax.set_xlabel('Rain rate inteval (mm/h)')
-    plt.grid()
+    # plt.rcParams.update({'font.size': 12})
+    # fig, ax = plt.subplots()
+    # ax.plot(rmbs_prv.values(),c='blue')
+    # ax.plot(rmbs_model.values(),c='red')
+    # ax2 = ax.twinx()
+    # ax2.plot(rmaes_prv.values(),c='blue',linestyle='--')
+    # ax2.plot(rmaes_model.values(),c='red',linestyle='--')
+    # ax.set_ylabel('RMB (solid)')
+    # ax2.set_ylabel('RMAE (dashed)')
+    # plt.xticks(range(len(edge)-1),rmaes_model.keys())
+    # ax.set_xlabel('Rain rate inteval (mm/h)')
+    # plt.grid()
