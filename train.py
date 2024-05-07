@@ -189,21 +189,13 @@ if __name__ == "__main__":
     pred = utils.scaler(pred, 'rr', 1)
     scatter = utils.Scatter((test_y), (pred))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+                  show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
                   fpath = path_save + '/' + 'test-cnn.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
-    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
+    #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
     #               fpath = path_save + '/' + 'test-cnn-log.png')
     
-    mbrs_model = {}
-    edge = [0,1,10,20,30,40,50,100]
-    for i in range(len(edge)-1):
-        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
-        if len(loc) > 0:
-            key = '{} - {}'.format(edge[i], edge[i+1])
-            mbrs_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['MBR']
-    pd.DataFrame(mbrs_model.values(), index = mbrs_model.keys()).to_csv(path_save + '/' + 'test-cnn-bins.csv')
 
 
 
@@ -215,18 +207,59 @@ if __name__ == "__main__":
     pred_prv = qpe_mayu(ref, zdr, kdp)
     scatter = utils.Scatter((test_y), (pred_prv))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
+                  show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
                   fpath = path_save + '/' + 'test-prv.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
-    #               show_metrics=1, label = ['rain rate (gauge) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
+    #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
     #               fpath = path_save + '/' + 'test-prv-log.png')
+
     
-    mbrs_prv = {}
+    plt.figure(figsize=(3,3),dpi=600)
+    plt.boxplot([pred_prv-test_y, pred-test_y], labels=['prv', 'cnn'], showfliers=0,showmeans=1)
+    plt.grid()
+    plt.title('BIAS')
+    plt.show()
+    
+    rmaes_model = {}
     edge = [0,1,10,20,30,40,50,100]
     for i in range(len(edge)-1):
         loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
         if len(loc) > 0:
             key = '{} - {}'.format(edge[i], edge[i+1])
-            mbrs_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['MBR']
-    pd.DataFrame(mbrs_prv.values(), index = mbrs_prv.keys()).to_csv(path_save + '/' + 'test-prv-bins.csv')
+            rmaes_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMAE']
+    rmaes_prv = {}
+    edge = [0,1,10,20,30,40,50,100]
+    for i in range(len(edge)-1):
+        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+        if len(loc) > 0:
+            key = '{} - {}'.format(edge[i], edge[i+1])
+            rmaes_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMAE']
+            
+    rmbs_model = {}
+    edge = [0,1,10,20,30,40,50,100]
+    for i in range(len(edge)-1):
+        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+        if len(loc) > 0:
+            key = '{} - {}'.format(edge[i], edge[i+1])
+            rmbs_model[key] = (utils.Scatter((test_y[loc]), (pred[loc])).evaluate())['RMB']
+    rmbs_prv = {}
+    edge = [0,1,10,20,30,40,50,100]
+    for i in range(len(edge)-1):
+        loc = np.where((test_y >= edge[i]) & (test_y < edge[i+1]))[0]
+        if len(loc) > 0:
+            key = '{} - {}'.format(edge[i], edge[i+1])
+            rmbs_prv[key] = (utils.Scatter((test_y[loc]), (pred_prv[loc])).evaluate())['RMB']
+            
+    plt.rcParams.update({'font.size': 12})
+    fig, ax = plt.subplots()
+    ax.plot(rmbs_prv.values(),c='blue')
+    ax.plot(rmbs_model.values(),c='red')
+    ax2 = ax.twinx()
+    ax2.plot(rmaes_prv.values(),c='blue',linestyle='--')
+    ax2.plot(rmaes_model.values(),c='red',linestyle='--')
+    ax.set_ylabel('RMB (solid)')
+    ax2.set_ylabel('RMAE (dashed)')
+    plt.xticks(range(len(edge)-1),rmaes_model.keys())
+    ax.set_xlabel('Rain rate inteval (mm/h)')
+    plt.grid()
