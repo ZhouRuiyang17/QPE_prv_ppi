@@ -5,35 +5,44 @@ import matplotlib.pyplot as plt
 import my.mytools as mt
 import datetime
 
-# ----多数据集间的check
-dt1 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")
-dt2 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
-mt.Scatter(dt1[:,0,4,4].flatten(), dt1[:,4,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-mt.Scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-mt.Scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-plt.scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten())
-plt.scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten())
-plt.ylim(0,10)
-plt.xlim(0,100)
+# =============================================================================
+# # ----多数据集间的check
+# dt1 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")
+# dt2 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
+# mt.Scatter(dt1[:,0,4,4].flatten(), dt1[:,4,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
+# mt.Scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
+# mt.Scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
+# plt.scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten())
+# plt.scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten())
+# plt.ylim(0,10)
+# plt.xlim(0,100)
+# =============================================================================
 
 # ----雷达
-dataset_raw = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")
+dataset_raw = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")[:, [1,3,5]]
+dataset_more = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
+dataset_raw = np.concatenate((dataset_raw, dataset_more))
 '''去除nan值'''
 loc = np.isnan(dataset_raw)
 dataset_raw[loc] = -999
 '''筛选反射率>15dbz的地方'''
+'''2024.5.9 only use 1.45 data'''
 ref1 = dataset_raw[:, 0].reshape(-1, 81)
-ref2 = dataset_raw[:, 1].reshape(-1, 81)
+# ref2 = dataset_raw[:, 1].reshape(-1, 81)
 mean1 = 10*np.log10(np.mean(10**(ref1/10), axis = 1))
-mean2 = 10*np.log10(np.mean(10**(ref2/10), axis = 1))
-loc = (mean1 > 15) | (mean2 > 15)
+# mean2 = 10*np.log10(np.mean(10**(ref2/10), axis = 1))
+loc = (mean1 > 15)# | (mean2 > 15)
 dataset = dataset_raw[loc]
 '''为匹配数据做准备'''
 index_raw = pd.read_csv(r"D:\data\dataset\prv_ppi\raw\index.csv", index_col = 0)
+index_more = pd.read_csv(r"D:\data\dataset\prv_ppi\raw\index_2018rain_145_zry.csv", index_col = 0)
+index_raw = pd.concat([index_raw, index_more], axis=0)
+
 index = index_raw.loc[loc]
 idx = pd.to_datetime(index['0']).to_list()
 clm = index['1'].to_list()
 
+#%%
 # ----降雨强度
 rainrate_raw = pd.read_csv(r"D:\data\beijing\dsd\RR_all.csv",index_col = 0)
 '''数据匹配'''
@@ -76,5 +85,5 @@ labels = rainrate[loc]
 dist, _, _ = plt.hist(labels, bins = np.arange(0,102,2), log=1)
 plt.show()
 
-np.save(r"D:\data\dataset\prv_ppi\dataset20240325\features.npy", features)
-np.save(r"D:\data\dataset\prv_ppi\dataset20240325\labels.npy", labels)
+np.save(r"D:\data\dataset\prv_ppi\dataset20240509\features.npy", features)
+np.save(r"D:\data\dataset\prv_ppi\dataset20240509\labels.npy", labels)
