@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-best setting')
+path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
     from torch.optim.lr_scheduler import StepLR
-    scheduler = StepLR(optimizer, step_size=50, gamma=0.2)
+    scheduler = StepLR(optimizer, step_size=10, gamma=0.2)
 
 
     epochs = 500
