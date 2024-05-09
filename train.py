@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn_avg 3prv-02per10-wmae')
+path_save = './model/based_on_20240509/{}'.format('240509-9-cnn 3prv-02per10-wmae ver2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -73,7 +73,8 @@ def qpe_mayu(ref, zdr, kdp):
     return rr
 
 edge = utils.scaler(np.array([0,10,20,30,40,50,100]), 'rr')
-weights = np.array([1,2,3,4,5,10])
+# weights = np.array([1,2,3,4,5,10])
+weights = 2**np.array([0,1,2,3,4,5])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
@@ -118,7 +119,7 @@ if __name__ == "__main__":
 
     
     # ----训练
-    model = CNN_3prv_pool().to(device)
+    model = CNN_3prv().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
@@ -188,7 +189,7 @@ if __name__ == "__main__":
 
     
     ### model
-    model = CNN_3prv_pool()
+    model = CNN_3prv()
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
