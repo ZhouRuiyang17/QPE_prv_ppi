@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-p50')
+path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-no stop')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -144,7 +144,7 @@ if __name__ == "__main__":
             plot(res1, res2, loss_train, loss_vali)
         
         '''
-        always store the LAST epochs/10 of params
+        always store the LAST epochs/10 of params and save the LAST params
         check the slope of the loss_vali of the LAST epochs/10 
         when slope > 0, count, and record the SLOPE and POSITION
         when counter == 20, stop
@@ -157,17 +157,18 @@ if __name__ == "__main__":
             flag, slope = utils.early_stop(loss_vali, int(epochs/10))
             torch.save(params[-1], path_save + '/' + "cnn.pth")
 
-            if flag and t >= 100:
-                slopes += [slope]
-                positive_position += [t]
-                positive_counter += flag
-            if positive_counter == 50:
-                torch.save(params[-1], path_save + '/' + "cnn.pth")
-                print('early stop at epoch:{}'.format(t))
-                plot(res1, res2, loss_train, loss_vali)
-                print(slopes)
-                print(positive_position)
-                break
+            # if flag and t >= 100:
+            #     slopes += [slope]
+            #     positive_position += [t]
+            #     positive_counter += flag
+            # if positive_counter == 50:
+            #     torch.save(params[-1], path_save + '/' + "cnn.pth")
+            #     print('early stop at epoch:{}'.format(t))
+            #     plot(res1, res2, loss_train, loss_vali)
+            #     print(slopes)
+            #     print(positive_position)
+            #     break
+
             # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
             # if flag_stop:
             #     torch.save(params[-1], path_save + '/' + "cnn.pth")
@@ -197,7 +198,7 @@ if __name__ == "__main__":
     scatter = utils.Scatter((test_y), (pred))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
-                  fpath = path_save + '/' + 'test-cnn 20240507.png')
+                  fpath = path_save + '/' + 'test-cnn.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'cnn',
@@ -218,7 +219,7 @@ if __name__ == "__main__":
     scatter = utils.Scatter((test_y), (pred_prv))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
                   show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
-                  fpath = path_save + '/' + 'test-prv 20240507.png')
+                  fpath = path_save + '/' + 'test-prv.png')
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
