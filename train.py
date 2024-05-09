@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-wmae')
+path_save = './model/based_on_20240509/{}'.format('240509-cnn_avg 3prv-02per10-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     
     # ----训练
-    model = CNN_3prv().to(device)
+    model = CNN_3prv_pool().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.L1Loss()
     loss_func = wmaeloss(weights, edge)
@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
     
     ### model
-    model = CNN_3prv()
+    model = CNN_3prv_pool()
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
