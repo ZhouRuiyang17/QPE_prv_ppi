@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-no stop')
+path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -72,7 +72,7 @@ def qpe_mayu(ref, zdr, kdp):
     
     return rr
 
-edge = np.array([0,10,20,30,40,50,100])
+edge = utils.scaler(np.array([0,10,20,30,40,50,100]), 'rr')
 weights = np.array([1,2,3,4,5,10])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
@@ -157,17 +157,17 @@ if __name__ == "__main__":
             flag, slope = utils.early_stop(loss_vali, int(epochs/10))
             torch.save(params[-1], path_save + '/' + "cnn.pth")
 
-            # if flag and t >= 100:
-            #     slopes += [slope]
-            #     positive_position += [t]
-            #     positive_counter += flag
-            # if positive_counter == 50:
-            #     torch.save(params[-1], path_save + '/' + "cnn.pth")
-            #     print('early stop at epoch:{}'.format(t))
-            #     plot(res1, res2, loss_train, loss_vali)
-            #     print(slopes)
-            #     print(positive_position)
-            #     break
+            if flag and t >= 100:
+                slopes += [slope]
+                positive_position += [t]
+                positive_counter += flag
+            if positive_counter == 50:
+                torch.save(params[-1], path_save + '/' + "cnn.pth")
+                print('early stop at epoch:{}'.format(t))
+                plot(res1, res2, loss_train, loss_vali)
+                print(slopes)
+                print(positive_position)
+                break
 
             # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
             # if flag_stop:
