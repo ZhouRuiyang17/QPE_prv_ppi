@@ -7,15 +7,15 @@ import torch
 from model import *
 import utils
 
-path = './dataset/20240326'
-path_save = './model/based_on_20240326/{}'.format('240507-cnn 3prv-best setting-re')
+path = './dataset/20240509'
+path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-best setting')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("使用的设备:", device)
 
-input(f'res will be stored in:\n{path_save}\nshall we go on?')
+input(f'res will be stored in:\n{path_save}\nshall we go on[y/n]?')
 
 def plot(res1, res2, loss_train, loss_vali):
     t = len(loss_train)
@@ -107,9 +107,9 @@ if __name__ == "__main__":
     test_x = np.load(os.path.join(path,'test_x.npy'), allow_pickle=True).astype(np.float32)#[:,1].reshape(-1,1,9,9)
     test_y = np.load(os.path.join(path,'test_y.npy'), allow_pickle=True).astype(np.float32)
 
-    train_x = train_x[:, 1::2]
-    vali_x = vali_x[:, 1::2]
-    test_x = test_x[:, 1::2]
+    # train_x = train_x[:, 1::2]
+    # vali_x = vali_x[:, 1::2]
+    # test_x = test_x[:, 1::2]
     
     train = utils.loader(train_x, train_y, device, 64)
     vali = utils.loader(vali_x, vali_y, device, 64)
