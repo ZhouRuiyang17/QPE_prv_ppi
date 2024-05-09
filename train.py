@@ -8,14 +8,14 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10')
+path_save = './model/based_on_20240509/{}'.format('240509-cnn 3prv-02per10-p50')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("使用的设备:", device)
 
-input(f'res will be stored in:\n{path_save}\nshall we go on[y/n]?')
+# input(f'res will be stored in:\n{path_save}\nshall we go on[y/n]?')
 
 def plot(res1, res2, loss_train, loss_vali):
     t = len(loss_train)
@@ -155,11 +155,13 @@ if __name__ == "__main__":
             params.append(model.state_dict())
             params = params[1:]
             flag, slope = utils.early_stop(loss_vali, int(epochs/10))
+            torch.save(params[-1], path_save + '/' + "cnn.pth")
+
             if flag and t >= 100:
                 slopes += [slope]
                 positive_position += [t]
                 positive_counter += flag
-            if positive_counter == 20:
+            if positive_counter == 50:
                 torch.save(params[-1], path_save + '/' + "cnn.pth")
                 print('early stop at epoch:{}'.format(t))
                 plot(res1, res2, loss_train, loss_vali)
