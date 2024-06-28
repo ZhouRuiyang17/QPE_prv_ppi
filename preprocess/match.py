@@ -5,22 +5,14 @@ import matplotlib.pyplot as plt
 import my.mytools as mt
 import datetime
 
-# =============================================================================
-# # ----多数据集间的check
-# dt1 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")
-# dt2 = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
-# mt.Scatter(dt1[:,0,4,4].flatten(), dt1[:,4,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-# mt.Scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-# mt.Scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten()).plot3(bins=[np.arange(100),np.arange(0,10,0.1)], lim=[[0,100],[0,10]],equal=0)
-# plt.scatter(dt1[:,1,4,4].flatten(), dt1[:,5,4,4].flatten())
-# plt.scatter(dt2[:,0,4,4].flatten(), dt2[:,2,4,4].flatten())
-# plt.ylim(0,10)
-# plt.xlim(0,100)
-# =============================================================================
 
 # ----雷达
 dataset_raw = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")[:, [1,3,5]]
 dataset_more = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
+# plt.scatter(dataset_more[:,1,4,4], dataset_more[:,0,4,4])
+# plt.scatter(dataset_raw[:,1,4,4], dataset_raw[:,0,4,4])
+# plt.ylim(0,80)
+# plt.xlim(0,10)
 dataset_raw = np.concatenate((dataset_raw, dataset_more))
 '''去除nan值'''
 loc = np.isnan(dataset_raw)
