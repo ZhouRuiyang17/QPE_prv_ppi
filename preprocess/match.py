@@ -9,10 +9,11 @@ import datetime
 # ----雷达
 dataset_raw = np.load(r"D:\data\dataset\prv_ppi\raw\dataset.npy")[:, [1,3,5]]
 dataset_more = np.load(r"D:\data\dataset\prv_ppi\raw\dataset_2018rain_145_zry.npy")
-# plt.scatter(dataset_more[:,1,4,4], dataset_more[:,0,4,4])
-# plt.scatter(dataset_raw[:,1,4,4], dataset_raw[:,0,4,4])
-# plt.ylim(0,80)
-# plt.xlim(0,10)
+plt.scatter(dataset_raw[:,0,4,4], dataset_raw[:,2,4,4])
+plt.scatter(dataset_more[:,0,4,4], dataset_more[:,2,4,4])
+plt.ylim(0,10)
+plt.xlim(0,80)
+#%%
 dataset_raw = np.concatenate((dataset_raw, dataset_more))
 '''去除nan值'''
 loc = np.isnan(dataset_raw)
