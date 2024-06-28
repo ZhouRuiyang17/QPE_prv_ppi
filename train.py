@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240628-1-cnn 3prv-02per10-wmae')
+path_save = './model/based_on_20240509/{}'.format('240509-9-cnn 3prv-02per10-wmae ver2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -58,19 +58,24 @@ def qpe_mayu(ref, zdr, kdp):
     
     refup = 10**(ref/10)
     zdrup = 10**(zdr/10)
-    rr = np.zeros(ref.shape)
+    # rr = np.zeros(ref.shape)
     
-    loc1 = np.where((kdp <= 0.3) & (zdr <= 0.25))
-    loc3 = np.where((kdp <= 0.3) & (zdr > 0.25))
-    loc2 = np.where((kdp > 0.3) & (zdr <= 0.25))
-    loc4 = np.where((kdp > 0.3) & (zdr > 0.25))
+    # loc1 = np.where((kdp <= 0.3) & (zdr <= 0.25))
+    # loc3 = np.where((kdp <= 0.3) & (zdr > 0.25))
+    # loc2 = np.where((kdp > 0.3) & (zdr <= 0.25))
+    # loc4 = np.where((kdp > 0.3) & (zdr > 0.25))
 
-    rr[loc1] = a1*refup[loc1]**b1
-    rr[loc3] = a3*refup[loc3]**b3*zdrup[loc3]**c3
-    rr[loc2] = a2*kdp[loc2]**b2
-    rr[loc4] = a4*kdp[loc4]**b4*zdrup[loc4]**c4
+    # rr[loc1] = a1*refup[loc1]**b1
+    # rr[loc3] = a3*refup[loc3]**b3*zdrup[loc3]**c3
+    # rr[loc2] = a2*kdp[loc2]**b2
+    # rr[loc4] = a4*kdp[loc4]**b4*zdrup[loc4]**c4
     
-    return rr
+    rr1 = a1*refup**b1
+    rr2 = a3*refup**b3*zdrup**c3
+    rr3 = a2*kdp**b2
+    rr4 = a4*kdp**b4*zdrup**c4
+
+    return rr1, rr2, rr3, rr4
 
 edge = utils.scaler(np.array([0,10,20,30,40,50,100]), 'rr')
 # weights = np.array([1,2,3,4,5,10])
@@ -118,72 +123,72 @@ if __name__ == "__main__":
     test_y = utils.scaler(test_y, 'rr', 1).reshape(-1)
 
     
-    # ----训练
-    model = CNN_3prv().to(device)
-    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    loss_func = torch.nn.L1Loss()
-    loss_func = wmaeloss(weights, edge)
-    from torch.optim.lr_scheduler import StepLR
-    scheduler = StepLR(optimizer, step_size=10, gamma=0.2)
+    # # ----训练
+    # model = CNN_3prv().to(device)
+    # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    # loss_func = torch.nn.L1Loss()
+    # # loss_func = wmaeloss(weights, edge)
+    # from torch.optim.lr_scheduler import StepLR
+    # scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
 
 
-    epochs = 500
-    loss_train = []; loss_vali = []
-    params = []; slopes = []; positive_counter = 0; positive_position = []
-    for t in range(epochs):
-        print(f"-------------------------------\nEpoch {t+1}")
+    # epochs = 500
+    # loss_train = []; loss_vali = []
+    # params = []; slopes = []; positive_counter = 0; positive_position = []
+    # for t in range(epochs):
+    #     print(f"-------------------------------\nEpoch {t+1}")
         
-        res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
-        scheduler.step()
-        print(f"Epoch {t + 1}, Learning Rate:")
-        for param_group in optimizer.param_groups:
-            print(param_group['lr']) # 打印更新后的学习率
+    #     res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
+    #     scheduler.step()
+    #     print(f"Epoch {t + 1}, Learning Rate:")
+    #     for param_group in optimizer.param_groups:
+    #         print(param_group['lr']) # 打印更新后的学习率
         
-        loss_train += [res1[-1]]
-        loss_vali += [res2[-1]]
-        if t % 50 == 0 or t == 5:           
-            plot(res1, res2, loss_train, loss_vali)
+    #     loss_train += [res1[-1]]
+    #     loss_vali += [res2[-1]]
+    #     if t % 10 == 0 or t == 5:           
+    #         plot(res1, res2, loss_train, loss_vali)
         
-        '''
-        always store the LAST epochs/10 of params and save the LAST params
-        check the slope of the loss_vali of the LAST epochs/10 
-        when slope > 0, count, and record the SLOPE and POSITION
-        when counter == 20, stop
-        '''
-        if len(params) < epochs/10:
-            params.append(model.state_dict())
-        else:
-            params.append(model.state_dict())
-            params = params[1:]
-            flag, slope = utils.early_stop(loss_vali, int(epochs/10))
-            torch.save(params[-1], path_save + '/' + "cnn.pth")
+    #     '''
+    #     always store the LAST epochs/10 of params and save the LAST params
+    #     check the slope of the loss_vali of the LAST epochs/10 
+    #     when slope > 0, count, and record the SLOPE and POSITION
+    #     when counter == 20, stop
+    #     '''
+    #     if len(params) < epochs/10:
+    #         params.append(model.state_dict())
+    #     else:
+    #         params.append(model.state_dict())
+    #         params = params[1:]
+    #         flag, slope = utils.early_stop(loss_vali, int(epochs/10))
+    #         torch.save(params[-1], path_save + '/' + "cnn.pth")
 
-            if flag and t >= 100:
-                slopes += [slope]
-                positive_position += [t]
-                positive_counter += flag
-            if positive_counter == 50:
-                torch.save(params[-1], path_save + '/' + "cnn.pth")
-                print('early stop at epoch:{}'.format(t))
-                plot(res1, res2, loss_train, loss_vali)
-                print(slopes)
-                print(positive_position)
-                break
+    #         if flag and t >= 100:
+    #             slopes += [slope]
+    #             positive_position += [t]
+    #             positive_counter += flag
+    #         if positive_counter == 50:
+    #             torch.save(params[-1], path_save + '/' + "cnn.pth")
+    #             print('early stop at epoch:{}'.format(t))
+    #             plot(res1, res2, loss_train, loss_vali)
+    #             print(slopes)
+    #             print(positive_position)
+    #             break
 
-            # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
-            # if flag_stop:
-            #     torch.save(params[-1], path_save + '/' + "cnn.pth")
-            #     print('early stop at epoch:{}'.format(t))
-            #     plot(res1, res2, loss_train, loss_vali)
-            #     break
+    #         # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
+    #         # if flag_stop:
+    #         #     torch.save(params[-1], path_save + '/' + "cnn.pth")
+    #         #     print('early stop at epoch:{}'.format(t))
+    #         #     plot(res1, res2, loss_train, loss_vali)
+    #         #     break
     
-    print("Done!")
+    # print("Done!")
 
     
     
-    if positive_counter != 20:
-        torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-        print('finish all epochs:{}'.format(epochs))  
+    # if positive_counter != 20:
+    #     torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
+    #     print('finish all epochs:{}'.format(epochs))  
 
 
 
@@ -217,10 +222,25 @@ if __name__ == "__main__":
     zdr = utils.scaler(test_x[:,1], 'zdr', 1)[:,4,4]
     kdp = utils.scaler(test_x[:,2], 'kdp', 1)[:,4,4]
     pred_prv = qpe_mayu(ref, zdr, kdp)
-    scatter = utils.Scatter((test_y), (pred_prv))
+    scatter = utils.Scatter((test_y), (pred_prv[0]))
     scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
-                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
-                  fpath = path_save + '/' + 'test-prv.png')
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'R(Z)',
+                  fpath = path_save + '/' + 'test-R(Z).png')
+    scatter = utils.Scatter((test_y), (pred_prv[1]))
+    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'R(Z,ZDR)',
+                  fpath = path_save + '/' + 'test-R(Z,ZDR).png')
+    scatter = utils.Scatter((test_y), (pred_prv[2]))
+    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'R(K)',
+                  fpath = path_save + '/' + 'test-R(K).png')
+    scatter = utils.Scatter((test_y), (pred_prv[3]))
+    scatter.plot3(bins = [np.arange(0,100)]*2, lim=[[0.1,100]]*2,draw_line = 1,
+                  show_metrics=True, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'R(K,ZDR)',
+                  fpath = path_save + '/' + 'test-R(K,ZDR).png')
+
+
+
     # scatter = utils.Scatter(np.log10(test_y), np.log10(pred_prv))
     # scatter.plot3(bins = [np.arange(-1,2,0.05)]*2, lim=[[-1,2]]*2,draw_line = 1,
     #               show_metrics=1, label = ['rain rate (ground) (mm/h)', 'rain rate (radar) (mm/h)'], title = 'prv',
