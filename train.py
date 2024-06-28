@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240509-9-cnn 3prv-02per10-wmae ver2')
+path_save = './model/based_on_20240509/{}'.format('240628-1-cnn 3prv-02per10-wmae')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -74,7 +74,7 @@ def qpe_mayu(ref, zdr, kdp):
 
 edge = utils.scaler(np.array([0,10,20,30,40,50,100]), 'rr')
 # weights = np.array([1,2,3,4,5,10])
-weights = 2**np.array([0,1,2,3,4,5])
+weights = np.array([0,1,2,3,4,5])
 class wmaeloss(nn.Module):  
     def __init__(self, weights, edge):  
         super(wmaeloss, self).__init__()  
