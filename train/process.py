@@ -66,12 +66,14 @@ test_x = np.array(test_x)[index]
 test_y = np.array(test_y)[index]
 mt.Scatter(test_x[:,0, 4,4], test_y).plot3(bins=[np.arange(0,1,0.01)]*2, lim=[[0,1]]*2, equal=0)
 
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\train_x.npy', train_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\train_y.npy', train_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\vali_x.npy', vali_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\vali_y.npy', vali_y)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\test_x.npy', test_x)
-np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\test_y.npy', test_y)
+# =============================================================================
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\train_x.npy', train_x)
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\train_y.npy', train_y)
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\vali_x.npy', vali_x)
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\vali_y.npy', vali_y)
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\test_x.npy', test_x)
+# np.save(r'E:\QPE_prv_ppi_2_99\dataset\20240509\test_y.npy', test_y)
+# =============================================================================
 
 #%%
 
