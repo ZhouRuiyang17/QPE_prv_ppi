@@ -8,7 +8,7 @@ from model import *
 import utils
 
 path = './dataset/20240509'
-path_save = './model/based_on_20240509/{}'.format('240628-cnn_3prv-05per20-maeloss')
+path_save = './model/based_on_20240509/{}'.format('240701-cnn_3prv-05per20-maeloss-ver3')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 # 检查 GPU 是否可用
@@ -190,6 +190,8 @@ if __name__ == "__main__":
         torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
         print('finish all epochs:{}'.format(epochs))  
 
+    loss_arr = np.array([loss_train, loss_vali]).T
+    np.savetxt(f'{path_save}/loss.csv', loss_arr, delimiter=',')
 
 
     

@@ -499,3 +499,6 @@ class CNN_pad_ave(nn.Module):
 #         x = self.fc2(x)
 #         pred = self.out(x)
 #         return pred
+
+
+
