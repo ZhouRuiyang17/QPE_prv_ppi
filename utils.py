@@ -5,21 +5,33 @@ from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 '''数据'''
 def scaler(data, dtype, reverse = False):
-    mins = {'ref':0,
-            'zdr':0,
-            'kdp':0,
-            'rr':0}
-    maxs = {'ref':70,
-            'zdr':10,
-            'kdp':10,
-            'rr':100}
+    # mins = {'ref':0,
+    #         'rr':0,
+    #         'log10rr':np.log10(0.1),
+    #         'logrr':np.log(0.1),
+    #         'log2rr':np.log2(0.1),
+    #         'D0':, 0}
+    # maxs = {'ref':70,
+    #         'rr':100,
+    #         'log10rr':np.log10(100),
+    #         'logrr':np.log(100),
+    #         'log2rr':np.log2(100)}
+    mins_maxs = {'ref':[0,70],
+                 'rr':[0,100],
+                 'log10rr':[np.log10(0.1), np.log10(100)],
+                 'log2rr': [np.log2(0.1),  np.log2(100)],
+                 'logrr':  [np.log(0.1),   np.log(100)],
+                 'D0': [0,6],
+                 'log10Nw': [0,6],
+                 'D0*log10Nw':[0,15]}
     
+    value_min, value_max = mins_maxs[dtype]
     if not reverse:
-        data_new = (data - mins[dtype]) / (maxs[dtype] - mins[dtype])
+        data_new = (data - value_min) / (value_max - value_min)
         data_new[data_new<0] = 0
         data_new[data_new>1] = 1
     else:
-        data_new = (maxs[dtype] - mins[dtype]) * data + mins[dtype]
+        data_new = (value_max - value_min) * data + value_min
         
     return data_new
 
