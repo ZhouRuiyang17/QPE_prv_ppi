@@ -7,7 +7,7 @@ import torch
 from model import *
 import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-maxrr200-05per20-mseloss')
+path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-maxrr200-log10rr-05per20-mse')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -73,8 +73,10 @@ if __name__ == "__main__":
 
     train_y = train_y[:, 0].reshape(-1, 1)
     vali_y = vali_y[:, 0].reshape(-1, 1)
-    train_y = utils.scaler(train_y, 'rr')
-    vali_y = utils.scaler(vali_y, 'rr')
+    # train_y = utils.scaler(train_y, 'rr')
+    # vali_y = utils.scaler(vali_y, 'rr')
+    train_y = utils.scaler(np.log10(train_y), 'log10rr')
+    vali_y = utils.scaler(np.log10(vali_y), 'log10rr')
 
     '''数据加载'''
     train = utils.loader(train_x, train_y, device, 64)
