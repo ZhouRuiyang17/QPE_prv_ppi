@@ -17,6 +17,8 @@ def scaler(data, dtype, reverse = False):
     #         'logrr':np.log(100),
     #         'log2rr':np.log2(100)}
     mins_maxs = {'ref':[0,70],
+                 'zdr':[0,7],
+                 'kdp':[0,7],
                  'rr':[0,100],
                  'log10rr':[np.log10(0.1), np.log10(100)],
                  'log2rr': [np.log2(0.1),  np.log2(100)],
