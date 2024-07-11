@@ -7,7 +7,7 @@ import torch
 from model import *
 import utils
 
-path_save = './model/based_on_202407/{}'.format('240710-cnn-3prv-05per20-maeloss')
+path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-05per20-mseloss')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -27,6 +27,8 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.plot([0,1],[0,1])
     ax.set_title('train')
     ax.set_aspect('equal')
+    bias = np.sum(prediction - rainrate) / np.sum(rainrate)
+    ax.text(0.8,0.9,bias)
     plt.savefig(path_save + '/train_epoch{}.png'.format(t), bbox_inches = 'tight')
     plt.close()
 
@@ -37,6 +39,8 @@ def plot(res1, res2, loss_train, loss_vali):
     ax.plot([0,1],[0,1])
     ax.set_title('vali')
     ax.set_aspect('equal')
+    bias = np.sum(prediction - rainrate) / np.sum(rainrate)
+    ax.text(0.8,0.9,bias)
     plt.savefig(path_save + '/vali_epoch{}.png'.format(t), bbox_inches = 'tight')
     plt.close()
 
@@ -57,6 +61,7 @@ if __name__ == "__main__":
     train_y = dataset_train['y_train'].astype(np.float32)
     vali_x = dataset_train['x_vali'].astype(np.float32)
     vali_y = dataset_train['y_vali'].astype(np.float32)
+    print('Data loaded')
 
     '''裁剪数据和归一化'''
     train_x = utils.scaler(train_x, 'ref')
@@ -75,7 +80,7 @@ if __name__ == "__main__":
     '''训练'''
     model = CNN_3prv().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    loss_func = torch.nn.L1Loss()
+    loss_func = torch.nn.MSELoss()
     # loss_func = wmaeloss(weights, edge)
     from torch.optim.lr_scheduler import StepLR
     scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
