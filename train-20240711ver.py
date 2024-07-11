@@ -5,9 +5,9 @@ import matplotlib.colors as colors
 import torch
 
 from model import *
-import utils
+import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-05per20-mseloss')
+path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-maxrr200-05per20-mseloss')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
