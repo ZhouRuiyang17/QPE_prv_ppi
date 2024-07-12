@@ -10,7 +10,7 @@ import my.mytools as mt
 
 import datetime
 
-path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-05per20-mseloss')
+path_save = './model/based_on_202407/{}'.format('240711-cnn-9prv-maxrr200-05per20-mse')
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -72,6 +72,62 @@ def apply(data):
     
     pred = pred.view(-1).detach().numpy()
     pred = utils.scaler(pred, 'rr', 1)
+    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
+
+    rainrate = np.zeros(len(data))
+    rainrate[loc] = pred
+    # rainrate = pred
+    rainrate = mask_rr(rainrate)
+    return rainrate
+
+def qpe_3ele(data, center):
+    ref = data[:,3, center, center]
+    zdr = data[:,4, center, center]
+    kdp = data[:,5, center, center]
+    refup = 10**(ref*0.1)
+    zdrup = 10**(zdr*0.1)
+
+    a1 = 0.0576; b1 = 0.557
+    a2 = 15.421; b2 = 0.817
+    a3 = 0.0059; b3 = 0.994;c3 = -4.929
+    a4 = 26.778; b4 = 0.946;c4 = -1.249
+
+
+
+    rr1 = a1*refup**b1
+    rr2 = a2*kdp**b2
+    rr3 = a3*refup**b3*zdrup**c3
+    rr4 = a4*kdp**b4*zdrup**c4
+
+    rr1 = mask_rr(rr1)
+    rr2 = mask_rr(rr2)
+    rr3 = mask_rr(rr3)
+    rr4 = mask_rr(rr4)
+
+    return rr1, rr2, rr3, rr4
+
+def apply_3ele(data):
+    refup = 10**(data[:, 3]*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0
+    test_x = data[loc].astype(np.float32)
+    # test_x = data.astype(np.float32)
+
+    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+    test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+    test_x = torch.from_numpy(test_x)
+
+    model = CNN_9prv()
+    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+    
+    pred = pred.view(-1).detach().numpy()
+    pred = utils.scaler(pred, 'rr', 1)
+    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
 
     rainrate = np.zeros(len(data))
     rainrate[loc] = pred
@@ -86,7 +142,8 @@ if __name__ == "__main__":
         if file.endswith('npz') and '2019' in file:
             print(file)
             f = np.load(f'../{file}')
-            data = f['data'][:, [3,4,5], 30-4:30+4+1, 30-4:30+4+1]
+            # data = f['data'][:, [3,4,5], 30-4:30+4+1, 30-4:30+4+1]
+            data = f['data'][:, :, 30-4:30+4+1, 30-4:30+4+1]
             ts = [datetime.datetime.strptime(ts, '%Y%m%d%H%M') for ts in f['ts']]
 
             stnm = file[5:10]
@@ -97,16 +154,16 @@ if __name__ == "__main__":
                 radar3 = radar.copy()
                 radar4 = radar.copy()
 
-                radar.loc[ts, stnm] = apply(data)
-                rr1, rr2, rr3, rr4 = qpe(data, 4)
+                radar.loc[ts, stnm] = apply_3ele(data)
+                rr1, rr2, rr3, rr4 = qpe_3ele(data, 4)
                 radar1.loc[ts, stnm] = rr1
                 radar2.loc[ts, stnm] = rr2
                 radar3.loc[ts, stnm] = rr3
                 radar4.loc[ts, stnm] = rr4
                 count += 1
             else:
-                radar.loc[ts, stnm] = apply(data)
-                rr1, rr2, rr3, rr4 = qpe(data, 4)
+                radar.loc[ts, stnm] = apply_3ele(data)
+                rr1, rr2, rr3, rr4 = qpe_3ele(data, 4)
                 radar1.loc[ts, stnm] = rr1
                 radar2.loc[ts, stnm] = rr2
                 radar3.loc[ts, stnm] = rr3

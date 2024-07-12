@@ -7,7 +7,7 @@ import torch
 from model import *
 import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240711-cnn-3prv-maxrr200-log10rr-05per20-mse')
+path_save = './model/based_on_202407/{}'.format('240711-cnn-9prv-maxrr200-05per20-mse')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -56,7 +56,7 @@ def plot(res1, res2, loss_train, loss_vali):
 if __name__ == "__main__":
     
     # ----封装
-    dataset_train = np.load('../dataset-1-9.npz')
+    dataset_train = np.load('../dataset-3-9.npz')
     train_x = dataset_train['x_train'].astype(np.float32)
     train_y = dataset_train['y_train'].astype(np.float32)
     vali_x = dataset_train['x_vali'].astype(np.float32)
@@ -64,19 +64,19 @@ if __name__ == "__main__":
     print('Data loaded')
 
     '''裁剪数据和归一化'''
-    train_x[:,0] = utils.scaler(train_x[:,0], 'ref')
-    vali_x[:,0] = utils.scaler(vali_x[:,0], 'ref')
-    train_x[:,1] = utils.scaler(train_x[:,1], 'zdr')
-    vali_x[:,1] = utils.scaler(vali_x[:,1], 'zdr')
-    train_x[:,2] = utils.scaler(train_x[:,2], 'kdp')
-    vali_x[:,2] = utils.scaler(vali_x[:,2], 'kdp')
+    train_x[:,[0,3,6]] = utils.scaler(train_x[:,[0,3,6]], 'ref')
+    vali_x[:, [0,3,6]] = utils.scaler(vali_x[:, [0,3,6]], 'ref')
+    train_x[:,[1,4,7]] = utils.scaler(train_x[:,[1,4,7]], 'zdr')
+    vali_x[:, [1,4,7]] = utils.scaler(vali_x[:, [1,4,7]], 'zdr')
+    train_x[:,[2,5,8]] = utils.scaler(train_x[:,[2,5,8]], 'kdp')
+    vali_x[:, [2,5,8]] = utils.scaler(vali_x[:, [2,5,8]], 'kdp')
 
     train_y = train_y[:, 0].reshape(-1, 1)
     vali_y = vali_y[:, 0].reshape(-1, 1)
-    # train_y = utils.scaler(train_y, 'rr')
-    # vali_y = utils.scaler(vali_y, 'rr')
-    train_y = utils.scaler(np.log10(train_y), 'log10rr')
-    vali_y = utils.scaler(np.log10(vali_y), 'log10rr')
+    train_y = utils.scaler(train_y, 'rr')
+    vali_y = utils.scaler(vali_y, 'rr')
+    # train_y = utils.scaler(np.log10(train_y), 'log10rr')
+    # vali_y = utils.scaler(np.log10(vali_y), 'log10rr')
 
     '''数据加载'''
     train = utils.loader(train_x, train_y, device, 64)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     
     '''训练'''
-    model = CNN_3prv().to(device)
+    model = CNN_9prv().to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.MSELoss()
     # loss_func = wmaeloss(weights, edge)
@@ -146,9 +146,9 @@ if __name__ == "__main__":
 
     
     
-    if positive_counter != 20:
-        torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-        print('finish all epochs:{}'.format(epochs))  
+    # if positive_counter != 20:
+    #     torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
+    #     print('finish all epochs:{}'.format(epochs))  
 
     loss_arr = np.array([loss_train, loss_vali]).T
     np.savetxt(f'{path_save}/loss.csv', loss_arr, delimiter=',')

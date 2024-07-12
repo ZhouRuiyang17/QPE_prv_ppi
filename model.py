@@ -178,6 +178,52 @@ class CNN_3prv(nn.Module):
         x = self.out(x)
         return x
 
+class CNN_9prv(nn.Module):
+    def __init__(self):
+        super(CNN_9prv, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels=9, out_channels=16, kernel_size=3, padding=1),
+            # nn.BatchNorm2d(16),
+            nn.ReLU(),
+            )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3),
+            # nn.BatchNorm2d(32),
+            nn.ReLU(),            
+            )
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+            # nn.BatchNorm2d(64),
+            nn.ReLU(),
+            )
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3),
+            # nn.BatchNorm2d(128),
+            nn.ReLU(),
+            )
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3),
+            # nn.BatchNorm2d(256),
+            nn.ReLU(),
+            )
+        self.flt = nn.Sequential(
+            nn.Flatten()
+            )
+        self.out = nn.Sequential(
+            nn.Linear(256, 1),
+            )
+        
+
+    def forward(self, x):        
+        x = self.conv(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.flt(x)
+        x = self.out(x)
+        return x
+
 class CNN_3prv_pool(nn.Module):
     def __init__(self):
         super(CNN_3prv_pool, self).__init__()
