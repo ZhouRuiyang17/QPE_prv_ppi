@@ -20,65 +20,65 @@ print("使用的设备:", device)
 
 def mask_rr(rr):
     rr[rr<0] = 0
-    rr[rr>100] = 0
+    rr[rr>200] = 0
     rr[np.isnan(rr)] = 0
 
     return rr
 
-def qpe(data, center):
-    ref = data[:,0, center, center]
-    zdr = data[:,1, center, center]
-    kdp = data[:,2, center, center]
-    refup = 10**(ref*0.1)
-    zdrup = 10**(zdr*0.1)
+# def qpe(data, center):
+#     ref = data[:,0, center, center]
+#     zdr = data[:,1, center, center]
+#     kdp = data[:,2, center, center]
+#     refup = 10**(ref*0.1)
+#     zdrup = 10**(zdr*0.1)
 
-    a1 = 0.0576; b1 = 0.557
-    a2 = 15.421; b2 = 0.817
-    a3 = 0.0059; b3 = 0.994;c3 = -4.929
-    a4 = 26.778; b4 = 0.946;c4 = -1.249
+#     a1 = 0.0576; b1 = 0.557
+#     a2 = 15.421; b2 = 0.817
+#     a3 = 0.0059; b3 = 0.994;c3 = -4.929
+#     a4 = 26.778; b4 = 0.946;c4 = -1.249
 
 
 
-    rr1 = a1*refup**b1
-    rr2 = a2*kdp**b2
-    rr3 = a3*refup**b3*zdrup**c3
-    rr4 = a4*kdp**b4*zdrup**c4
+#     rr1 = a1*refup**b1
+#     rr2 = a2*kdp**b2
+#     rr3 = a3*refup**b3*zdrup**c3
+#     rr4 = a4*kdp**b4*zdrup**c4
 
-    rr1 = mask_rr(rr1)
-    rr2 = mask_rr(rr2)
-    rr3 = mask_rr(rr3)
-    rr4 = mask_rr(rr4)
+#     rr1 = mask_rr(rr1)
+#     rr2 = mask_rr(rr2)
+#     rr3 = mask_rr(rr3)
+#     rr4 = mask_rr(rr4)
 
-    return rr1, rr2, rr3, rr4
+#     return rr1, rr2, rr3, rr4
 
-def apply(data):
-    refup = 10**(data[:, 0]*0.1)
-    meanup = refup.mean(axis=(1,2))
-    mean = 10*np.log10(meanup)
-    loc = mean >= 0
-    test_x = data[loc].astype(np.float32)
-    # test_x = data.astype(np.float32)
+# def apply(data):
+#     refup = 10**(data[:, 0]*0.1)
+#     meanup = refup.mean(axis=(1,2))
+#     mean = 10*np.log10(meanup)
+#     loc = mean >= 0
+#     test_x = data[loc].astype(np.float32)
+#     # test_x = data.astype(np.float32)
 
-    test_x[:,0] = utils.scaler(test_x[:,0], 'ref').astype(np.float32)
-    test_x[:,1] = utils.scaler(test_x[:,1], 'zdr').astype(np.float32)
-    test_x[:,2] = utils.scaler(test_x[:,2], 'kdp').astype(np.float32)
-    test_x = torch.from_numpy(test_x)
+#     test_x[:,0] = utils.scaler(test_x[:,0], 'ref').astype(np.float32)
+#     test_x[:,1] = utils.scaler(test_x[:,1], 'zdr').astype(np.float32)
+#     test_x[:,2] = utils.scaler(test_x[:,2], 'kdp').astype(np.float32)
+#     test_x = torch.from_numpy(test_x)
 
-    model = CNN_3prv()
-    model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
-    model.eval()
-    with torch.no_grad():
-        pred = model(test_x)
+#     model = CNN_3prv()
+#     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
+#     model.eval()
+#     with torch.no_grad():
+#         pred = model(test_x)
     
-    pred = pred.view(-1).detach().numpy()
-    pred = utils.scaler(pred, 'rr', 1)
-    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
+#     pred = pred.view(-1).detach().numpy()
+#     # pred = utils.scaler(pred, 'rr', 1)
+#     pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
 
-    rainrate = np.zeros(len(data))
-    rainrate[loc] = pred
-    # rainrate = pred
-    rainrate = mask_rr(rainrate)
-    return rainrate
+#     rainrate = np.zeros(len(data))
+#     rainrate[loc] = pred
+#     # rainrate = pred
+#     rainrate = mask_rr(rainrate)
+#     return rainrate
 
 def qpe_3ele(data, center):
     ref = data[:,3, center, center]
