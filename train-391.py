@@ -7,7 +7,7 @@ import torch
 from model import *
 import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv')
+path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-wmse')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -53,6 +53,39 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.savefig(path_save + '/loss.png', bbox_inches = 'tight')
     plt.close()
 
+
+class WeightedMSELoss(nn.Module):
+    def __init__(self):
+        super(WeightedMSELoss, self).__init__()
+
+    def forward(self, inputs, targets):
+        # 定义目标值区间和对应的权重
+        weight_intervals = [
+            (0.0, 0.1, 1),
+            (0.1, 0.2, 2),
+            (0.2, 0.3, 3),
+            (0.3, 0.4, 4),
+            (0.4, 0.5, 5),
+            (0.5, 0.6, 6),
+            (0.6, 0.7, 7),
+            (0.7, 0.8, 8),
+            (0.8, 0.9, 9),
+            (0.9, 1.0, 10)
+        ]
+        
+        # 创建权重矩阵
+        weights = torch.zeros_like(targets)
+        for lower, upper, weight in weight_intervals:
+            mask = (targets >= lower) & (targets < upper)
+            weights[mask] = weight
+        
+        # 计算加权均方误差
+        mse_loss = nn.MSELoss(reduction='none')  # 不做平均
+        loss = mse_loss(inputs, targets)
+        weighted_loss = loss * weights
+        
+        return weighted_loss.mean()  # 可以根据需要选择如何汇总损失
+
 if __name__ == "__main__":
     
     # ----封装
@@ -86,8 +119,8 @@ if __name__ == "__main__":
     '''训练'''
     model = CNN(9,1).to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    loss_func = torch.nn.MSELoss()
-    # loss_func = wmaeloss(weights, edge)
+    # loss_func = torch.nn.MSELoss()
+    loss_func = WeightedMSELoss()
     from torch.optim.lr_scheduler import StepLR
     scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
 
