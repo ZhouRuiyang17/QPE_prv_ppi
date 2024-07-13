@@ -7,7 +7,7 @@ import torch
 from model import *
 import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240711-cnn-9prv-maxrr200-05per20-mse')
+path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-1e-5decay')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -84,8 +84,8 @@ if __name__ == "__main__":
 
     
     '''训练'''
-    model = CNN_9prv().to(device)
-    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    model = CNN(9,1).to(device)
+    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-5)
     loss_func = torch.nn.MSELoss()
     # loss_func = wmaeloss(weights, edge)
     from torch.optim.lr_scheduler import StepLR
