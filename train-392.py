@@ -20,6 +20,7 @@ print("使用的设备:", device)
 def plot(res1, res2, loss_train, loss_vali):
     t = len(loss_train)
 
+    '''train'''
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
     rainrate = np.array(res1[1])[:, 0].flatten(); prediction = np.array(res1[2])[:, 0].flatten()
@@ -32,9 +33,10 @@ def plot(res1, res2, loss_train, loss_vali):
     plt.savefig(path_save + '/train_epoch{}.png'.format(t), bbox_inches = 'tight')
     plt.close()
 
+    '''vali'''
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
-    rainrate = np.array(res1[1])[:, 0].flatten(); prediction = np.array(res1[2])[:, 0].flatten()
+    rainrate = np.array(res2[1])[:, 0].flatten(); prediction = np.array(res2[2])[:, 0].flatten()
     ax.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
     ax.plot([0,1],[0,1])
     ax.set_title('vali')
