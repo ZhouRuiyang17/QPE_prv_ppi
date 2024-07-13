@@ -125,7 +125,7 @@ def apply_3ele(data):
     with torch.no_grad():
         pred = model(test_x)
     
-    pred = pred.view(-1).detach().numpy()
+    pred = pred.view(-1,2).detach().numpy()
     pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
     pred[:,1] = utils.scaler(pred[:,1], 'D0*log10Nw', 1)
     # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
