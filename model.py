@@ -87,10 +87,10 @@ class CNN_tian(nn.Module):
         return x
 
 class CNN(nn.Module):
-    def __init__(self):
+    def __init__(self, num_input_layers, num_output):
         super(CNN, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=num_input_layers, out_channels=16, kernel_size=3, padding=1),
             # nn.BatchNorm2d(16),
             nn.ReLU(),
             )
@@ -118,7 +118,7 @@ class CNN(nn.Module):
             nn.Flatten()
             )
         self.out = nn.Sequential(
-            nn.Linear(256, 1),
+            nn.Linear(256, num_output),
             )
         
 

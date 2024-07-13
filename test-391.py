@@ -119,7 +119,7 @@ def apply_3ele(data):
     test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
     test_x = torch.from_numpy(test_x)
 
-    model = CNN_9prv()
+    model = CNN(9,1)
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
