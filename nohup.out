@@ -1,0 +1,2166 @@
+[0.         0.00450225 0.04952476 0.49974987 1.        ]
+[0.33322933 0.6058715  1.         1.         1.        ]
+[0.         0.30293575 0.6058715  0.90880725 1.        ]
+使用的设备: cuda
+Data loaded
+-------------------------------
+Epoch 1
+Epoch 1, Learning Rate:
+0.0001
+-------------------------------
+Epoch 2
+Epoch 2, Learning Rate:
+0.0001
+-------------------------------
+Epoch 3
+Epoch 3, Learning Rate:
+0.0001
+-------------------------------
+Epoch 4
+Epoch 4, Learning Rate:
+0.0001
+-------------------------------
+Epoch 5
+Epoch 5, Learning Rate:
+0.0001
+-------------------------------
+Epoch 6
+Epoch 6, Learning Rate:
+0.0001
+-------------------------------
+Epoch 7
+Epoch 7, Learning Rate:
+0.0001
+-------------------------------
+Epoch 8
+Epoch 8, Learning Rate:
+0.0001
+-------------------------------
+Epoch 9
+Epoch 9, Learning Rate:
+0.0001
+-------------------------------
+Epoch 10
+Epoch 10, Learning Rate:
+0.0001
+-------------------------------
+Epoch 11
+Epoch 11, Learning Rate:
+0.0001
+-------------------------------
+Epoch 12
+Epoch 12, Learning Rate:
+0.0001
+-------------------------------
+Epoch 13
+Epoch 13, Learning Rate:
+0.0001
+-------------------------------
+Epoch 14
+Epoch 14, Learning Rate:
+0.0001
+-------------------------------
+Epoch 15
+Epoch 15, Learning Rate:
+0.0001
+-------------------------------
+Epoch 16
+Epoch 16, Learning Rate:
+0.0001
+-------------------------------
+Epoch 17
+Epoch 17, Learning Rate:
+0.0001
+-------------------------------
+Epoch 18
+Epoch 18, Learning Rate:
+0.0001
+-------------------------------
+Epoch 19
+Epoch 19, Learning Rate:
+0.0001
+-------------------------------
+Epoch 20
+Epoch 20, Learning Rate:
+5e-05
+-------------------------------
+Epoch 21
+Epoch 21, Learning Rate:
+5e-05
+-------------------------------
+Epoch 22
+Epoch 22, Learning Rate:
+5e-05
+-------------------------------
+Epoch 23
+Epoch 23, Learning Rate:
+5e-05
+-------------------------------
+Epoch 24
+Epoch 24, Learning Rate:
+5e-05
+-------------------------------
+Epoch 25
+Epoch 25, Learning Rate:
+5e-05
+-------------------------------
+Epoch 26
+Epoch 26, Learning Rate:
+5e-05
+-------------------------------
+Epoch 27
+Epoch 27, Learning Rate:
+5e-05
+-------------------------------
+Epoch 28
+Epoch 28, Learning Rate:
+5e-05
+-------------------------------
+Epoch 29
+Epoch 29, Learning Rate:
+5e-05
+-------------------------------
+Epoch 30
+Epoch 30, Learning Rate:
+5e-05
+-------------------------------
+Epoch 31
+Epoch 31, Learning Rate:
+5e-05
+-------------------------------
+Epoch 32
+Epoch 32, Learning Rate:
+5e-05
+-------------------------------
+Epoch 33
+Epoch 33, Learning Rate:
+5e-05
+-------------------------------
+Epoch 34
+Epoch 34, Learning Rate:
+5e-05
+-------------------------------
+Epoch 35
+Epoch 35, Learning Rate:
+5e-05
+-------------------------------
+Epoch 36
+Epoch 36, Learning Rate:
+5e-05
+-------------------------------
+Epoch 37
+Epoch 37, Learning Rate:
+5e-05
+-------------------------------
+Epoch 38
+Epoch 38, Learning Rate:
+5e-05
+-------------------------------
+Epoch 39
+Epoch 39, Learning Rate:
+5e-05
+-------------------------------
+Epoch 40
+Epoch 40, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 41
+Epoch 41, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 42
+Epoch 42, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 43
+Epoch 43, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 44
+Epoch 44, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 45
+Epoch 45, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 46
+Epoch 46, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 47
+Epoch 47, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 48
+Epoch 48, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 49
+Epoch 49, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 50
+Epoch 50, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 51
+Epoch 51, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 52
+Epoch 52, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 53
+Epoch 53, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 54
+Epoch 54, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 55
+Epoch 55, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 56
+Epoch 56, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 57
+Epoch 57, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 58
+Epoch 58, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 59
+Epoch 59, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 60
+Epoch 60, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 61
+Epoch 61, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 62
+Epoch 62, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 63
+Epoch 63, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 64
+Epoch 64, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 65
+Epoch 65, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 66
+Epoch 66, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 67
+Epoch 67, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 68
+Epoch 68, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 69
+Epoch 69, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 70
+Epoch 70, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 71
+Epoch 71, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 72
+Epoch 72, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 73
+Epoch 73, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 74
+Epoch 74, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 75
+Epoch 75, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 76
+Epoch 76, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 77
+Epoch 77, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 78
+Epoch 78, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 79
+Epoch 79, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 80
+Epoch 80, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 81
+Epoch 81, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 82
+Epoch 82, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 83
+Epoch 83, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 84
+Epoch 84, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 85
+Epoch 85, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 86
+Epoch 86, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 87
+Epoch 87, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 88
+Epoch 88, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 89
+Epoch 89, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 90
+Epoch 90, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 91
+Epoch 91, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 92
+Epoch 92, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 93
+Epoch 93, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 94
+Epoch 94, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 95
+Epoch 95, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 96
+Epoch 96, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 97
+Epoch 97, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 98
+Epoch 98, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 99
+Epoch 99, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 100
+Epoch 100, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 101
+Epoch 101, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 102
+Epoch 102, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 103
+Epoch 103, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 104
+Epoch 104, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 105
+Epoch 105, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 106
+Epoch 106, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 107
+Epoch 107, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 108
+Epoch 108, Learning Rate:
+[0.         0.00450225 0.04952476 0.49974987 1.        ]
+[0.33322933 0.6058715  1.         1.         1.        ]
+[0.         0.30293575 0.6058715  0.90880725 1.        ]
+使用的设备: cuda
+Data loaded
+-------------------------------
+Epoch 1
+Epoch 1, Learning Rate:
+0.0001
+-------------------------------
+Epoch 2
+Epoch 2, Learning Rate:
+0.0001
+-------------------------------
+Epoch 3
+Epoch 3, Learning Rate:
+0.0001
+-------------------------------
+Epoch 4
+Epoch 4, Learning Rate:
+0.0001
+-------------------------------
+Epoch 5
+Epoch 5, Learning Rate:
+0.0001
+-------------------------------
+Epoch 6
+Epoch 6, Learning Rate:
+0.0001
+-------------------------------
+Epoch 7
+Epoch 7, Learning Rate:
+0.0001
+-------------------------------
+Epoch 8
+Epoch 8, Learning Rate:
+0.0001
+-------------------------------
+Epoch 9
+Epoch 9, Learning Rate:
+0.0001
+-------------------------------
+Epoch 10
+Epoch 10, Learning Rate:
+0.0001
+-------------------------------
+Epoch 11
+Epoch 11, Learning Rate:
+0.0001
+-------------------------------
+Epoch 12
+Epoch 12, Learning Rate:
+0.0001
+-------------------------------
+Epoch 13
+Epoch 13, Learning Rate:
+0.0001
+-------------------------------
+Epoch 14
+Epoch 14, Learning Rate:
+0.0001
+-------------------------------
+Epoch 15
+Epoch 15, Learning Rate:
+0.0001
+-------------------------------
+Epoch 16
+Epoch 16, Learning Rate:
+0.0001
+-------------------------------
+Epoch 17
+Epoch 17, Learning Rate:
+0.0001
+-------------------------------
+Epoch 18
+Epoch 18, Learning Rate:
+0.0001
+-------------------------------
+Epoch 19
+Epoch 19, Learning Rate:
+0.0001
+-------------------------------
+Epoch 20
+Epoch 20, Learning Rate:
+5e-05
+-------------------------------
+Epoch 21
+Epoch 21, Learning Rate:
+5e-05
+-------------------------------
+Epoch 22
+Epoch 22, Learning Rate:
+5e-05
+-------------------------------
+Epoch 23
+Epoch 23, Learning Rate:
+5e-05
+-------------------------------
+Epoch 24
+Epoch 24, Learning Rate:
+5e-05
+-------------------------------
+Epoch 25
+Epoch 25, Learning Rate:
+5e-05
+-------------------------------
+Epoch 26
+Epoch 26, Learning Rate:
+5e-05
+-------------------------------
+Epoch 27
+Epoch 27, Learning Rate:
+5e-05
+-------------------------------
+Epoch 28
+Epoch 28, Learning Rate:
+5e-05
+-------------------------------
+Epoch 29
+Epoch 29, Learning Rate:
+5e-05
+-------------------------------
+Epoch 30
+Epoch 30, Learning Rate:
+5e-05
+-------------------------------
+Epoch 31
+Epoch 31, Learning Rate:
+5e-05
+-------------------------------
+Epoch 32
+Epoch 32, Learning Rate:
+5e-05
+-------------------------------
+Epoch 33
+Epoch 33, Learning Rate:
+5e-05
+-------------------------------
+Epoch 34
+Epoch 34, Learning Rate:
+5e-05
+-------------------------------
+Epoch 35
+Epoch 35, Learning Rate:
+5e-05
+-------------------------------
+Epoch 36
+Epoch 36, Learning Rate:
+5e-05
+-------------------------------
+Epoch 37
+Epoch 37, Learning Rate:
+5e-05
+-------------------------------
+Epoch 38
+Epoch 38, Learning Rate:
+5e-05
+-------------------------------
+Epoch 39
+Epoch 39, Learning Rate:
+5e-05
+-------------------------------
+Epoch 40
+Epoch 40, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 41
+Epoch 41, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 42
+Epoch 42, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 43
+Epoch 43, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 44
+Epoch 44, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 45
+Epoch 45, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 46
+Epoch 46, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 47
+Epoch 47, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 48
+Epoch 48, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 49
+Epoch 49, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 50
+Epoch 50, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 51
+Epoch 51, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 52
+Epoch 52, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 53
+Epoch 53, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 54
+Epoch 54, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 55
+Epoch 55, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 56
+Epoch 56, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 57
+Epoch 57, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 58
+Epoch 58, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 59
+Epoch 59, Learning Rate:
+2.5e-05
+-------------------------------
+Epoch 60
+Epoch 60, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 61
+Epoch 61, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 62
+Epoch 62, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 63
+Epoch 63, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 64
+Epoch 64, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 65
+Epoch 65, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 66
+Epoch 66, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 67
+Epoch 67, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 68
+Epoch 68, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 69
+Epoch 69, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 70
+Epoch 70, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 71
+Epoch 71, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 72
+Epoch 72, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 73
+Epoch 73, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 74
+Epoch 74, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 75
+Epoch 75, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 76
+Epoch 76, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 77
+Epoch 77, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 78
+Epoch 78, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 79
+Epoch 79, Learning Rate:
+1.25e-05
+-------------------------------
+Epoch 80
+Epoch 80, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 81
+Epoch 81, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 82
+Epoch 82, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 83
+Epoch 83, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 84
+Epoch 84, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 85
+Epoch 85, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 86
+Epoch 86, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 87
+Epoch 87, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 88
+Epoch 88, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 89
+Epoch 89, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 90
+Epoch 90, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 91
+Epoch 91, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 92
+Epoch 92, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 93
+Epoch 93, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 94
+Epoch 94, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 95
+Epoch 95, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 96
+Epoch 96, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 97
+Epoch 97, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 98
+Epoch 98, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 99
+Epoch 99, Learning Rate:
+6.25e-06
+-------------------------------
+Epoch 100
+Epoch 100, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 101
+Epoch 101, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 102
+Epoch 102, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 103
+Epoch 103, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 104
+Epoch 104, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 105
+Epoch 105, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 106
+Epoch 106, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 107
+Epoch 107, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 108
+Epoch 108, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 109
+Epoch 109, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 110
+Epoch 110, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 111
+Epoch 111, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 112
+Epoch 112, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 113
+Epoch 113, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 114
+Epoch 114, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 115
+Epoch 115, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 116
+Epoch 116, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 117
+Epoch 117, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 118
+Epoch 118, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 119
+Epoch 119, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 120
+Epoch 120, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 121
+Epoch 121, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 122
+Epoch 122, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 123
+Epoch 123, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 124
+Epoch 124, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 125
+Epoch 125, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 126
+Epoch 126, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 127
+Epoch 127, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 128
+Epoch 128, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 129
+Epoch 129, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 130
+Epoch 130, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 131
+Epoch 131, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 132
+Epoch 132, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 133
+Epoch 133, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 134
+Epoch 134, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 135
+Epoch 135, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 136
+Epoch 136, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 137
+Epoch 137, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 138
+Epoch 138, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 139
+Epoch 139, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 140
+Epoch 140, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 141
+Epoch 141, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 142
+Epoch 142, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 143
+Epoch 143, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 144
+Epoch 144, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 145
+Epoch 145, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 146
+Epoch 146, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 147
+Epoch 147, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 148
+Epoch 148, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 149
+Epoch 149, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 150
+Epoch 150, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 151
+Epoch 151, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 152
+Epoch 152, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 153
+Epoch 153, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 154
+Epoch 154, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 155
+Epoch 155, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 156
+Epoch 156, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 157
+Epoch 157, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 158
+Epoch 158, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 159
+Epoch 159, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 160
+Epoch 160, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 161
+Epoch 161, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 162
+Epoch 162, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 163
+Epoch 163, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 164
+Epoch 164, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 165
+Epoch 165, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 166
+Epoch 166, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 167
+Epoch 167, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 168
+Epoch 168, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 169
+Epoch 169, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 170
+Epoch 170, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 171
+Epoch 171, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 172
+Epoch 172, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 173
+Epoch 173, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 174
+Epoch 174, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 175
+Epoch 175, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 176
+Epoch 176, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 177
+Epoch 177, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 178
+Epoch 178, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 179
+Epoch 179, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 180
+Epoch 180, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 181
+Epoch 181, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 182
+Epoch 182, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 183
+Epoch 183, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 184
+Epoch 184, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 185
+Epoch 185, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 186
+Epoch 186, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 187
+Epoch 187, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 188
+Epoch 188, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 189
+Epoch 189, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 190
+Epoch 190, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 191
+Epoch 191, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 192
+Epoch 192, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 193
+Epoch 193, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 194
+Epoch 194, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 195
+Epoch 195, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 196
+Epoch 196, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 197
+Epoch 197, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 198
+Epoch 198, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 199
+Epoch 199, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 200
+Epoch 200, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 201
+Epoch 201, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 202
+Epoch 202, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 203
+Epoch 203, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 204
+Epoch 204, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 205
+Epoch 205, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 206
+Epoch 206, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 207
+Epoch 207, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 208
+Epoch 208, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 209
+Epoch 209, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 210
+Epoch 210, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 211
+3.125e-06
+-------------------------------
+Epoch 109
+Epoch 109, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 110
+Epoch 110, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 111
+Epoch 111, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 112
+Epoch 112, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 113
+Epoch 113, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 114
+Epoch 114, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 115
+Epoch 115, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 116
+Epoch 116, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 117
+Epoch 117, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 118
+Epoch 118, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 119
+Epoch 119, Learning Rate:
+3.125e-06
+-------------------------------
+Epoch 120
+Epoch 120, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 121
+Epoch 121, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 122
+Epoch 122, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 123
+Epoch 123, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 124
+Epoch 124, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 125
+Epoch 125, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 126
+Epoch 126, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 127
+Epoch 127, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 128
+Epoch 128, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 129
+Epoch 129, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 130
+Epoch 130, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 131
+Epoch 131, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 132
+Epoch 132, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 133
+Epoch 133, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 134
+Epoch 134, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 135
+Epoch 135, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 136
+Epoch 136, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 137
+Epoch 137, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 138
+Epoch 138, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 139
+Epoch 139, Learning Rate:
+1.5625e-06
+-------------------------------
+Epoch 140
+Epoch 140, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 141
+Epoch 141, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 142
+Epoch 142, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 143
+Epoch 143, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 144
+Epoch 144, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 145
+Epoch 145, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 146
+Epoch 146, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 147
+Epoch 147, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 148
+Epoch 148, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 149
+Epoch 149, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 150
+Epoch 150, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 151
+Epoch 151, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 152
+Epoch 152, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 153
+Epoch 153, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 154
+Epoch 154, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 155
+Epoch 155, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 156
+Epoch 156, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 157
+Epoch 157, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 158
+Epoch 158, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 159
+Epoch 159, Learning Rate:
+7.8125e-07
+-------------------------------
+Epoch 160
+Epoch 160, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 161
+Epoch 161, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 162
+Epoch 162, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 163
+Epoch 163, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 164
+Epoch 164, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 165
+Epoch 165, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 166
+Epoch 166, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 167
+Epoch 167, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 168
+Epoch 168, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 169
+Epoch 169, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 170
+Epoch 170, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 171
+Epoch 171, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 172
+Epoch 172, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 173
+Epoch 173, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 174
+Epoch 174, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 175
+Epoch 175, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 176
+Epoch 176, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 177
+Epoch 177, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 178
+Epoch 178, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 179
+Epoch 179, Learning Rate:
+3.90625e-07
+-------------------------------
+Epoch 180
+Epoch 180, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 181
+Epoch 181, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 182
+Epoch 182, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 183
+Epoch 183, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 184
+Epoch 184, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 185
+Epoch 185, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 186
+Epoch 186, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 187
+Epoch 187, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 188
+Epoch 188, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 189
+Epoch 189, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 190
+Epoch 190, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 191
+Epoch 191, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 192
+Epoch 192, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 193
+Epoch 193, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 194
+Epoch 194, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 195
+Epoch 195, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 196
+Epoch 196, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 197
+Epoch 197, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 198
+Epoch 198, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 199
+Epoch 199, Learning Rate:
+1.953125e-07
+-------------------------------
+Epoch 200
+Epoch 200, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 201
+Epoch 201, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 202
+Epoch 202, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 203
+Epoch 203, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 204
+Epoch 204, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 205
+Epoch 205, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 206
+Epoch 206, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 207
+Epoch 207, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 208
+Epoch 208, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 209
+Epoch 209, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 210
+Epoch 210, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 211
+Epoch 211, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 212
+Epoch 212, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 213
+Epoch 213, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 214
+Epoch 214, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 215
+Epoch 215, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 216
+Epoch 216, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 217
+Epoch 217, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 218
+Epoch 218, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 219
+Epoch 219, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 220
+Epoch 220, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 221
+Epoch 221, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 222
+Epoch 222, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 223
+Epoch 223, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 224
+Epoch 224, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 225
+Epoch 225, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 226
+Epoch 226, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 227
+Epoch 227, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 228
+Epoch 228, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 229
+Epoch 229, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 230
+Epoch 230, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 231
+Epoch 231, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 232
+Epoch 232, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 233
+Epoch 233, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 234
+Epoch 234, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 235
+Epoch 235, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 236
+Epoch 236, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 237
+Epoch 237, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 238
+Epoch 238, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 239
+Epoch 239, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 240
+Epoch 240, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 241
+Epoch 241, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 242
+Epoch 242, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 243
+Epoch 243, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 244
+Epoch 244, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 245
+Epoch 245, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 246
+Epoch 246, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 247
+Epoch 247, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 248
+Epoch 248, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 249
+Epoch 249, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 250
+Epoch 250, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 251
+Epoch 251, Learning Rate:
+2.44140625e-08
+early stop at epoch:250
+[1.9050773305972438e-08, 9.545355195961803e-09, 1.641250614484808e-08, 8.94639363680865e-09, 1.519333792907955e-08, 3.244641436778396e-08, 1.8322076793196226e-08, 3.044821273019153e-08, 2.3863277219101697e-08, 1.576494129752074e-09, 2.135401827338676e-07, 2.5508680848483224e-07, 2.3702337258420706e-07, 1.9860091953656683e-07, 1.9555720995300632e-07, 2.3039636670007376e-07, 1.9417372998890639e-07, 1.6313963433285074e-07, 1.2460748394423983e-07, 9.893009355832875e-08, 5.674953120036536e-08, 2.598455473201247e-08, 5.584396017010273e-08, 4.220029357874973e-08, 2.1717805731144964e-08, 2.285057218258463e-07, 2.575421461652476e-07, 2.431176487488802e-07, 2.437958315479028e-07, 2.194961988867726e-07, 1.8826325787563217e-07, 1.9532274733253893e-07, 1.845603537916852e-07, 1.9791975613185206e-07, 1.6835674372269145e-07, 1.1908015025322822e-07, 9.804733796293756e-08, 6.524216481927428e-08, 1.005142675705258e-07, 6.962120569170422e-08, 2.8488652143870484e-08, 3.6570680432622883e-09, 7.576741633551064e-09, 8.881500993744181e-08, 7.88904523667452e-08, 8.731956048386542e-08, 6.03041920802671e-08, 5.129308151695429e-08, 6.934519706404268e-08, 5.182124698559713e-08]
+[123, 124, 126, 128, 133, 134, 135, 136, 137, 149, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 239, 240, 244, 245, 246, 247, 248, 249, 250]
+Done!
+Epoch 211, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 212
+Epoch 212, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 213
+Epoch 213, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 214
+Epoch 214, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 215
+Epoch 215, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 216
+Epoch 216, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 217
+Epoch 217, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 218
+Epoch 218, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 219
+Epoch 219, Learning Rate:
+9.765625e-08
+-------------------------------
+Epoch 220
+Epoch 220, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 221
+Epoch 221, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 222
+Epoch 222, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 223
+Epoch 223, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 224
+Epoch 224, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 225
+Epoch 225, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 226
+Epoch 226, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 227
+Epoch 227, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 228
+Epoch 228, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 229
+Epoch 229, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 230
+Epoch 230, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 231
+Epoch 231, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 232
+Epoch 232, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 233
+Epoch 233, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 234
+Epoch 234, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 235
+Epoch 235, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 236
+Epoch 236, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 237
+Epoch 237, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 238
+Epoch 238, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 239
+Epoch 239, Learning Rate:
+4.8828125e-08
+-------------------------------
+Epoch 240
+Epoch 240, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 241
+Epoch 241, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 242
+Epoch 242, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 243
+Epoch 243, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 244
+Epoch 244, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 245
+Epoch 245, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 246
+Epoch 246, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 247
+Epoch 247, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 248
+Epoch 248, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 249
+Epoch 249, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 250
+Epoch 250, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 251
+Epoch 251, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 252
+Epoch 252, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 253
+Epoch 253, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 254
+Epoch 254, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 255
+Epoch 255, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 256
+Epoch 256, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 257
+Epoch 257, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 258
+Epoch 258, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 259
+Epoch 259, Learning Rate:
+2.44140625e-08
+-------------------------------
+Epoch 260
+Epoch 260, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 261
+Epoch 261, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 262
+Epoch 262, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 263
+Epoch 263, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 264
+Epoch 264, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 265
+Epoch 265, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 266
+Epoch 266, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 267
+Epoch 267, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 268
+Epoch 268, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 269
+Epoch 269, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 270
+Epoch 270, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 271
+Epoch 271, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 272
+Epoch 272, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 273
+Epoch 273, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 274
+Epoch 274, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 275
+Epoch 275, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 276
+Epoch 276, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 277
+Epoch 277, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 278
+Epoch 278, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 279
+Epoch 279, Learning Rate:
+1.220703125e-08
+-------------------------------
+Epoch 280
+Epoch 280, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 281
+Epoch 281, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 282
+Epoch 282, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 283
+Epoch 283, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 284
+Epoch 284, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 285
+Epoch 285, Learning Rate:
+6.103515625e-09
+-------------------------------
+Epoch 286
+Epoch 286, Learning Rate:
+6.103515625e-09
+early stop at epoch:285
+[1.178414615388679e-08, 8.701394765881964e-08, 1.656230898345518e-08, 1.5954435894302377e-07, 1.1131478697400322e-07, 4.12280105945874e-08, 1.2668538046063245e-07, 1.5696354371374266e-07, 1.5535320312966105e-07, 1.093885743695191e-07, 6.78398655731322e-08, 1.6935699669913412e-07, 1.1149950164492685e-07, 5.108640427722208e-08, 4.563802584648696e-08, 3.699507309393555e-08, 1.0396104081741842e-10, 4.4303795013954234e-08, 6.557300754415441e-08, 8.207180696168351e-08, 5.049636167367568e-08, 1.2647455571348687e-07, 2.197082149111104e-07, 2.944064728455585e-07, 5.01328111052653e-07, 4.506857191918476e-07, 4.038998982111936e-07, 4.020689361665031e-07, 2.938929254036893e-07, 1.4197203739772524e-07, 7.756567976665952e-08, 3.42957268492488e-08, 9.27860173934013e-08, 1.0638891268216999e-07, 1.0751627834817019e-07, 1.4214691783891083e-07, 1.0333432569628518e-07, 1.6547180289853685e-07, 2.672205539612716e-07, 1.917331436880276e-07, 8.620324235161995e-08, 5.596920443413451e-08, 1.2384714131135318e-07, 3.0856398172153924e-08, 2.475096762768753e-07, 1.0401407614245863e-07, 1.5864506382751844e-07, 2.2001065685500776e-07, 2.604995620529843e-07, 2.979927415412611e-07]
+[171, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 216, 237, 238, 243, 245, 246, 248, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285]
+Done!
