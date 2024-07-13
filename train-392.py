@@ -7,7 +7,7 @@ import torch
 from model import *
 import my.utils as utils
 
-path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv')
+path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-2out')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -22,7 +22,7 @@ def plot(res1, res2, loss_train, loss_vali):
 
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
-    rainrate = np.array(res1[1]).flatten(); prediction = np.array(res1[2]).flatten()
+    rainrate = np.array(res1[1])[:, 0].flatten(); prediction = np.array(res1[2])[:, 0].flatten()
     ax.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
     ax.plot([0,1],[0,1])
     ax.set_title('train')
@@ -34,7 +34,7 @@ def plot(res1, res2, loss_train, loss_vali):
 
     plt.cla()
     fig = plt.figure(figsize=(6,6)); ax = fig.add_subplot()
-    rainrate = np.array(res2[1]).flatten(); prediction = np.array(res2[2]).flatten()
+    rainrate = np.array(res1[1])[:, 0].flatten(); prediction = np.array(res1[2])[:, 0].flatten()
     ax.hist2d(rainrate, prediction,bins = [np.arange(0,1,0.01)]*2, norm = colors.LogNorm())
     ax.plot([0,1],[0,1])
     ax.set_title('vali')
@@ -71,12 +71,12 @@ if __name__ == "__main__":
     train_x[:,[2,5,8]] = utils.scaler(train_x[:,[2,5,8]], 'kdp')
     vali_x[:, [2,5,8]] = utils.scaler(vali_x[:, [2,5,8]], 'kdp')
 
-    train_y = train_y[:, 0].reshape(-1, 1)
-    vali_y = vali_y[:, 0].reshape(-1, 1)
-    train_y = utils.scaler(train_y, 'rr')
-    vali_y = utils.scaler(vali_y, 'rr')
-    # train_y = utils.scaler(np.log10(train_y), 'log10rr')
-    # vali_y = utils.scaler(np.log10(vali_y), 'log10rr')
+    train_y = train_y[:, [0,3]]
+    vali_y = vali_y[:, [0,3]]
+    train_y[:,0] = utils.scaler(train_y[:,0], 'rr')
+    vali_y[:,0] = utils.scaler(vali_y[:,0], 'rr')
+    train_y[:,1] = utils.scaler(train_y[:,1], 'D0*log10Nw')
+    vali_y[:,1] = utils.scaler(vali_y[:,1], 'D0*log10Nw')
 
     '''数据加载'''
     train = utils.loader(train_x, train_y, device, 64)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     
     '''训练'''
-    model = CNN(9,1).to(device)
+    model = CNN(9,2).to(device)
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     loss_func = torch.nn.MSELoss()
     # loss_func = wmaeloss(weights, edge)
