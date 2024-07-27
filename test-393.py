@@ -53,11 +53,12 @@ def qpe_3ele(data, center):
 
     return rr1, rr2, rr3, rr4
 
-def apply_3ele(data):
-    refup = 10**(data[:, 3]*0.1)
+def apply_3ele(data, center = 4):
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
     meanup = refup.mean(axis=(1,2))
     mean = 10*np.log10(meanup)
-    loc = mean >= 0
+    loc = mean >= 0 
     test_x = data[loc].astype(np.float32)
     # test_x = data.astype(np.float32)
 
@@ -177,5 +178,49 @@ def main():
     plt.grid()
     plt.savefig(f'{path_save}/box.png')
 
+def example(extent = 4):
+    ls = []
+    for root, dirs, files in os.walk('/data/zry/radar/Xradar_npz_qc/BJXSY/20180807'):
+        for file in files:
+            if '223000' in file:
+                ls += [root + '/' + file]
+
+    for fp in ls:
+        data = np.load(fp)['data']
+        aaaa = data[[0,1,3], :3] # (prv, ele, azi, gate)
+
+        bbbb = np.zeros((9,360,1000))*1. # (ele-prv, azi, gate)
+        bbbb[[0,3,6]] = aaaa[0]
+        bbbb[[1,4,7]] = aaaa[1]
+        bbbb[[2,5,8]] = aaaa[2]
+
+        cccc = np.zeros((9,360+8,1000))*1. # (ele-prv, azi, gate)
+        cccc[:,extent:-extent] = bbbb
+        cccc[:,:extent] = bbbb[:,-extent:]
+        cccc[:,-extent:] = bbbb[:,:extent]
+
+        samples = np.zeros((360*(1000-2*extent), 9, 2*extent+1, 2*extent+1))
+        counter = 0
+        for true_azi in np.arange(360):
+            fake_azi = true_azi+extent
+            for gate in np.arange(4,996):
+                sample = cccc[:,fake_azi-extent:fake_azi+extent+1, gate-extent:gate+extent+1]
+                samples[counter] = sample; counter += 1
+        
+        rr1, rr2, rr3, rr4 = qpe_3ele(samples, extent)
+        rainrate = np.zeros((9,360,1000))
+        rainrate[0, :, 4:-4] = rr1.reshape(360, 1000-2*extent)
+        rainrate[1, :, 4:-4] = rr2.reshape(360, 1000-2*extent)
+        rainrate[2, :, 4:-4] = rr3.reshape(360, 1000-2*extent)
+        rainrate[3, :, 4:-4] = rr4.reshape(360, 1000-2*extent)
+
+        rr_dl = apply_3ele(samples)
+        rainrate[4, :, 4:-4] = rr_dl.reshape(360, 1000-2*extent)
+
+        np.save('/data/zry/radar/Xradar_npz_qc/BJXSY/20180716/aaatest.npy', rainrate)
+
+
 if __name__ == "__main__":
-    main()
+    # main()
+
+    example()
