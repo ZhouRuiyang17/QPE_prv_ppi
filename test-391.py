@@ -10,7 +10,7 @@ import my.mytools as mt
 
 import datetime
 
-path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-wmse')
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-wmse')
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -6,14 +6,22 @@ import torch
 
 from model import *
 import my.utils as utils
+import logging
 
-path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-wmse')
+# 配置日志记录器
+logging.basicConfig(
+    filename='main.log',                  # 日志文件名
+    level=logging.INFO,                   # 记录 INFO 及以上级别的日志
+    format='%(asctime)s---%(message)s',   # 日志格式
+    datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
+)
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-wmse')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("使用的设备:", device)
+logging.info("使用的设备:", device)
 
 # input(f'res will be stored in:\n{path_save}\nshall we go on[y/n]?')
 
@@ -94,7 +102,7 @@ if __name__ == "__main__":
     train_y = dataset_train['y_train'].astype(np.float32)
     vali_x = dataset_train['x_vali'].astype(np.float32)
     vali_y = dataset_train['y_vali'].astype(np.float32)
-    print('Data loaded')
+    logging.info('Data loaded')
 
     '''裁剪数据和归一化'''
     train_x[:,[0,3,6]] = utils.scaler(train_x[:,[0,3,6]], 'ref')
@@ -129,13 +137,13 @@ if __name__ == "__main__":
     loss_train = []; loss_vali = []
     params = []; slopes = []; positive_counter = 0; positive_position = []
     for t in range(epochs):
-        print(f"-------------------------------\nEpoch {t+1}")
+        logging.info(f"-------------------------------\nEpoch {t+1}")
         
         res1, res2 = utils.trainer(train, vali, model, loss_func, optimizer)
         scheduler.step()
-        print(f"Epoch {t + 1}, Learning Rate:")
+        logging.info(f"Epoch {t + 1}, Learning Rate:")
         for param_group in optimizer.param_groups:
-            print(param_group['lr']) # 打印更新后的学习率
+            logging.info(param_group['lr']) # 打印更新后的学习率
         
         loss_train += [res1[-1]]
         loss_vali += [res2[-1]]
@@ -162,26 +170,26 @@ if __name__ == "__main__":
                 positive_counter += flag
             if positive_counter == 50:
                 torch.save(params[-1], path_save + '/' + "cnn.pth")
-                print('early stop at epoch:{}'.format(t))
+                logging.info('early stop at epoch:{}'.format(t))
                 plot(res1, res2, loss_train, loss_vali)
-                print(slopes)
-                print(positive_position)
+                logging.info(slopes)
+                logging.info(positive_position)
                 break
 
             # flag_stop = utils.early_stop_ptrend(loss_vali, 10)
             # if flag_stop:
             #     torch.save(params[-1], path_save + '/' + "cnn.pth")
-            #     print('early stop at epoch:{}'.format(t))
+            #     logging.info('early stop at epoch:{}'.format(t))
             #     plot(res1, res2, loss_train, loss_vali)
             #     break
     
-    print("Done!")
+    logging.info("Done!")
 
     
     
     # if positive_counter != 20:
     #     torch.save(model.state_dict(), path_save + '/' + "cnn.pth")
-    #     print('finish all epochs:{}'.format(epochs))  
+    #     logging.info('finish all epochs:{}'.format(epochs))  
 
     loss_arr = np.array([loss_train, loss_vali]).T
     np.savetxt(f'{path_save}/loss.csv', loss_arr, delimiter=',')
