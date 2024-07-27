@@ -10,7 +10,8 @@ import my.mytools as mt
 
 import datetime
 
-path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv-3out-wmse')
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse')
+print(path_save)
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -83,8 +84,7 @@ def apply_3ele(data):
     rainrate = mask_rr(rainrate)
     return rainrate
 
-if __name__ == "__main__":
-    
+def main():
     count = 0
     for file in os.listdir('../'):
         if file.endswith('npz') and '2019' in file:
@@ -176,3 +176,6 @@ if __name__ == "__main__":
                 labels=['dl', 'ref', 'kdp', 'refzdr', 'kdpzdr'], showfliers=0, showmeans=1)
     plt.grid()
     plt.savefig(f'{path_save}/box.png')
+
+if __name__ == "__main__":
+    main()
