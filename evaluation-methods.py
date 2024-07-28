@@ -8,13 +8,14 @@ import matplotlib.colors as colors
 # plt.rcParams['font.family'] = 'Microsoft YaHei'
 plt.rcParams['font.size'] = 12
 
+path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse'
 
-aaa = mt.readcsv(r"/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse/example-dl.csv", 0, isrr=3, mask=1, acc='H')
-bbb = mt.readcsv(r"/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse/example-ref.csv", 0, isrr=3, mask=1, acc='H')
-ccc = mt.readcsv(r"/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse/example-kdp.csv", 0, isrr=3, mask=1, acc='H')
-ddd = mt.readcsv(r"/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse/example-refzdr.csv", 0, isrr=3, mask=1, acc='H')
-eee = mt.readcsv(r"/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse/example-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
-zzz = mt.readcsv(r"/home/zry/code/gauge_all.csv", 0, isrr=0, mask=1)
+aaa = mt.readcsv(f"{path}/example-dl.csv", 0, isrr=3, mask=1, acc='H')
+bbb = mt.readcsv(f"{path}/example-ref.csv", 0, isrr=3, mask=1, acc='H')
+ccc = mt.readcsv(f"{path}/example-kdp.csv", 0, isrr=3, mask=1, acc='H')
+ddd = mt.readcsv(f"{path}/example-refzdr.csv", 0, isrr=3, mask=1, acc='H')
+eee = mt.readcsv(f"{path}/example-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
+zzz = mt.readcsv(f"/home/zry/code/gauge_all.csv", 0, isrr=0, mask=1)
 
 titles = ['dl', 'ref', 'kdp', 'refzdr', 'kdpzdr']
 
@@ -91,7 +92,7 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
     met.to_csv(met_path)
     print(met)
 
-plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, r"model/based_on_202407/240727-cnn-9prv-3out-wmse/all.png", r"model/based_on_202407/240727-cnn-9prv-3out-wmse/all.csv")
+# plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/all.png", f"{path}/all.csv")
 
 
 def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
@@ -121,97 +122,77 @@ def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
     plt.grid()
     plt.savefig(fphist)
 
-plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, "model/based_on_202407/240727-cnn-9prv-3out-wmse/all-box.png", "model/based_on_202407/240727-cnn-9prv-3out-wmse/all-hist.png")
+# plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/all-box.png", f"{path}/all-hist.png")
 
 
-# =============================================================================
-# def accumulate(ls):
-#     print(f'{ls[0]}-{ls[-1]}')
-#     
-#     data = np.load(ls[0])
-#     for fpath in ls[1:]:
-#         temp = np.load(fpath)
-#         data += temp
-#     
-#     return data
-# 
-# def plot_an_event(aaa, bbb, ccc, zzz, event,
-#                   ls1, ls2, ls3,
-#                   siteinfo_path,
-#                   savepath):
-#     aaa = aaa.loc[event[0] : event[1]].copy()
-#     bbb = bbb.loc[event[0] : event[1]].copy()
-#     ccc = ccc.loc[event[0] : event[1]].copy()
-#     zzz = zzz.loc[event[0] : event[1]].copy()
-#     
-#     plot_all_scatters(aaa,bbb,ccc,zzz, savepath[0], savepath[1])
-#     
-#     columns = zzz.columns
-#     aaa = aaa.sum().values
-#     bbb = bbb.sum().values
-#     ccc = ccc.sum().values
-#     zzz = zzz.sum().values
-#     loc = (zzz>=2) & (aaa>=2) & (bbb>=2) & (ccc>=2)
-# 
-#     
-#     # 创建一个包含3个子图的图形
-#     import cartopy.crs as ccrs
-#     fig, axs = plt.subplots(1, 3, figsize=(12, 4), subplot_kw={'projection': ccrs.PlateCarree()})
-#     # plt.subplots_adjust(hspace=0.5)
-#     # plt.subplots_adjust(wspace=0.5)
-#     plt.subplots_adjust(left=0, right=1.2, top=1, bottom=0)
-#     
-#     area, lon, lat = mt.yinchuan_c_vcp()
-#     siteinfo = pd.read_csv(siteinfo_path, index_col=0)
-#     siteinfo.index = siteinfo.index.astype(str)
-#     lons = siteinfo.loc[columns, 'lon']
-#     lats = siteinfo.loc[columns, 'lat']
-#     
-#     pm1 = mt.pcolor_geo(axs[0], accumulate(ls1), 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-#     pm2 = mt.pcolor_geo(axs[1], accumulate(ls2), 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-#     pm3 = mt.pcolor_geo(axs[2], accumulate(ls3), 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-# 
-#     
-#     cbar = fig.colorbar(pm1[0], ax=axs, location='right')
-#     cbar.set_ticks(ticks = pm1[2])
-#     cbar.set_ticklabels(pm1[2])
-#     cbar.set_label(pm1[1])
-#     fig.savefig(savepath[2], transparent=0, dpi=fig.dpi, bbox_inches='tight')
-#     
-# 
-# 
-# '''20180720'''
-# path = r'D:\data\yinchuan\mosaic\20240521结果\zr300'
-# ls = []; ls2=[]; ls3=[]
+def accumulate(ls):
+    print(f'{ls[0]}-{ls[-1]}')
+    
+    data = np.load(ls[0]) * 3/60
+    for fpath in ls[1:]:
+        temp = np.load(fpath) * 3/60
+        data += temp
+    
+    return data
+
+def plot_an_event(aaa, bbb, ccc, zzz, event,
+                  ls1,
+                  siteinfo_path,
+                  savepath):
+    # aaa = aaa.loc[event[0] : event[1]].copy()
+    # bbb = bbb.loc[event[0] : event[1]].copy()
+    # ccc = ccc.loc[event[0] : event[1]].copy()
+    # zzz = zzz.loc[event[0] : event[1]].copy()
+    
+    # plot_all_scatters(aaa,bbb,ccc,zzz, savepath[0], savepath[1])
+    
+    # columns = zzz.columns
+    # aaa = aaa.sum().values
+    # bbb = bbb.sum().values
+    # ccc = ccc.sum().values
+    zzz = zzz.sum().values
+    loc = (zzz>=2)# & (aaa>=2) & (bbb>=2) & (ccc>=2)
+
+    
+    # 创建一个包含3个子图的图形
+    import cartopy.crs as ccrs
+    fig, axs = plt.subplots(1, 5, figsize=(20, 4), subplot_kw={'projection': ccrs.PlateCarree()})
+    # plt.subplots_adjust(hspace=0.5)
+    # plt.subplots_adjust(wspace=0.5)
+    plt.subplots_adjust(left=0, right=1.2, top=1, bottom=0)
+    
+    area, lon, lat = mt.BJ_AREA_SMALL()
+    siteinfo = pd.read_csv(siteinfo_path, index_col=0)
+    siteinfo.index = siteinfo.index.astype(str)
+    lons = siteinfo.loc[columns, 'lon']
+    lats = siteinfo.loc[columns, 'lat']
+    
+    acc = accumulate(ls1)
+    pm1 = mt.pcolor_geo(axs[0], acc[4], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
+    pm2 = mt.pcolor_geo(axs[1], acc[0], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
+    pm3 = mt.pcolor_geo(axs[2], acc[1], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
+    pm4 = mt.pcolor_geo(axs[3], acc[2], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
+    pm5 = mt.pcolor_geo(axs[4], acc[3], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
+
+    
+    cbar = fig.colorbar(pm1[0], ax=axs, location='right')
+    cbar.set_ticks(ticks = pm1[2])
+    cbar.set_ticklabels(pm1[2])
+    cbar.set_label(pm1[1])
+
+    for i in range(len(titles)):
+        axs[i].set_title(titles[i])
+
+
+    fig.savefig(savepath, transparent=0, dpi=fig.dpi, bbox_inches='tight')
+    
+
+
+# path = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
+# ls = []
 # for file in os.listdir(path):
-#     if '20180720' in file:# or '20220711' in file:
 #         ls += [path + '\\' + file]
-#         ls2 += [path.replace('zr300', 'mlp') + '\\' + file]
-#         ls3 += [path.replace('zr300', 'mlpyc') + '\\' + file]
 # begin = '2018-7-20 9:0'#!!!
 # end = '2018-7-21 0:0'
-# print(ls[170])
-# ls = ls[:170]
-# savepath = [r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180720.png", 
-#             r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180720.csv",
-#             r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180720-2.png"]
-# plot_an_event(aaa,bbb,ccc,zzz,[begin, end], ls, ls, ls, r"D:\data\yinchuan\gauge\site_info.csv", savepath)
-# 
-# '''20180722'''
-# path = r'D:\data\yinchuan\mosaic\20240521结果\zr300'
-# ls = []; ls2=[]; ls3=[]
-# for file in os.listdir(path):
-#     if '20180722' in file:# or '20220711' in file:
-#         ls += [path + '\\' + file]
-#         ls2 += [path.replace('zr300', 'mlp') + '\\' + file]
-#         ls3 += [path.replace('zr300', 'mlpyc') + '\\' + file]
-# begin = '2018-7-22 9:0'#!!!
-# end = '2018-7-23 8:0'
-# print(ls[254])
-# ls = ls[:255]
-# savepath = [r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180722.png", 
-#             r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180722.csv",
-#             r"C:\Users\admin\OneDrive\讨论\银川内涝\文章\银川\new\yc-20180722-2.png"]
-# plot_an_event(aaa,bbb,ccc,zzz,[begin, end], ls, ls2, ls3, r"D:\data\yinchuan\gauge\site_info.csv", savepath)
-# 
-# =============================================================================
+# plot_an_event(aaa,bbb,ccc,zzz,[begin, end], ls, "../gauge_info.csv", f'{path}/example-dist.png')
+
