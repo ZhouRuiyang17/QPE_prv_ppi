@@ -10,7 +10,8 @@ import my.mytools as mt
 
 import datetime
 
-path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-wmse')
+path_save = './model/based_on_202407/{}'.format('240713-cnn-9prv')
+print(path_save)
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -106,11 +107,12 @@ def qpe_3ele(data, center):
 
     return rr1, rr2, rr3, rr4
 
-def apply_3ele(data):
-    refup = 10**(data[:, 3]*0.1)
+def apply_3ele(data, center = 4):
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
     meanup = refup.mean(axis=(1,2))
     mean = 10*np.log10(meanup)
-    loc = mean >= 0
+    loc = mean >= 0 
     test_x = data[loc].astype(np.float32)
     # test_x = data.astype(np.float32)
 
