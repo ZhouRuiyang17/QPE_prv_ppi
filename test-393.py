@@ -37,7 +37,9 @@ def qpe_3ele(data, center):
     a1 = 0.0576; b1 = 0.557
     a2 = 15.421; b2 = 0.817
     a3 = 0.0059; b3 = 0.994;c3 = -4.929
+    # a3 = 0.0061; b3 = 0.959;c3 = -3.671 # zz
     a4 = 26.778; b4 = 0.946;c4 = -1.249
+    # a4 = 22.560; b4 = 0.910;c4 = -0.859 # zz
 
 
 
@@ -180,12 +182,15 @@ def main():
 
 def example(extent = 4):
     ls = []
-    for root, dirs, files in os.walk('/data/zry/radar/Xradar_npz_qc/BJXSY/20180807'):
+    lssave = []
+    for root, dirs, files in os.walk('/data/zry/radar/Xradar_npz_qc/BJXSY/20190722'):
         for file in files:
-            if '223000' in file:
+            # if '223000' in file:
                 ls += [root + '/' + file]
+                lssave += ['/data/zry/radar/Xradar_npy_qpe/BJXSY' + '/' + file.replace('npz', 'npy')]
 
-    for fp in ls:
+    for fp, fpsave in zip(ls, lssave):
+        logging.info(fp)
         data = np.load(fp)['data']
         aaaa = data[[0,1,3], :3] # (prv, ele, azi, gate)
 
@@ -217,10 +222,23 @@ def example(extent = 4):
         rr_dl = apply_3ele(samples)
         rainrate[4, :, 4:-4] = rr_dl.reshape(360, 1000-2*extent)
 
-        np.save('/data/zry/radar/Xradar_npz_qc/BJXSY/20180716/aaatest.npy', rainrate)
+        np.save(fpsave, rainrate)
+        logging.info(fpsave)
+        logging.info('-----------------------------------------')
 
+
+
+import logging
+
+# 配置日志记录器
+logging.basicConfig(
+    filename='apply.log',                  # 日志文件名
+    level=logging.INFO,                   # 记录 INFO 及以上级别的日志
+    format='%(asctime)s---%(message)s',   # 日志格式
+    datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
+)
 
 if __name__ == "__main__":
-    # main()
+    main()
 
-    example()
+    # example()

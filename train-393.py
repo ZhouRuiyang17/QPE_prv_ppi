@@ -17,7 +17,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
 )
 
-path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse')
+path_save = './model/based_on_202407/{}'.format('240728-cnn-9prv-3out-wmse-ref_mask')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -106,7 +106,7 @@ class WeightedMSELoss(nn.Module):
 if __name__ == "__main__":
     
     # ----封装
-    dataset_train = np.load('../dataset-3-9.npz')
+    dataset_train = np.load('../dataset-3-9-ref_mask.npz')
     train_x = dataset_train['x_train'].astype(np.float32)
     train_y = dataset_train['y_train'].astype(np.float32)
     vali_x = dataset_train['x_vali'].astype(np.float32)

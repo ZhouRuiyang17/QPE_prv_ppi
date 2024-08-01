@@ -10,14 +10,14 @@ plt.rcParams['font.size'] = 12
 
 path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse'
 
-aaa = mt.readcsv(f"{path}/example-dl.csv", 0, isrr=3, mask=1, acc='H')
-bbb = mt.readcsv(f"{path}/example-ref.csv", 0, isrr=3, mask=1, acc='H')
-ccc = mt.readcsv(f"{path}/example-kdp.csv", 0, isrr=3, mask=1, acc='H')
-ddd = mt.readcsv(f"{path}/example-refzdr.csv", 0, isrr=3, mask=1, acc='H')
-eee = mt.readcsv(f"{path}/example-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
+aaa = mt.readcsv(f"{path}/rainrate-dl.csv", 0, isrr=3, mask=1, acc='H')
+bbb = mt.readcsv(f"{path}/rainrate-ref.csv", 0, isrr=3, mask=1, acc='H')
+ccc = mt.readcsv(f"{path}/rainrate-kdp.csv", 0, isrr=3, mask=1, acc='H')
+ddd = mt.readcsv(f"{path}/rainrate-refzdr.csv", 0, isrr=3, mask=1, acc='H')
+eee = mt.readcsv(f"{path}/rainrate-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
 zzz = mt.readcsv(f"/home/zry/code/gauge_all.csv", 0, isrr=0, mask=1)
 
-titles = ['dl', 'ref', 'kdp', 'refzdr', 'kdpzdr']
+titles = ['CNN Model', 'R(Z)', 'R(kdp)', 'R(Z,zdr)', 'R(kdp,zdr)']
 
 '''match'''
 _, _, index, columns = mt.match_df(aaa, zzz)
@@ -67,11 +67,11 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
     # plt.subplots_adjust(wspace=0.5)
     plt.subplots_adjust(left=0, right=1.2, top=0.8, bottom=0)
     
-    hd1 = mt.hist2d(axs[0], zzz[loc], aaa[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd2 = mt.hist2d(axs[1], zzz[loc], bbb[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd3 = mt.hist2d(axs[2], zzz[loc], ccc[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd4 = mt.hist2d(axs[3], zzz[loc], ddd[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd5 = mt.hist2d(axs[4], zzz[loc], eee[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd1 = mt.hist2d(axs[0], zzz[loc], aaa[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd2 = mt.hist2d(axs[1], zzz[loc], bbb[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd3 = mt.hist2d(axs[2], zzz[loc], ccc[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd4 = mt.hist2d(axs[3], zzz[loc], ddd[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd5 = mt.hist2d(axs[4], zzz[loc], eee[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
     
     '''cb'''
     fig.colorbar(hd1[3], ax=axs, location='right', pad=0.05)
@@ -92,7 +92,7 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
     met.to_csv(met_path)
     print(met)
 
-# plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/all.png", f"{path}/all.csv")
+plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/hour-all.png", f"{path}/hour-all.csv")
 
 
 def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
