@@ -5,7 +5,7 @@ import matplotlib.colors as colors
 import torch
 
 from model import *
-import my.utils as utils
+import my.utils.utils_ml as utils
 
 import logging
 
@@ -17,6 +17,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
 )
 
+# 配置路径
 path_save = './model/based_on_202407/{}'.format('240728-cnn-9prv-3out-wmse-ref_mask')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
@@ -104,6 +105,8 @@ class WeightedMSELoss(nn.Module):
 
 
 if __name__ == "__main__":
+    torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
+    '''跑个例的时候写一个loader：100，9，9'''
     
     # ----封装
     dataset_train = np.load('../dataset-3-9-ref_mask.npz')
