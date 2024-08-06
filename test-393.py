@@ -234,7 +234,7 @@ def example(extent = 4):
         np.save(fpsave, rainrate)
         logging.info(fpsave)
         logging.info('-----------------------------------------')
-        break
+        
 
 
 
