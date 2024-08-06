@@ -9,11 +9,18 @@ import my.utils.utils_ml as utils
 import my.utils.mytools as mt
 
 import datetime
-
+import logging
+# 配置日志记录器
+logging.basicConfig(
+    filename='apply.log',                  # 日志文件名
+    level=logging.INFO,                   # 记录 INFO 及以上级别的日志
+    format='%(asctime)s---%(message)s',   # 日志格式
+    datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
+)
 
 
 # 配置路径
-path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse copy')
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse')
 print(path_save)
 
 # 检查 GPU 是否可用
@@ -178,34 +185,39 @@ def main():
 def example(extent = 4):
     ls = []
     lssave = []
-    for root, dirs, files in os.walk('/data/zry/radar/Xradar_npz_qc/BJXSY/20190722'):
+    for root, dirs, files in os.walk('/data/zry/radar/Xradar_npz_qc/BJXSY/20190809'):
         for file in files:
-            # if '223000' in file:
+            # if 'BJXSY.20190722.142959' in file:
                 ls += [root + '/' + file]
                 lssave += ['/data/zry/radar/Xradar_npy_qpe/BJXSY' + '/' + file.replace('npz', 'npy')]
 
     for fp, fpsave in zip(ls, lssave):
         logging.info(fp)
+        t0 = datetime.datetime.now()
         data = np.load(fp)['data']
-        aaaa = data[[0,1,3], :3] # (prv, ele, azi, gate)
+        logging.info(f"cost of np.load(fp)['data']: {datetime.datetime.now()-t0}")
+        aaaa = data[[0,1,3], :3] # [0,1,3]表示ref zdr kdp，[:3]表示前三层，格式(prv, ele, azi, gate)
 
-        bbbb = np.zeros((9,360,1000))*1. # (ele-prv, azi, gate)
+        bbbb = np.zeros((9,360,1000))*1. # (ele*prv, azi, gate)
         bbbb[[0,3,6]] = aaaa[0]
         bbbb[[1,4,7]] = aaaa[1]
         bbbb[[2,5,8]] = aaaa[2]
 
-        cccc = np.zeros((9,360+8,1000))*1. # (ele-prv, azi, gate)
+        cccc = np.zeros((9,360+8,1000))*1. # (ele*prv, azi_extent, gate)
         cccc[:,extent:-extent] = bbbb
         cccc[:,:extent] = bbbb[:,-extent:]
         cccc[:,-extent:] = bbbb[:,:extent]
 
+        t0 = datetime.datetime.now()
         samples = np.zeros((360*(1000-2*extent), 9, 2*extent+1, 2*extent+1))
         counter = 0
         for true_azi in np.arange(360):
             fake_azi = true_azi+extent
-            for gate in np.arange(4,996):
+            for gate in np.arange(extent,1000-extent):
                 sample = cccc[:,fake_azi-extent:fake_azi+extent+1, gate-extent:gate+extent+1]
                 samples[counter] = sample; counter += 1
+        logging.info(f'cost of resample: {datetime.datetime.now()-t0}')
+        logging.info(f'num of samples:{counter}')
         
         rr1, rr2, rr3, rr4 = qpe_3ele(samples, extent)
         rainrate = np.zeros((9,360,1000))
@@ -214,29 +226,24 @@ def example(extent = 4):
         rainrate[2, :, 4:-4] = rr3.reshape(360, 1000-2*extent)
         rainrate[3, :, 4:-4] = rr4.reshape(360, 1000-2*extent)
 
+        t0 = datetime.datetime.now()
         rr_dl = apply_3ele(samples)
+        logging.info(f'cost of qpe: {datetime.datetime.now()-t0}')
         rainrate[4, :, 4:-4] = rr_dl.reshape(360, 1000-2*extent)
 
         np.save(fpsave, rainrate)
         logging.info(fpsave)
         logging.info('-----------------------------------------')
+        break
 
 
 
-import logging
 
-# 配置日志记录器
-logging.basicConfig(
-    filename='apply.log',                  # 日志文件名
-    level=logging.INFO,                   # 记录 INFO 及以上级别的日志
-    format='%(asctime)s---%(message)s',   # 日志格式
-    datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
-)
 
 if __name__ == "__main__":
     # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
 
-    main()
+    # main()
 
-    # example()
+    example()
 
