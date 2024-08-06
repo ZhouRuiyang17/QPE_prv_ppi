@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import my.mytools as mt
+import my.utils.mytools as mt
 import datetime
 
 #%%
@@ -18,15 +18,15 @@ radar = radar.loc[index, columns].sort_index()
 gauge = gauge.loc[index, columns].sort_index()
 
 
-# 要删除的日期列表
-dates_to_remove = ['20170521','20170522','20170523',
-                   '20170810',
-                   '20190525','20190526','20190527']
-# 将日期转换为datetime对象
-dates_to_remove = pd.to_datetime(dates_to_remove)
-# 过滤掉要删除的日期
-radar = radar[~radar.index.normalize().isin(dates_to_remove)]
-gauge = gauge[~gauge.index.normalize().isin(dates_to_remove)]
+# # 要删除的日期列表
+# dates_to_remove = ['20170521','20170522','20170523',
+#                    '20170810',
+#                    '20190525','20190526','20190527']
+# # 将日期转换为datetime对象
+# dates_to_remove = pd.to_datetime(dates_to_remove)
+# # 过滤掉要删除的日期
+# radar = radar[~radar.index.normalize().isin(dates_to_remove)]
+# gauge = gauge[~gauge.index.normalize().isin(dates_to_remove)]
 
 
 # date = '20170822'

@@ -123,17 +123,17 @@ def main():
             radar4.loc[ts, stnm] = rr4
             # break
 
-    radar.to_csv(f'{path_save}/rainrate-dl.csv')
-    radar1.to_csv(f'{path_save}/rainrate-ref.csv')
-    radar2.to_csv(f'{path_save}/rainrate-kdp.csv')
-    radar3.to_csv(f'{path_save}/rainrate-refzdr.csv')
-    radar4.to_csv(f'{path_save}/rainrate-kdpzdr.csv')
+    radar.to_csv(f'{path_save}/test-rr-dl.csv')
+    radar1.to_csv(f'{path_save}/test-rr-ref.csv')
+    radar2.to_csv(f'{path_save}/test-rr-kdp.csv')
+    radar3.to_csv(f'{path_save}/test-rr-refzdr.csv')
+    radar4.to_csv(f'{path_save}/test-rr-kdpzdr.csv')
 
-    radar = mt.readcsv(f'{path_save}/rainrate-dl.csv', isrr=3, mask=1, acc='H')
-    radar1 = mt.readcsv(f'{path_save}/rainrate-ref.csv', isrr=3, mask=1, acc='H')
-    radar2 = mt.readcsv(f'{path_save}/rainrate-kdp.csv', isrr=3, mask=1, acc='H')
-    radar3 = mt.readcsv(f'{path_save}/rainrate-refzdr.csv', isrr=3, mask=1, acc='H')
-    radar4 = mt.readcsv(f'{path_save}/rainrate-kdpzdr.csv', isrr=3, mask=1, acc='H')
+    radar = mt.readcsv(f'{path_save}/test-rr-dl.csv', isrr=3, mask=1, acc='H')
+    radar1 = mt.readcsv(f'{path_save}/test-rr-ref.csv', isrr=3, mask=1, acc='H')
+    radar2 = mt.readcsv(f'{path_save}/test-rr-kdp.csv', isrr=3, mask=1, acc='H')
+    radar3 = mt.readcsv(f'{path_save}/test-rr-refzdr.csv', isrr=3, mask=1, acc='H')
+    radar4 = mt.readcsv(f'{path_save}/test-rr-kdpzdr.csv', isrr=3, mask=1, acc='H')
     gauge = mt.readcsv('../gauge_all.csv')
 
     _, _, idx, col = mt.match_df(gauge, radar)
@@ -152,15 +152,15 @@ def main():
     eee = radar4.values
     loc = (zzz>=0.1) & (aaa>=0.1) & (bbb>=0.1) & (ccc>=0.1) & (ddd>=0.1) & (eee>=0.1)
     mt.Scatter(zzz[loc], aaa[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
-                                          fpath=f'{path_save}/eval-dl.png', title='dl')
+                                          fpath=f'{path_save}/test-hour-dl.png', title='dl')
     mt.Scatter(zzz[loc], bbb[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
-                                        fpath=f'{path_save}/eval-ref.png', title='ref')
+                                        fpath=f'{path_save}/test-hour-ref.png', title='ref')
     mt.Scatter(zzz[loc], ccc[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
-                                        fpath=f'{path_save}/eval-kdp.png', title='kdp')
+                                        fpath=f'{path_save}/test-hour-kdp.png', title='kdp')
     mt.Scatter(zzz[loc], ddd[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
-                                        fpath=f'{path_save}/eval-refzdr.png', title='refzdr')
+                                        fpath=f'{path_save}/test-hour-refzdr.png', title='refzdr')
     mt.Scatter(zzz[loc], eee[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
-                                        fpath=f'{path_save}/eval-kdpzdr.png', title='kdpzdr')
+                                        fpath=f'{path_save}/test-hour-kdpzdr.png', title='kdpzdr')
     
     plt.figure()
     plt.boxplot([aaa[loc]-zzz[loc],
@@ -170,7 +170,7 @@ def main():
                  eee[loc]-zzz[loc]],
                  labels=['dl', 'ref', 'kdp', 'refzdr', 'kdpzdr'], showfliers=1, showmeans=1)
     plt.grid()
-    plt.savefig(f'{path_save}/box-fly.png')
+    plt.savefig(f'{path_save}/test-box-fly.png')
 
     plt.figure()
     plt.boxplot([aaa[loc]-zzz[loc],
@@ -180,7 +180,7 @@ def main():
                 eee[loc]-zzz[loc]],
                 labels=['dl', 'ref', 'kdp', 'refzdr', 'kdpzdr'], showfliers=0, showmeans=1)
     plt.grid()
-    plt.savefig(f'{path_save}/box.png')
+    plt.savefig(f'{path_save}/test-box.png')
 
 def example(extent = 4):
     ls = []
@@ -243,7 +243,7 @@ def example(extent = 4):
 if __name__ == "__main__":
     # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
 
-    # main()
+    main()
 
-    example()
+    # example()
 

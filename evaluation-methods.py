@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import my.mytools as mt
+import my.utils.mytools as mt
 import datetime
 import matplotlib.colors as colors
 # plt.rcParams['font.family'] = 'Microsoft YaHei'
@@ -10,11 +10,11 @@ plt.rcParams['font.size'] = 12
 
 path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse'
 
-aaa = mt.readcsv(f"{path}/rainrate-dl.csv", 0, isrr=3, mask=1, acc='H')
-bbb = mt.readcsv(f"{path}/rainrate-ref.csv", 0, isrr=3, mask=1, acc='H')
-ccc = mt.readcsv(f"{path}/rainrate-kdp.csv", 0, isrr=3, mask=1, acc='H')
-ddd = mt.readcsv(f"{path}/rainrate-refzdr.csv", 0, isrr=3, mask=1, acc='H')
-eee = mt.readcsv(f"{path}/rainrate-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
+aaa = mt.readcsv(f"{path}/example-dl.csv", 0, isrr=3, mask=1, acc='H')
+bbb = mt.readcsv(f"{path}/example-ref.csv", 0, isrr=3, mask=1, acc='H')
+ccc = mt.readcsv(f"{path}/example-kdp.csv", 0, isrr=3, mask=1, acc='H')
+ddd = mt.readcsv(f"{path}/example-refzdr.csv", 0, isrr=3, mask=1, acc='H')
+eee = mt.readcsv(f"{path}/example-kdpzdr.csv", 0, isrr=3, mask=1, acc='H')
 zzz = mt.readcsv(f"/home/zry/code/gauge_all.csv", 0, isrr=0, mask=1)
 
 titles = ['CNN Model', 'R(Z)', 'R(kdp)', 'R(Z,zdr)', 'R(kdp,zdr)']
@@ -28,12 +28,13 @@ ddd = ddd.loc[index, columns]
 eee = eee.loc[index, columns]
 zzz = zzz.loc[index, columns]
 
-# =============================================================================
-# aaa = aaa.loc['20180716']
-# bbb = bbb.loc['20180716']
-# # ccc = ccc.loc['20180716']
-# zzz = zzz.loc['20180716']
-# =============================================================================
+date = '20190722'
+aaa = aaa.loc[date]
+bbb = bbb.loc[date]
+ccc = ccc.loc[date]
+ddd = ddd.loc[date]
+eee = eee.loc[date]
+zzz = zzz.loc[date]
 
 
 # # 要删除的日期列表
@@ -48,7 +49,7 @@ zzz = zzz.loc[index, columns]
 # ccc = ccc[~ccc.index.normalize().isin(dates_to_remove)]
 # zzz = zzz[~zzz.index.normalize().isin(dates_to_remove)]
 
-
+'''scatters'''
 def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
                       fig_path, met_path):
     aaa = aaa.values.flatten()
@@ -92,9 +93,10 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
     met.to_csv(met_path)
     print(met)
 
-plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/hour-all.png", f"{path}/hour-all.csv")
+# plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/example-hour-all.png", f"{path}/example-hour-all.csv")
 
 
+'''box and hist'''
 def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
              fpbox, fphist):
     aaa = aaa.values.flatten()
@@ -122,77 +124,47 @@ def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
     plt.grid()
     plt.savefig(fphist)
 
-# plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/all-box.png", f"{path}/all-hist.png")
+# plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/example-hour-box.png", f"{path}/example-hour-hist.png")
 
 
-def accumulate(ls):
-    print(f'{ls[0]}-{ls[-1]}')
     
-    data = np.load(ls[0]) * 3/60
-    for fpath in ls[1:]:
-        temp = np.load(fpath) * 3/60
-        data += temp
-    
+
+'''distribution'''
+def summary(ls):
+    count = 0
+    lenth = len(ls)
+    for fp in ls:
+        if count == 0:
+            data = np.load(fp) * 3/60
+            count += 1
+        else:
+            data += np.load(fp) * 3/60
+            count += 1
+
+    print(f'{count} / {lenth}')
     return data
 
-def plot_an_event(aaa, bbb, ccc, zzz, event,
-                  ls1,
-                  siteinfo_path,
-                  savepath):
-    # aaa = aaa.loc[event[0] : event[1]].copy()
-    # bbb = bbb.loc[event[0] : event[1]].copy()
-    # ccc = ccc.loc[event[0] : event[1]].copy()
-    # zzz = zzz.loc[event[0] : event[1]].copy()
+def compare_event(gauge, accumulation):
     
-    # plot_all_scatters(aaa,bbb,ccc,zzz, savepath[0], savepath[1])
-    
-    # columns = zzz.columns
-    # aaa = aaa.sum().values
-    # bbb = bbb.sum().values
-    # ccc = ccc.sum().values
-    zzz = zzz.sum().values
-    loc = (zzz>=2)# & (aaa>=2) & (bbb>=2) & (ccc>=2)
+    sites_used = gauge.columns
+    gaugesum = gauge.sum()
+    loc = (gaugesum >= 10)
 
-    
-    # 创建一个包含3个子图的图形
-    import cartopy.crs as ccrs
-    fig, axs = plt.subplots(1, 5, figsize=(20, 4), subplot_kw={'projection': ccrs.PlateCarree()})
-    # plt.subplots_adjust(hspace=0.5)
-    # plt.subplots_adjust(wspace=0.5)
-    plt.subplots_adjust(left=0, right=1.2, top=1, bottom=0)
-    
-    area, lon, lat = mt.BJ_AREA_SMALL()
-    siteinfo = pd.read_csv(siteinfo_path, index_col=0)
-    siteinfo.index = siteinfo.index.astype(str)
-    lons = siteinfo.loc[columns, 'lon']
-    lats = siteinfo.loc[columns, 'lat']
-    
-    acc = accumulate(ls1)
-    pm1 = mt.pcolor_geo(axs[0], acc[4], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-    pm2 = mt.pcolor_geo(axs[1], acc[0], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-    pm3 = mt.pcolor_geo(axs[2], acc[1], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-    pm4 = mt.pcolor_geo(axs[3], acc[2], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-    pm5 = mt.pcolor_geo(axs[4], acc[3], 'acc', area, lon, lat, scatters=[lons[loc], lats[loc], zzz[loc]], size=50)
-
-    
-    cbar = fig.colorbar(pm1[0], ax=axs, location='right')
-    cbar.set_ticks(ticks = pm1[2])
-    cbar.set_ticklabels(pm1[2])
-    cbar.set_label(pm1[1])
-
-    for i in range(len(titles)):
-        axs[i].set_title(titles[i])
+    '''site info'''
+    siteinfo = pd.read_csv(r"../gauge_info.csv",index_col=0).sort_values(by='stnm')
+    lons = siteinfo.loc[sites_used, 'lon']
+    lats = siteinfo.loc[sites_used, 'lat']
 
 
-    fig.savefig(savepath, transparent=0, dpi=fig.dpi, bbox_inches='tight')
-    
+    mt.RADAR(accumulation[4], 'acc', *mt.BJXSY, eles=[1.45]).ppi_lonlat(0, scatters=[lons[loc], lats[loc], gaugesum[loc]], title = f'dl', save=f'{path}/example-{date}-dl.png')
+    mt.RADAR(accumulation[0], 'acc', *mt.BJXSY, eles=[1.45]).ppi_lonlat(0, scatters=[lons[loc], lats[loc], gaugesum[loc]], title = f'ref', save=f'{path}/example-{date}-ref.png')
+    mt.RADAR(accumulation[1], 'acc', *mt.BJXSY, eles=[1.45]).ppi_lonlat(0, scatters=[lons[loc], lats[loc], gaugesum[loc]], title = f'kdp', save=f'{path}/example-{date}-kdp.png')
+    mt.RADAR(accumulation[2], 'acc', *mt.BJXSY, eles=[1.45]).ppi_lonlat(0, scatters=[lons[loc], lats[loc], gaugesum[loc]], title = f'refzdr', save=f'{path}/example-{date}-refzdr.png')
+    mt.RADAR(accumulation[3], 'acc', *mt.BJXSY, eles=[1.45]).ppi_lonlat(0, scatters=[lons[loc], lats[loc], gaugesum[loc]], title = f'kdpzdr', save=f'{path}/example-{date}-kdpzdr.png')
 
-
-# path = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
-# ls = []
-# for file in os.listdir(path):
-#         ls += [path + '\\' + file]
-# begin = '2018-7-20 9:0'#!!!
-# end = '2018-7-21 0:0'
-# plot_an_event(aaa,bbb,ccc,zzz,[begin, end], ls, "../gauge_info.csv", f'{path}/example-dist.png')
-
+path_qpe = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
+ls = []
+for file in os.listdir(path_qpe):
+    if date in file:
+        ls += [path_qpe + '/' + file]
+compare_event(zzz, summary(ls))
