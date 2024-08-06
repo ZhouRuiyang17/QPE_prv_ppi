@@ -5,19 +5,21 @@ import matplotlib.colors as colors
 import torch
 
 from model import *
-import my.utils as utils
-import my.mytools as mt
+import my.utils.utils_ml as utils
+import my.utils.mytools as mt
 
 import datetime
 
-path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse')
+
+
+# 配置路径
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse copy')
 print(path_save)
 
 # 检查 GPU 是否可用
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("使用的设备:", device)
 
-# input(f'res will be stored in:\n{path_save}\nshall we go on[y/n]?')
 
 def mask_rr(rr):
     rr[rr<0] = 0
@@ -67,15 +69,15 @@ def apply_3ele(data, center = 4):
     test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
     test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
     test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
-    test_x = torch.from_numpy(test_x)
+    test_x = torch.from_numpy(test_x).to(device)
 
-    model = CNN(9,3)
+    model = CNN(9,3).to(device)
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
         pred = model(test_x)
-    
-    pred = pred.view(-1,3).detach().numpy()
+
+    pred = pred.view(-1,3).detach().cpu().numpy()
     pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
     pred[:,1] = utils.scaler(pred[:,1], 'D0', 1)
     pred[:,2] = utils.scaler(pred[:,2], 'log10Nw', 1)
@@ -83,7 +85,7 @@ def apply_3ele(data, center = 4):
 
     rainrate = np.zeros(len(data))
     rainrate[loc] = pred[:,0]
-    # rainrate = pred
+    # rainrate = pred[:,0]
     rainrate = mask_rr(rainrate)
     return rainrate
 
@@ -97,30 +99,23 @@ def main():
             data = f['data'][:, :, 30-4:30+4+1, 30-4:30+4+1]
             ts = [datetime.datetime.strptime(ts, '%Y%m%d%H%M') for ts in f['ts']]
 
-            stnm = file[5:10]
             if count == 0:
                 radar = pd.DataFrame(index=ts)
                 radar1 = radar.copy()
                 radar2 = radar.copy()
                 radar3 = radar.copy()
                 radar4 = radar.copy()
-
-                radar.loc[ts, stnm] = apply_3ele(data)
-                rr1, rr2, rr3, rr4 = qpe_3ele(data, 4)
-                radar1.loc[ts, stnm] = rr1
-                radar2.loc[ts, stnm] = rr2
-                radar3.loc[ts, stnm] = rr3
-                radar4.loc[ts, stnm] = rr4
                 count += 1
-            else:
-                radar.loc[ts, stnm] = apply_3ele(data)
-                rr1, rr2, rr3, rr4 = qpe_3ele(data, 4)
-                radar1.loc[ts, stnm] = rr1
-                radar2.loc[ts, stnm] = rr2
-                radar3.loc[ts, stnm] = rr3
-                radar4.loc[ts, stnm] = rr4
-                count += 1
+            
+            stnm = file[5:10]
+            radar.loc[ts, stnm] = apply_3ele(data)
+            rr1, rr2, rr3, rr4 = qpe_3ele(data, 4)
+            radar1.loc[ts, stnm] = rr1
+            radar2.loc[ts, stnm] = rr2
+            radar3.loc[ts, stnm] = rr3
+            radar4.loc[ts, stnm] = rr4
             # break
+
     radar.to_csv(f'{path_save}/rainrate-dl.csv')
     radar1.to_csv(f'{path_save}/rainrate-ref.csv')
     radar2.to_csv(f'{path_save}/rainrate-kdp.csv')
@@ -239,6 +234,9 @@ logging.basicConfig(
 )
 
 if __name__ == "__main__":
+    # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
+
     main()
 
     # example()
+
