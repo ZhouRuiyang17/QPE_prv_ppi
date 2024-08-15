@@ -28,7 +28,7 @@ ddd = ddd.loc[index, columns]
 eee = eee.loc[index, columns]
 zzz = zzz.loc[index, columns]
 
-date = '20190722'
+date = '20190809'
 aaa = aaa.loc[date]
 bbb = bbb.loc[date]
 ccc = ccc.loc[date]
@@ -93,6 +93,7 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz,
     met.to_csv(met_path)
     print(met)
 
+plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/example-hour-{date}-all.png", f"{path}/example-hour-{date}-all.csv")
 # plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/example-hour-all.png", f"{path}/example-hour-all.csv")
 
 
@@ -124,6 +125,7 @@ def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
     plt.grid()
     plt.savefig(fphist)
 
+plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/example-hour-{date}-box.png", f"{path}/example-hour-{date}-hist.png")
 # plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/example-hour-box.png", f"{path}/example-hour-hist.png")
 
 
