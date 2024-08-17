@@ -6,6 +6,8 @@ import datetime
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 
 class CNN_tian_re(nn.Module):
     def __init__(self):
@@ -546,5 +548,61 @@ class CNN_pad_ave(nn.Module):
 #         pred = self.out(x)
 #         return pred
 
+class ResidualLayer(nn.Module):
+    '''keep size same'''
+    def __init__(self, in_channels, out_channels):
+        super(ResidualLayer, self).__init__()
+        self.conv1 = nn.Conv3d(in_channels, out_channels, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv3d(out_channels, out_channels, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv3d(in_channels, out_channels, kernel_size=1)
+    
+    def forward(self, x):
+        residual = self.conv3(x)
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        return x + residual
 
 
+class QPEnet(nn.Module):
+    def __init__(self):
+        super(QPEnet, self).__init__()
+        # Input1 branch
+        self.res1 = ResidualLayer(3, 32)
+        self.res2 = ResidualLayer(32, 32)
+        self.conv3d = nn.Conv3d(32, 64, kernel_size=(3, 3, 3))
+        # self.pool3d = nn.AvgPool3d(kernel_size=(2, 2, 2))
+        
+       
+        self.conv2d_1 = nn.Conv2d(64, 32, kernel_size=3)
+        self.conv2d_2 = nn.Conv2d(32, 32, kernel_size=3)
+        self.pool2d = nn.MaxPool2d(kernel_size=2)
+        self.fc1 = nn.Linear(32, 64)
+        self.fc2 = nn.Linear(64, 1)
+        
+    def forward(self, input1):
+        # ----Input1: (3,3,9,9)
+        x1 = self.res1(input1)
+        # ----(32,3,9,9)
+        x1 = self.res2(x1)
+        # ----(32,3,9,9)
+        x1 = F.relu(self.conv3d(x1))
+        # ----(64,1,7,7)
+        x1 = x1.squeeze()
+        # ----(64,7,7)
+        
+        
+        
+        x = F.relu(self.conv2d_1(x1))
+        # ----32 5 5
+        x = F.relu(self.conv2d_2(x))
+        # ----32 3 3
+        x = self.pool2d(x)
+        # ----32 1 1
+        x = x.squeeze()
+        # ----32
+        x = F.relu(self.fc1(x))
+        # ----64
+        output = F.relu(self.fc2(x))
+        # ----1
+        
+        return output
