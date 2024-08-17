@@ -606,3 +606,79 @@ class QPEnet(nn.Module):
         # ----1
         
         return output
+
+class QPEnet_ver2(nn.Module):
+    def __init__(self):
+        super(QPEnet_ver2, self).__init__()
+        # Input1 branch
+        self.res1 = ResidualLayer(1, 32)
+        self.res2 = ResidualLayer(32, 32)
+        self.conv3d = nn.Conv3d(32, 64, kernel_size=(3, 3, 3))
+        # self.pool3d = nn.AvgPool3d(kernel_size=(2, 2, 2))
+        
+        # Input1 branch
+        self.res1_zdr = ResidualLayer(1, 32)
+        self.res2_zdr = ResidualLayer(32, 32)
+        self.conv3d_zdr = nn.Conv3d(32, 64, kernel_size=(3, 3, 3))
+
+        # Input1 branch
+        self.res1_kdp = ResidualLayer(1, 32)
+        self.res2_kdp = ResidualLayer(32, 32)
+        self.conv3d_kdp = nn.Conv3d(32, 64, kernel_size=(3, 3, 3))
+       
+        self.conv2d_1 = nn.Conv2d(64*3, 32, kernel_size=3)
+        self.conv2d_2 = nn.Conv2d(32, 32, kernel_size=3)
+        self.pool2d = nn.MaxPool2d(kernel_size=2)
+        self.fc1 = nn.Linear(32, 64)
+        self.fc2 = nn.Linear(64, 1)
+        
+    def forward(self, input1):
+        ref = input1[:, 0].unsqueeze(1)
+        zdr = input1[:, 1].unsqueeze(1)
+        kdp = input1[:, 2].unsqueeze(1)
+        # ----Input1: (1,3,9,9)
+        x1 = self.res1(ref)
+        # ----(32,3,9,9)
+        x1 = self.res2(x1)
+        # ----(32,3,9,9)
+        x1 = F.relu(self.conv3d(x1))
+        # ----(64,1,7,7)
+        x1 = x1.squeeze()
+        # ----(64,7,7)
+
+        # ----Input1: (1,3,9,9)
+        zdr = self.res1_zdr(zdr)
+        # ----(32,3,9,9)
+        zdr = self.res2_zdr(zdr)
+        # ----(32,3,9,9)
+        zdr = F.relu(self.conv3d_zdr(zdr))
+        # ----(64,1,7,7)
+        zdr = zdr.squeeze()
+        # ----(64,7,7)
+
+        # ----Input1: (1,3,9,9)
+        kdp = self.res1_kdp(kdp)
+        # ----(32,3,9,9)
+        kdp = self.res2_kdp(kdp)
+        # ----(32,3,9,9)
+        kdp = F.relu(self.conv3d_kdp(kdp))
+        # ----(64,1,7,7)
+        kdp = kdp.squeeze()
+        # ----(64,7,7)
+        
+        x1 = torch.cat((x1, zdr, kdp), dim=1)
+        
+        x = F.relu(self.conv2d_1(x1))
+        # ----32 5 5
+        x = F.relu(self.conv2d_2(x))
+        # ----32 3 3
+        x = self.pool2d(x)
+        # ----32 1 1
+        x = x.squeeze()
+        # ----32
+        x = F.relu(self.fc1(x))
+        # ----64
+        output = F.relu(self.fc2(x))
+        # ----1
+        
+        return output
