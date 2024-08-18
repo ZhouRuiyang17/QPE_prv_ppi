@@ -71,9 +71,9 @@ class ResidualLayer(nn.Module):
         return x + residual
 
 
-class QPEnet(nn.Module):
+class ResNet(nn.Module):
     def __init__(self):
-        super(QPEnet, self).__init__()
+        super(ResNet, self).__init__()
         # Input1 branch
         self.res1 = ResidualLayer(3, 32)
         self.res2 = ResidualLayer(32, 32)
@@ -115,9 +115,9 @@ class QPEnet(nn.Module):
         
         return output
 
-class QPEnet_ver2(nn.Module):
+class ResNet_3399_1(nn.Module):
     def __init__(self):
-        super(QPEnet_ver2, self).__init__()
+        super(ResNet_3399_1, self).__init__()
         # Input1 branch
         self.res1 = ResidualLayer(1, 32)
         self.res2 = ResidualLayer(32, 32)
@@ -192,9 +192,9 @@ class QPEnet_ver2(nn.Module):
         return output
     
 
-class QPEnet_ver3(nn.Module):
+class ResNet_2399_1(nn.Module):
     def __init__(self):
-        super(QPEnet_ver3, self).__init__()
+        super(ResNet_2399_1, self).__init__()
         # ref branch
         self.res1 = ResidualLayer(1, 32)
         self.res2 = ResidualLayer(32, 32)
@@ -254,7 +254,7 @@ class QPEnet_ver3(nn.Module):
         
         return output
     
-# model = QPEnet_ver3()
+# model = ResNet_ver3()
 # input1 = torch.randn(10, 2, 3, 9, 9)  # Batch size of 10, (5, 11, 11) radar images
 # output = model(input1)
 # print('done')
