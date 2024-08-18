@@ -7,6 +7,8 @@ nohup.out
 main.log
 # 忽略所有 .pyc 文件
 *.pyc
+__pycache__/
+__pycache__
 
 # 忽略所有 .log 文件
 *.log
