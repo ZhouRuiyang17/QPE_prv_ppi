@@ -20,7 +20,7 @@ logging.basicConfig(
 
 
 # 配置路径
-path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse')
+path_save = './model/based_on_202407/{}'.format('240727-cnn-9prv-3out-wmse-0815re')
 print(path_save)
 
 # 检查 GPU 是否可用

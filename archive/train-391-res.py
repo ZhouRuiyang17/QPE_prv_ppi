@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 # 配置路径
-path_save = './model/based_on_202407/{}'.format('res-391-vlr-wmse')
+path_save = './model/based_on_202407/{}'.format('resver2-391-vlr-wmsever2')
 if not os.path.exists(path_save):
     os.makedirs(path_save)
 
@@ -75,17 +75,24 @@ class WeightedMSELoss(nn.Module):
         rr_target = targets[:, 0]
 
         # 定义目标值区间和对应的权重
+        # weight_intervals = [
+        #     (0.0, 0.1, 1),
+        #     (0.1, 0.2, 2),
+        #     (0.2, 0.3, 3),
+        #     (0.3, 0.4, 4),
+        #     (0.4, 0.5, 5),
+        #     (0.5, 0.6, 6),
+        #     (0.6, 0.7, 7),
+        #     (0.7, 0.8, 8),
+        #     (0.8, 0.9, 9),
+        #     (0.9, 1.0, 10)
+        # ]
+
         weight_intervals = [
-            (0.0, 0.1, 1),
-            (0.1, 0.2, 2),
-            (0.2, 0.3, 3),
-            (0.3, 0.4, 4),
-            (0.4, 0.5, 5),
-            (0.5, 0.6, 6),
-            (0.6, 0.7, 7),
-            (0.7, 0.8, 8),
-            (0.8, 0.9, 9),
-            (0.9, 1.0, 10)
+            (0.0, 0.05, 1),
+            (0.05, 0.1, 2),
+            (0.1, 0.2, 4),
+            (0.2, 1, 8),
         ]
         
         # 创建权重矩阵
@@ -150,7 +157,9 @@ if __name__ == "__main__":
 
     
     '''训练'''
-    model = QPEnet().to(device)
+    # model = QPEnet().to(device)
+    model = QPEnet_ver2().to(device)
+
     optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
     # loss_func = torch.nn.MSELoss()
     loss_func = WeightedMSELoss()

@@ -7,6 +7,7 @@ import torch
 from model import *
 import my.utils.utils_ml as utils
 import my.utils.mytools as mt
+from common_tool import *
 
 import datetime
 import logging
@@ -19,7 +20,7 @@ logging.basicConfig(
 )
 
 
-path_save = './model/based_on_202407/{}'.format('res-391-vlr-wmse')
+path_save = './model/based_on_202407/{}'.format('resver2-391-vlr-wmse')
 print(path_save)
 
 # 检查 GPU 是否可用
@@ -82,7 +83,8 @@ def apply_3ele(data, center = 4):
     test_x1[:, 2] = test_x[:, [2,5,8]]
     test_x = torch.from_numpy(test_x1.astype(np.float32)).to(device)
 
-    model = QPEnet().to(device)
+    # model = QPEnet().to(device)
+    model = QPEnet_ver2().to(device)
     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
     model.eval()
     with torch.no_grad():
@@ -164,6 +166,11 @@ def main():
     mt.Scatter(zzz[loc], eee[loc]).plot3(bins=[np.arange(60)]*2, labels=['gauge (mm)', 'radar (mm)'], lim=[[0,60]]*2, show_metrics=1, draw_line=1,
                                         fpath=f'{path_save}/test-hour-kdpzdr.png', title='kdpzdr')
     
+    mytable(zzz,aaa,bbb,ccc,ddd,eee,path_save,1)
+    mytable(zzz,aaa,bbb,ccc,ddd,eee,path_save,5)
+    mytable(zzz,aaa,bbb,ccc,ddd,eee,path_save,10)
+
+
     plt.figure()
     plt.boxplot([aaa[loc]-zzz[loc],
                  bbb[loc]-zzz[loc],
