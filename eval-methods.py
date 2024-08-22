@@ -10,6 +10,7 @@ plt.rcParams['font.size'] = 12
 
 path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse'
 
+
 aaa = mt.readcsv(f"{path}/example-dl.csv", 0, isrr=3, mask=1, acc='H')
 bbb = mt.readcsv(f"{path}/example-ref.csv", 0, isrr=3, mask=1, acc='H')
 ccc = mt.readcsv(f"{path}/example-kdp.csv", 0, isrr=3, mask=1, acc='H')
@@ -35,19 +36,11 @@ ccc = ccc.loc[date]
 # ddd = ddd.loc[date]
 eee = eee.loc[date]
 zzz = zzz.loc[date]
+path = path + '/eval'
+if not os.path.exists(path):
+    os.makedirs(path)
 
 
-# # 要删除的日期列表
-# dates_to_remove = ['20170521','20170522','20170523',
-#                    '20170810',
-#                    '20190525','20190526','20190527']
-# # 将日期转换为datetime对象
-# dates_to_remove = pd.to_datetime(dates_to_remove)
-# # 过滤掉要删除的日期
-# aaa = aaa[~aaa.index.normalize().isin(dates_to_remove)]
-# bbb = bbb[~bbb.index.normalize().isin(dates_to_remove)]
-# ccc = ccc[~ccc.index.normalize().isin(dates_to_remove)]
-# zzz = zzz[~zzz.index.normalize().isin(dates_to_remove)]
 
 '''scatters'''
 def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
@@ -83,7 +76,7 @@ def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
             axs[i][j].set_title(titles[count])
             count += 1
     '''save'''
-    fig.savefig(fig_path, transparent=0,dpi=fig.dpi, bbox_inches='tight')
+    fig.savefig(fig_path, transparent=0, dpi=600, bbox_inches='tight')
     
     '''metrics'''
     met = {**mt.get_metrics(zzz[loc], aaa[loc]), **mt.get_metrics_hit(zzz,aaa,4)}
@@ -92,11 +85,11 @@ def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
     met.loc[titles[2]] = {**mt.get_metrics(zzz[loc], ccc[loc]), **mt.get_metrics_hit(zzz,ccc,4)}
     # met.loc[titles[3]] = mt.get_metrics(zzz[loc], ddd[loc])
     met.loc[titles[3]] = {**mt.get_metrics(zzz[loc], eee[loc]), **mt.get_metrics_hit(zzz,eee,4)}
-    met = met[['total num', 'RMB', 'MAE', 'RMSE', 'CC', 'POD', 'FAR', 'CSI']]
+    met = met[['RMB', 'MAE', 'RMSE', 'CC', 'POD', 'FAR', 'CSI']]
     met.to_csv(met_path)
     print(met)
 
-# plot_all_scatters(aaa, bbb, ccc, eee, zzz, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv")
+plot_all_scatters(aaa, bbb, ccc, eee, zzz, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv")
 # plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/example-hour-all.png", f"{path}/example-hour-all.csv")
 
 
@@ -183,12 +176,14 @@ def compare_event(gauge, accumulation):
 
     plt.savefig(f'{path}/example-{date}.png', bbox_inches='tight', dpi=fig.dpi)
 
-# path_qpe = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
-# ls = []
-# for file in os.listdir(path_qpe):
-#     if date in file:
-#         ls += [path_qpe + '/' + file]
-# accumulation = summary(ls)
-# np.save(f'./dataset/{date}.npy', accumulation)
-accumulation = np.load(f'./dataset/{date}.npy')
-compare_event(zzz, accumulation)
+if date != '':
+    print(f'plot {date}')
+    # path_qpe = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
+    # ls = []
+    # for file in os.listdir(path_qpe):
+    #     if date in file:
+    #         ls += [path_qpe + '/' + file]
+    # accumulation = summary(ls)
+    # np.save(f'./dataset/{date}.npy', accumulation)
+    accumulation = np.load(f'./dataset/{date}.npy')
+    compare_event(zzz, accumulation)
