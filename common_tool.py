@@ -8,41 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from torch import nn
 
-class WeightedMSELoss(nn.Module):
-    def __init__(self):
-        super(WeightedMSELoss, self).__init__()
-
-    def forward(self, inputs, targets):
-        rr_target = targets[:, 0]
-
-        # 定义目标值区间和对应的权重
-        weight_intervals = [
-            (0.0, 0.1, 1),
-            (0.1, 0.2, 2),
-            (0.2, 0.3, 3),
-            (0.3, 0.4, 4),
-            (0.4, 0.5, 5),
-            (0.5, 0.6, 6),
-            (0.6, 0.7, 7),
-            (0.7, 0.8, 8),
-            (0.8, 0.9, 9),
-            (0.9, 1.0, 10)
-        ]
-        
-        # 创建权重矩阵
-        weights = torch.zeros_like(targets)
-        for lower, upper, weight in weight_intervals:
-            mask = (rr_target >= lower) & (rr_target < upper)
-            weights[mask] = weight
-        # weights = weights.unsqueeze(1).expand(-1, 3)
-        # logging.info(weights[:100])
-
-        # 计算加权均方误差
-        mse_loss = nn.MSELoss(reduction='none')  # 不做平均
-        loss = mse_loss(inputs, targets)
-        weighted_loss = loss * weights
-        
-        return weighted_loss.mean()  # 可以根据需要选择如何汇总损失
 
 
 
@@ -54,41 +19,193 @@ def mytable(zzz, aaa, bbb, ccc, ddd, eee,
     metrics_hit.loc['kdp'] = mt.get_metrics_hit(zzz, ccc, thr)
     metrics_hit.loc['refzdr'] = mt.get_metrics_hit(zzz, ddd, thr)
     metrics_hit.loc['kdpzdr'] = mt.get_metrics_hit(zzz, eee, thr)
-    metrics_hit.to_csv(f'{path_save}/hit-{thr}.csv')
-
-def process_for_train_393(device):
-    '''加载:(ele1, ele2, ele3)'''
-    dataset_train = np.load('../dataset-3-9.npz')
-    train_x = dataset_train['x_train'].astype(np.float32)
-    train_y = dataset_train['y_train'].astype(np.float32)
-    vali_x = dataset_train['x_vali'].astype(np.float32)
-    vali_y = dataset_train['y_vali'].astype(np.float32)
+    metrics_hit.to_csv(f'{path_save}/test-hit-{thr}.csv')
 
 
+def mask_rr(rr):
+    rr[rr<0] = 0
+    rr[rr>200] = 0
+    rr[np.isnan(rr)] = 0
 
-    '''裁剪数据和归一化'''
-    train_x[:,[0,3,6]] = utils.scaler(train_x[:,[0,3,6]], 'ref')
-    vali_x[:, [0,3,6]] = utils.scaler(vali_x[:, [0,3,6]], 'ref')
-    train_x[:,[1,4,7]] = utils.scaler(train_x[:,[1,4,7]], 'zdr')
-    vali_x[:, [1,4,7]] = utils.scaler(vali_x[:, [1,4,7]], 'zdr')
-    train_x[:,[2,5,8]] = utils.scaler(train_x[:,[2,5,8]], 'kdp')
-    vali_x[:, [2,5,8]] = utils.scaler(vali_x[:, [2,5,8]], 'kdp')
+    return rr
 
-    train_y = train_y[:, :-1]
-    vali_y = vali_y[:, :-1]
-    train_y[:,0] = utils.scaler(train_y[:,0], 'rr')
-    vali_y[:,0] = utils.scaler(vali_y[:,0], 'rr')
-    train_y[:,1] = utils.scaler(train_y[:,1], 'D0')
-    vali_y[:,1] = utils.scaler(vali_y[:,1], 'D0')
-    train_y[:,2] = utils.scaler(train_y[:,2], 'log10Nw')
-    vali_y[:,2] = utils.scaler(vali_y[:,2], 'log10Nw')
+def qpe_3ele(data, center=4):
+    ref = data[:,3, center, center]
+    zdr = data[:,4, center, center]
+    kdp = data[:,5, center, center]
+    refup = 10**(ref*0.1)
+    zdrup = 10**(zdr*0.1)
+
+    a1 = 0.0576; b1 = 0.557
+    a2 = 15.421; b2 = 0.817
+    a3 = 0.0059; b3 = 0.994;c3 = -4.929
+    # a3 = 0.0061; b3 = 0.959;c3 = -3.671 # zz
+    a4 = 26.778; b4 = 0.946;c4 = -1.249
+    # a4 = 22.560; b4 = 0.910;c4 = -0.859 # zz
 
 
 
-    '''数据加载'''
-    train = utils.loader(train_x, train_y, device, 64)
-    vali = utils.loader(vali_x, vali_y, device, 64)
+    rr1 = a1*refup**b1
+    rr2 = a2*kdp**b2
+    rr3 = a3*refup**b3*zdrup**c3
+    rr4 = a4*kdp**b4*zdrup**c4
 
-    return train, vali
+    rr1 = mask_rr(rr1)
+    rr2 = mask_rr(rr2)
+    rr3 = mask_rr(rr3)
+    rr4 = mask_rr(rr4)
+
+    return rr1, rr2, rr3, rr4
 
 
+def apply_393(data, model, device, center = 4):
+    '''筛选'''
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0 
+    test_x = data[loc].astype(np.float32)
+    # test_x = data.astype(np.float32)
+
+    '''scaler'''
+    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+    test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+    
+    '''tensor'''
+#     test_x = torch.from_numpy(test_x).to(device)
+    test_x = utils.totensor(test_x, device)
+
+#     model = CNN(9,3).to(device)
+#     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+
+    pred = utils.toarray(pred, 3)
+    pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+    pred[:,1] = utils.scaler(pred[:,1], 'D0', 1)
+    pred[:,2] = utils.scaler(pred[:,2], 'log10Nw', 1)
+    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
+
+    rainrate = np.zeros(len(data))
+    rainrate[loc] = pred[:,0]
+    # rainrate = pred[:,0]
+    rainrate = mask_rr(rainrate)
+    return rainrate
+
+def apply_ResQPE(data, model, device, center = 4):
+    '''筛选'''
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0 
+    test_x = data[loc].astype(np.float32)
+    # test_x = data.astype(np.float32)
+
+    '''scaler'''
+    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+    test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+    test_x1 = np.zeros((len(test_x), 3, 3, 9, 9))
+    test_x1[:, 0] = test_x[:, [0,3,6]]
+    test_x1[:, 1] = test_x[:, [1,4,7]]
+    test_x1[:, 2] = test_x[:, [2,5,8]]
+    
+    '''tensor'''
+#     test_x = torch.from_numpy(test_x).to(device)
+    test_x = utils.totensor(test_x1, device)
+
+#     model = CNN(9,3).to(device)
+#     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+
+    pred = utils.toarray(pred, 1)
+    pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+#     pred[:,1] = utils.scaler(pred[:,1], 'D0', 1)
+#     pred[:,2] = utils.scaler(pred[:,2], 'log10Nw', 1)
+    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
+
+    rainrate = np.zeros(len(data))
+    rainrate[loc] = pred[:,0]
+    # rainrate = pred[:,0]
+    rainrate = mask_rr(rainrate)
+    return rainrate
+
+
+
+def apply_391_resver2(data, model, device, center = 4):
+    '''筛选'''
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0 
+    test_x = data[loc].astype(np.float32)
+    # test_x = data.astype(np.float32)
+
+    '''scaler'''
+    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+    test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+    test_x1 = np.zeros((len(test_x), 3, 3, 9, 9))
+    test_x1[:, 0] = test_x[:, [0,3,6]]
+    test_x1[:, 1] = test_x[:, [1,4,7]]
+    test_x1[:, 2] = test_x[:, [2,5,8]]
+    
+    '''tensor'''
+#     test_x = torch.from_numpy(test_x).to(device)
+    test_x = utils.totensor(test_x1, device)
+
+#     model = CNN(9,3).to(device)
+#     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+
+    pred = utils.toarray(pred, 1)
+    pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+#     pred[:,1] = utils.scaler(pred[:,1], 'D0', 1)
+#     pred[:,2] = utils.scaler(pred[:,2], 'log10Nw', 1)
+    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
+
+    rainrate = np.zeros(len(data))
+    rainrate[loc] = pred[:,0]
+    # rainrate = pred[:,0]
+    rainrate = mask_rr(rainrate)
+    return rainrate
+
+def apply_resver3(data, model, device, center = 4):
+    '''筛选'''
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0 
+    test_x = data[loc].astype(np.float32)
+
+    '''scaler'''
+    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+    test_x1 = np.zeros((len(test_x), 2, 3, 9, 9))
+    test_x1[:, 0] = test_x[:, [0,3,6]]
+    test_x1[:, 1] = test_x[:, [2,5,8]]
+    
+    '''tensor'''
+    test_x = utils.totensor(test_x1, device)
+
+    model.eval()
+    with torch.no_grad():
+        pred = model(test_x)
+
+    pred = utils.toarray(pred, 1)
+    pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+
+    rainrate = np.zeros(len(data))
+    rainrate[loc] = pred[:,0]
+    rainrate = mask_rr(rainrate)
+    return rainrate
