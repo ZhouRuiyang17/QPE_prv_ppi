@@ -159,20 +159,19 @@ def process_for_train_3399_1(device):
 
 if __name__ == "__main__":
     torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
-    # 检查 GPU 是否可用
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    logging.info("使用的设备:", device)
-     
     # 配置日志记录器
     logging.basicConfig(
-        filename='main.log',                  # 日志文件名
+        filename='./train.log',                  # 日志文件名
         level=logging.INFO,                   # 记录 INFO 及以上级别的日志
         format='%(asctime)s---%(message)s',   # 日志格式
         datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
     )
+    # 检查 GPU 是否可用
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    logging.info("使用的设备:", device)
 
     # 配置路径
-    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse')
+    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse-re')
     if not os.path.exists(path_save):
         os.makedirs(path_save)
     
