@@ -71,9 +71,9 @@ class ResidualLayer(nn.Module):
         return x + residual
 
 
-class ResNet(nn.Module):
+class ResQPE(nn.Module):
     def __init__(self):
-        super(ResNet, self).__init__()
+        super(ResQPE, self).__init__()
         # Input1 branch
         self.res1 = ResidualLayer(3, 32)
         self.res2 = ResidualLayer(32, 32)
