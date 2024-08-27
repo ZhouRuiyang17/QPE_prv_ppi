@@ -29,14 +29,15 @@ ccc = ccc.loc[index, columns]
 eee = eee.loc[index, columns]
 zzz = zzz.loc[index, columns]
 
-date = '20190809'
-aaa = aaa.loc[date]
-bbb = bbb.loc[date]
-ccc = ccc.loc[date]
-# ddd = ddd.loc[date]
-eee = eee.loc[date]
-zzz = zzz.loc[date]
-path = path + '/eval'
+date = ''
+# date = '20190809'
+# aaa = aaa.loc[date]
+# bbb = bbb.loc[date]
+# ccc = ccc.loc[date]
+# # ddd = ddd.loc[date]
+# eee = eee.loc[date]
+# zzz = zzz.loc[date]
+path = path + '/eval-0827re'
 if not os.path.exists(path):
     os.makedirs(path)
 
@@ -90,42 +91,8 @@ def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
     print(met)
 
 plot_all_scatters(aaa, bbb, ccc, eee, zzz, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv")
-# plot_all_scatters(aaa, bbb, ccc, ddd, eee, zzz, f"{path}/example-hour-all.png", f"{path}/example-hour-all.csv")
 
 
-'''box and hist'''
-# def plot_box(aaa, bbb, ccc, ddd, eee, zzz, labels,
-#              fpbox, fphist):
-#     aaa = aaa.values.flatten()
-#     bbb = bbb.values.flatten()
-#     ccc = ccc.values.flatten()
-#     ddd = ddd.values.flatten()
-#     eee = eee.values.flatten()
-#     zzz = zzz.values.flatten()
-#     loc = (zzz>=0.1) & (aaa>=0.1) & (bbb>=0.1) & (ccc>=0.1) & (ddd>=0.1) & (eee>=0.1)
-
-#     plt.figure()
-#     plt.boxplot([aaa[loc]-zzz[loc], bbb[loc]-zzz[loc], ccc[loc]-zzz[loc], ddd[loc]-zzz[loc], eee[loc]-zzz[loc]],
-#                 showfliers=0, labels=titles, showmeans=1,
-#                 )
-#     plt.grid()
-#     plt.savefig(fpbox)
-    
-#     plt.figure()
-#     plt.hist(aaa[loc]-zzz[loc], bins=np.arange(-10, 11, 1), alpha=0.5, label=labels[0])
-#     plt.hist(bbb[loc]-zzz[loc], bins=np.arange(-10, 11, 1), alpha=0.5, label=labels[1])
-#     plt.hist(ccc[loc]-zzz[loc], bins=np.arange(-10, 11, 1), alpha=0.5, label=labels[2])
-#     plt.hist(ddd[loc]-zzz[loc], bins=np.arange(-10, 11, 1), alpha=0.5, label=labels[3])
-#     plt.hist(eee[loc]-zzz[loc], bins=np.arange(-10, 11, 1), alpha=0.5, label=labels[4])
-#     plt.legend()
-#     plt.grid()
-#     plt.savefig(fphist)
-
-# plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/example-hour-{date}-box.png", f"{path}/example-hour-{date}-hist.png")
-# # plot_box(aaa, bbb, ccc, ddd, eee, zzz, titles, f"{path}/example-hour-box.png", f"{path}/example-hour-hist.png")
-
-
-    
 
 '''distribution'''
 def summary(ls):
