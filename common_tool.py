@@ -7,7 +7,7 @@ import torch
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from torch import nn
-
+import datetime
 
 
 
@@ -100,44 +100,40 @@ def apply_ResQPE(data, model, device, center = 4, mode='fast_test'):
         datatemp[:, [2,5,8]] = data[:,2,:]
         data = datatemp.copy()
     '''筛选'''
+    t0 = datetime.datetime.now()
     ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
     refup = 10**(ref*0.1)
     meanup = refup.mean(axis=(1,2))
     mean = 10*np.log10(meanup)
     loc = mean >= 0 
     test_x = data[loc].astype(np.float32)
-    # test_x = data.astype(np.float32)
-
-    '''scaler'''
-    test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
-    test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
-    test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
-    test_x1 = np.zeros((len(test_x), 3, 3, 9, 9))
-    test_x1[:, 0] = test_x[:, [0,3,6]]
-    test_x1[:, 1] = test_x[:, [1,4,7]]
-    test_x1[:, 2] = test_x[:, [2,5,8]]
+    logging.info(f'cost of location: {datetime.datetime.now()-t0}')
+    logging.info(f'num of input: {len(test_x)}')
     
-    '''tensor'''
-#     test_x = torch.from_numpy(test_x).to(device)
-    test_x = utils.totensor(test_x1, device)
-
-#     model = CNN(9,3).to(device)
-#     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
-    # model.eval()
-    # with torch.no_grad():
-    #     pred = model(test_x)
-    pred = utils.DLcalculate(model, test_x, 1024)
-
-    pred = utils.toarray(pred, 1)
-    pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
-#     pred[:,1] = utils.scaler(pred[:,1], 'D0', 1)
-#     pred[:,2] = utils.scaler(pred[:,2], 'log10Nw', 1)
-    # pred = utils.scaler(pred, 'log10rr', 1); pred = 10**(pred)
-
-    rainrate = np.zeros(len(data))
-    rainrate[loc] = pred[:,0]
-    # rainrate = pred[:,0]
-    rainrate = mask_rr(rainrate)
+    if len(test_x) != 0:
+        '''scaler'''
+        test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+        test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+        test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+        test_x1 = np.zeros((len(test_x), 3, 3, 9, 9))
+        test_x1[:, 0] = test_x[:, [0,3,6]]
+        test_x1[:, 1] = test_x[:, [1,4,7]]
+        test_x1[:, 2] = test_x[:, [2,5,8]]
+        '''tensor'''
+        test_x = utils.totensor(test_x1, device)
+        '''calculate'''
+        t0 = datetime.datetime.now()
+        pred = utils.DLcalculate(model, test_x, 1024)
+        logging.info(f'cost of QPE: {datetime.datetime.now()-t0}')
+        '''tensor-re'''
+        pred = utils.toarray(pred, 1)
+        '''scaler-re'''
+        pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+        rainrate = np.zeros(len(data))
+        rainrate[loc] = pred[:,0]
+        rainrate = mask_rr(rainrate)
+    else:
+        rainrate = np.zeros(len(data))
     return rainrate
 
 

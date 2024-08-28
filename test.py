@@ -222,7 +222,6 @@ def test(path_save, model, device):
                 samples[counter] = sample; counter += 1
                 # print(true_azi, gate)
         logging.info(f'cost of resample: {datetime.datetime.now()-t0}')
-        logging.info(f'num of samples:{counter}')
         
         rr1, rr2, rr3, rr4 = qpe_3ele(samples[:,0,1,4,4],samples[:,1,1,4,4],samples[:,2,1,4,4])
         rainrate = np.zeros((9,360,1000))
@@ -231,9 +230,7 @@ def test(path_save, model, device):
         rainrate[2, :, 4:-4] = rr3.reshape(360, 1000-2*4)
         rainrate[3, :, 4:-4] = rr4.reshape(360, 1000-2*4)
 
-        t0 = datetime.datetime.now()
         rr_dl = apply_ResQPE(samples, model, device, mode='test')
-        logging.info(f'cost of qpe: {datetime.datetime.now()-t0}')
         rainrate[4, :, 4:-4] = rr_dl.reshape(360, 1000-2*4)
 
         np.save(fpsave, rainrate)
@@ -251,7 +248,7 @@ def test(path_save, model, device):
         # 清理显存
         torch.cuda.empty_cache()
         logging.info('-----------------------------------------')
-        
+    logging.info('Finished!!!!!')
 
 
 
