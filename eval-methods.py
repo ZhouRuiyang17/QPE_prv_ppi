@@ -8,7 +8,7 @@ import matplotlib.colors as colors
 # plt.rcParams['font.family'] = 'Microsoft YaHei'
 plt.rcParams['font.size'] = 12
 
-path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/240727-cnn-9prv-3out-wmse'
+path = '/home/zry/code/QPE_prv_ppi/model/based_on_202407/ResQPE-3399-1-vlr-wmse/eval'
 
 
 aaa = mt.readcsv(f"{path}/example-dl.csv", 0, isrr=3, mask=1, acc='H')
@@ -37,15 +37,14 @@ date = ''
 # # ddd = ddd.loc[date]
 # eee = eee.loc[date]
 # zzz = zzz.loc[date]
-path = path + '/eval-0827re'
-if not os.path.exists(path):
-    os.makedirs(path)
 
 
 
 '''scatters'''
 def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
                       fig_path, met_path):
+    flg = (zzz>=0.1) & (aaa>=0.1) & (bbb>=0.1) & (ccc>=0.1) & (eee>=0.1)
+    
     aaa = aaa.values.flatten()
     bbb = bbb.values.flatten()
     ccc = ccc.values.flatten()
@@ -62,11 +61,11 @@ def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
     # plt.subplots_adjust(wspace=0.5)
     plt.subplots_adjust(left=0, right=1.2, top=1, bottom=0)
     
-    hd1 = mt.hist2d(axs[0][0], zzz[loc], aaa[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd2 = mt.hist2d(axs[0][1], zzz[loc], bbb[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd3 = mt.hist2d(axs[1][0], zzz[loc], ccc[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd4 = mt.hist2d(axs[1][1], zzz[loc], ddd[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd5 = mt.hist2d(axs[1][1], zzz[loc], eee[loc], bins=[np.arange(61)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd1 = mt.hist2d(axs[0][0], zzz[loc], aaa[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd2 = mt.hist2d(axs[0][1], zzz[loc], bbb[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd3 = mt.hist2d(axs[1][0], zzz[loc], ccc[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    # hd4 = mt.hist2d(axs[1][1], zzz[loc], ddd[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd5 = mt.hist2d(axs[1][1], zzz[loc], eee[loc], bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
     
     '''cb'''
     fig.colorbar(hd1[3], ax=axs, location='right', pad=0.05)
@@ -90,8 +89,8 @@ def plot_all_scatters(aaa, bbb, ccc, eee, zzz,
     met.to_csv(met_path)
     print(met)
 
-plot_all_scatters(aaa, bbb, ccc, eee, zzz, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv")
-
+# plot_all_scatters(aaa, bbb, ccc, eee, zzz, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv")
+mt.boxplot(zzz,aaa,bbb,ccc,eee,titles,f"{path}/example-hour-box-{date}.png")
 
 
 '''distribution'''
@@ -143,14 +142,14 @@ def compare_event(gauge, accumulation):
 
     plt.savefig(f'{path}/example-{date}.png', bbox_inches='tight', dpi=fig.dpi)
 
-if date != '':
-    print(f'plot {date}')
-    # path_qpe = r'/data/zry/radar/Xradar_npy_qpe/BJXSY'
-    # ls = []
-    # for file in os.listdir(path_qpe):
-    #     if date in file:
-    #         ls += [path_qpe + '/' + file]
-    # accumulation = summary(ls)
-    # np.save(f'./dataset/{date}.npy', accumulation)
-    accumulation = np.load(f'./dataset/{date}.npy')
-    compare_event(zzz, accumulation)
+# if date != '':
+#     print(f'plot {date}')
+#     path_qpe = r'/data/zry/radar/Xradar_npy_qpe/BJXSY-test/ResQPE-3399-1-vlr-wmse'
+#     ls = []
+#     for file in os.listdir(path_qpe):
+#         if date in file:
+#             ls += [path_qpe + '/' + file]
+#     accumulation = summary(ls)
+#     # np.save(f'./dataset/{date}.npy', accumulation)
+#     # accumulation = np.load(f'./dataset/{date}-1hour.npy')
+#     compare_event(zzz, accumulation)
