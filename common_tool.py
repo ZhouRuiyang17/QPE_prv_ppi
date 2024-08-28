@@ -29,10 +29,7 @@ def mask_rr(rr):
 
     return rr
 
-def qpe_3ele(data, center=4):
-    ref = data[:,3, center, center]
-    zdr = data[:,4, center, center]
-    kdp = data[:,5, center, center]
+def qpe_3ele(ref, zdr, kdp):
     refup = 10**(ref*0.1)
     zdrup = 10**(zdr*0.1)
 
@@ -95,7 +92,13 @@ def apply_393(data, model, device, center = 4):
     rainrate = mask_rr(rainrate)
     return rainrate
 
-def apply_ResQPE(data, model, device, center = 4):
+def apply_ResQPE(data, model, device, center = 4, mode='fast_test'):
+    if mode != 'fast_test':
+        datatemp = np.zeros((len(data), 9,9,9))
+        datatemp[:, [0,3,6]] = data[:,0,:]
+        datatemp[:, [1,4,7]] = data[:,1,:]
+        datatemp[:, [2,5,8]] = data[:,2,:]
+        data = datatemp.copy()
     '''筛选'''
     ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
     refup = 10**(ref*0.1)
@@ -120,9 +123,10 @@ def apply_ResQPE(data, model, device, center = 4):
 
 #     model = CNN(9,3).to(device)
 #     model.load_state_dict(torch.load(path_save + '/' + "cnn.pth"))#,map_location=torch.device('cpu')))
-    model.eval()
-    with torch.no_grad():
-        pred = model(test_x)
+    # model.eval()
+    # with torch.no_grad():
+    #     pred = model(test_x)
+    pred = utils.DLcalculate(model, test_x, 1024)
 
     pred = utils.toarray(pred, 1)
     pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)

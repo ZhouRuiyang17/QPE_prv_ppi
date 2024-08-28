@@ -11,7 +11,7 @@ from common_tool import *
 
 import datetime
 import logging
-
+import psutil
 
 
 def fast_test(path_save, model, device):
@@ -36,8 +36,8 @@ def fast_test(path_save, model, device):
             # radar.loc[ts, stnm] = apply_393(data,model,device)
             radar.loc[ts, stnm] = apply_ResQPE(data,model,device)
             # radar.loc[ts, stnm] = apply_resver3(data,model,device)
-            
-            rr1, rr2, rr3, rr4 = qpe_3ele(data)
+
+            rr1, rr2, rr3, rr4 = qpe_3ele(data[:,3,4,4],data[:,4,4,4],data[:,5,4,4])
             radar1.loc[ts, stnm] = rr1
             radar2.loc[ts, stnm] = rr2
             radar3.loc[ts, stnm] = rr3
@@ -162,7 +162,96 @@ def example(extent = 4):
         logging.info('-----------------------------------------')
         
 
+def reshape(data, extent = 4):
+    bbbb = np.zeros((9,360,1000))*1. # (ele*prv, azi, gate)
+    bbbb[[0,3,6]] = prvs[0]
+    bbbb[[1,4,7]] = prvs[1]
+    bbbb[[2,5,8]] = prvs[2]
 
+    cccc = np.zeros((9,360+8,1000))*1. # (ele*prv, azi_extent, gate)
+    cccc[:,extent:-extent] = bbbb
+    cccc[:,:extent] = bbbb[:,-extent:]
+    cccc[:,-extent:] = bbbb[:,:extent]
+    return cccc
+
+def reshape_3399(data, extent = 4):
+    new = np.zeros((3,3,360+2*extent,1000))
+
+    new[:,:,extent:-extent] = data
+    new[:,:,:extent] = data[:,:,-extent:]
+    new[:,:,-extent:] = data[:,:,:extent]
+    return new
+
+def test(path_save, model, device):
+    if not os.path.exists(path_save):
+        os.makedirs(path_save)
+
+    df = pd.read_csv('/home/zry/code/QPE_prv_ppi/my/统计2019年的降雨3.csv')
+
+    ls = []
+    lssave = []
+    for fp in df['fp']:
+        ls += [fp]
+
+        file = fp.split('/')[-1]
+        fpsave = path_save + '/' + file.replace('npz', 'npy')
+        lssave += [fpsave]
+
+    for fp, fpsave in zip(ls, lssave):
+        '''简单测试用'''
+        # fp = '/data/zry/radar/Xradar_npz_qc/BJXSY/20180716/BJXSY.20180716.003600.npz'
+        # fpsave = '/data/zry/radar/Xradar_npy_qpe/BJXSY-test/ResQPE-3399-1-vlr-wmse/BJXSY.20180716.003600.npz'
+        if os.path.exists(fpsave):
+            continue
+
+        logging.info(fp)
+        t0 = datetime.datetime.now()
+        data = np.load(fp)['data']
+        logging.info(f"cost of np.load(fp)['data']: {datetime.datetime.now()-t0}")
+        prvs = data[[0,1,3], :3] # [0,1,3]表示ref zdr kdp，[:3]表示前三层，格式(prv, ele, azi, gate)
+
+        prvs_extent = reshape_3399(prvs)
+
+        t0 = datetime.datetime.now()
+        samples = np.zeros((360*(1000-2*4), 3,3,9,9))# num_samples, 3,3,9,9
+        counter = 0
+        for true_azi in np.arange(360):
+            fake_azi = true_azi+4
+            for gate in np.arange(4,1000-4):
+                sample = prvs_extent[:,:, fake_azi-4:fake_azi+4+1, gate-4:gate+4+1]
+                samples[counter] = sample; counter += 1
+                # print(true_azi, gate)
+        logging.info(f'cost of resample: {datetime.datetime.now()-t0}')
+        logging.info(f'num of samples:{counter}')
+        
+        rr1, rr2, rr3, rr4 = qpe_3ele(samples[:,0,1,4,4],samples[:,1,1,4,4],samples[:,2,1,4,4])
+        rainrate = np.zeros((9,360,1000))
+        rainrate[0, :, 4:-4] = rr1.reshape(360, 1000-2*4)
+        rainrate[1, :, 4:-4] = rr2.reshape(360, 1000-2*4)
+        rainrate[2, :, 4:-4] = rr3.reshape(360, 1000-2*4)
+        rainrate[3, :, 4:-4] = rr4.reshape(360, 1000-2*4)
+
+        t0 = datetime.datetime.now()
+        rr_dl = apply_ResQPE(samples, model, device, mode='test')
+        logging.info(f'cost of qpe: {datetime.datetime.now()-t0}')
+        rainrate[4, :, 4:-4] = rr_dl.reshape(360, 1000-2*4)
+
+        np.save(fpsave, rainrate)
+        logging.info(fpsave)
+
+        # 在循环结束时输出内存占用情况
+        process = psutil.Process(os.getpid())
+        memory_info = process.memory_info()
+        logging.info(f"Memory usage: {memory_info.rss / 1024 ** 2:.2f} MB")
+        # 输出当前显存占用情况
+        allocated_memory = torch.cuda.memory_allocated()
+        reserved_memory = torch.cuda.memory_reserved()
+        logging.info(f"CUDA memory allocated: {allocated_memory / 1024 ** 2:.2f} MB")
+        logging.info(f"CUDA memory reserved: {reserved_memory / 1024 ** 2:.2f} MB")
+        # 清理显存
+        torch.cuda.empty_cache()
+        logging.info('-----------------------------------------')
+        
 
 
 
@@ -170,24 +259,27 @@ if __name__ == "__main__":
     # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
     # 配置日志记录器
     logging.basicConfig(
-        filename='apply.log',                  # 日志文件名
+        filename='test.log',                  # 日志文件名
         level=logging.INFO,                   # 记录 INFO 及以上级别的日志
         format='%(asctime)s---%(message)s',   # 日志格式
         datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
     )
-
     # 检查 GPU 是否可用
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("使用的设备:", device)
 
-    # 配置路径
-    path_save = './model/based_on_202407/{}'.format('resver2-2399-1-vlr')
+
+
+    '''配置路径'''
+    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse')
     print(path_save)
     # model = CNN(9,3).to(device)
-    model = QPEnet_ver3().to(device)
+    model = ResQPE().to(device)
     model.load_state_dict(torch.load(path_save + '/' + "model.pth"))#,map_location=torch.device('cpu')))
+    
+    '''快速测试'''
+    # fast_test(path_save, model, device)
 
-    fast_test(path_save, model, device)
-
-    # example()
+    '''大量测试'''
+    test('/data/zry/radar/Xradar_npy_qpe/BJXSY-test/{}'.format('ResQPE-3399-1-vlr-wmse'), model, device)
 
