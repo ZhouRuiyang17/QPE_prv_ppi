@@ -14,7 +14,7 @@ import logging
 import psutil
 
 
-def fast_test(path_save, model, device):
+def fast_test(path_save, model, device, nettype='res'):
     count = 0
     for file in os.listdir('../'):
         if file.endswith('npz') and '2019' in file:
@@ -33,8 +33,10 @@ def fast_test(path_save, model, device):
                 count += 1
             
             stnm = file[5:10]
-            # radar.loc[ts, stnm] = apply_393(data,model,device)
-            radar.loc[ts, stnm] = apply_ResQPE(data,model,device)
+            if nettype == 'cnn':
+               radar.loc[ts, stnm] = apply_CNNQPE(data,model,device)
+            elif nettype == 'res':
+                radar.loc[ts, stnm] = apply_ResQPE(data,model,device)
             # radar.loc[ts, stnm] = apply_resver3(data,model,device)
 
             rr1, rr2, rr3, rr4 = qpe_3ele(data[:,3,4,4],data[:,4,4,4],data[:,5,4,4])
@@ -186,7 +188,7 @@ def test(path_save, model, device):
     if not os.path.exists(path_save):
         os.makedirs(path_save)
 
-    df = pd.read_csv('/home/zry/code/QPE_prv_ppi/my/统计2019年的降雨3.csv')
+    df = pd.read_csv('/home/zry/code/QPE_prv_ppi/my/统计2019年的降雨-最大24小时-细化.csv')
 
     ls = []
     lssave = []
@@ -256,7 +258,7 @@ if __name__ == "__main__":
     # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
     # 配置日志记录器
     logging.basicConfig(
-        filename='test.log',                  # 日志文件名
+        filename='test-ResQPE.log',                  # 日志文件名
         level=logging.INFO,                   # 记录 INFO 及以上级别的日志
         format='%(asctime)s---%(message)s',   # 日志格式
         datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
@@ -268,15 +270,15 @@ if __name__ == "__main__":
 
 
     '''配置路径'''
-    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse')
+    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse-new_scaler')
     print(path_save)
-    # model = CNN(9,3).to(device)
+    # model = CNNQPE(9,1).to(device)
     model = ResQPE().to(device)
     model.load_state_dict(torch.load(path_save + '/' + "model.pth"))#,map_location=torch.device('cpu')))
     
     '''快速测试'''
-    # fast_test(path_save, model, device)
+    fast_test(path_save, model, device, 'res')
 
     '''大量测试'''
-    test('/data/zry/radar/Xradar_npy_qpe/BJXSY-test/{}'.format('ResQPE-3399-1-vlr-wmse'), model, device)
+    # test('/data/zry/radar/Xradar_npy_qpe/BJXSY-test/{}'.format('ResQPE-3399-1-vlr-wmse'), model, device)
 
