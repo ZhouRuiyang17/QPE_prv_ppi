@@ -134,7 +134,7 @@ def apply_ResQPE(data, model, device, center = 4, mode='fast_test'):
         datatemp[:, [0,3,6]] = data[:,0,:]
         datatemp[:, [1,4,7]] = data[:,1,:]
         datatemp[:, [2,5,8]] = data[:,2,:]
-        data = datatemp.copy()
+        data = datatemp
     '''筛选'''
     t0 = datetime.datetime.now()
     ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
