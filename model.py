@@ -10,9 +10,9 @@ import torch.nn.functional as F
 
 
 
-class CNN(nn.Module):
+class CNNQPE(nn.Module):
     def __init__(self, num_input_layers, num_output):
-        super(CNN, self).__init__()
+        super(CNNQPE, self).__init__()
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels=num_input_layers, out_channels=16, kernel_size=3, padding=1),
             # nn.BatchNorm2d(16),

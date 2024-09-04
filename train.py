@@ -80,6 +80,37 @@ def process_for_train_999_3(device):
     vali = utils.loader(vali_x, vali_y, device, 64)
 
     return train, vali
+def process_for_train_999_1(device):
+    '''加载:(ele1, ele2, ele3)'''
+    dataset_train = np.load('../dataset-3-9.npz')
+    train_x = dataset_train['x_train'].astype(np.float32)
+    train_y = dataset_train['y_train'].astype(np.float32)
+    vali_x = dataset_train['x_vali'].astype(np.float32)
+    vali_y = dataset_train['y_vali'].astype(np.float32)
+
+
+
+    '''裁剪数据和归一化'''
+    train_x[:,[0,3,6]] = utils.scaler(train_x[:,[0,3,6]], 'ref')
+    vali_x[:, [0,3,6]] = utils.scaler(vali_x[:, [0,3,6]], 'ref')
+    train_x[:,[1,4,7]] = utils.scaler(train_x[:,[1,4,7]], 'zdr')
+    vali_x[:, [1,4,7]] = utils.scaler(vali_x[:, [1,4,7]], 'zdr')
+    train_x[:,[2,5,8]] = utils.scaler(train_x[:,[2,5,8]], 'kdp')
+    vali_x[:, [2,5,8]] = utils.scaler(vali_x[:, [2,5,8]], 'kdp')
+
+    train_y = train_y[:, 0].reshape(-1,1)
+    vali_y = vali_y[:, 0].reshape(-1,1)
+    train_y[:,0] = utils.scaler(train_y[:,0], 'rr')
+    vali_y[:,0] = utils.scaler(vali_y[:,0], 'rr')
+
+
+
+    '''数据加载'''
+    train = utils.loader(train_x, train_y, device, 64)
+    vali = utils.loader(vali_x, vali_y, device, 64)
+
+    return train, vali
+
 
 def process_for_train_2399_1(device):
     '''加载:(ele1, ele2, ele3)'''
@@ -161,7 +192,7 @@ if __name__ == "__main__":
     torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
     # 配置日志记录器
     logging.basicConfig(
-        filename='./train.log',                  # 日志文件名
+        filename='./train-CNNQPE.log',                  # 日志文件名
         level=logging.INFO,                   # 记录 INFO 及以上级别的日志
         format='%(asctime)s---%(message)s',   # 日志格式
         datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
@@ -171,14 +202,16 @@ if __name__ == "__main__":
     logging.info("使用的设备:", device)
 
     # 配置路径
-    path_save = './model/based_on_202407/{}'.format('ResQPE-3399-1-vlr-wmse-re')
+    path_save = './model/based_on_202407/{}'.format('CNNQPE-999-1-vlr-wmse-new_stop_3')
     if not os.path.exists(path_save):
         os.makedirs(path_save)
     
 
     '''模型和加载器'''
-    model = ResQPE().to(device)
-    train, vali = process_for_train_3399_1(device)
+    # model = ResQPE().to(device)
+    # train, vali = process_for_train_3399_1(device)
+    model = CNNQPE(9,1).to(device)
+    train, vali = process_for_train_999_1(device)
     logging.info('Model and Data loaded')
     '''损失函数'''
     # loss_func = torch.nn.MSELoss()
@@ -196,4 +229,4 @@ if __name__ == "__main__":
     '''快速测试'''
     from test import fast_test
     model.load_state_dict(torch.load(path_save + '/' + "model.pth"))#,map_location=torch.device('cpu')))
-    fast_test(path_save, model, device)
+    fast_test(path_save, model, device, 'cnn')

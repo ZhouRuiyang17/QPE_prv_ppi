@@ -92,7 +92,43 @@ def apply_393(data, model, device, center = 4):
     rainrate = mask_rr(rainrate)
     return rainrate
 
+def apply_CNNQPE(data, model, device, center = 4):
+    # data: n,9,9,9
+    '''筛选'''
+    t0 = datetime.datetime.now()
+    ref = data[:, 3, center-1:center+1+1, center-1:center+1+1]
+    refup = 10**(ref*0.1)
+    meanup = refup.mean(axis=(1,2))
+    mean = 10*np.log10(meanup)
+    loc = mean >= 0 
+    test_x = data[loc].astype(np.float32)
+    logging.info(f'cost of location: {datetime.datetime.now()-t0}')
+    logging.info(f'num of input: {len(test_x)}')
+    
+    if len(test_x) != 0:
+        '''scaler'''
+        test_x[:,[0,3,6]] = utils.scaler(test_x[:,[0,3,6]], 'ref').astype(np.float32)
+        test_x[:,[1,4,7]] = utils.scaler(test_x[:,[1,4,7]], 'zdr').astype(np.float32)
+        test_x[:,[2,5,8]] = utils.scaler(test_x[:,[2,5,8]], 'kdp').astype(np.float32)
+        '''tensor'''
+        test_x = utils.totensor(test_x, device)
+        '''calculate'''
+        t0 = datetime.datetime.now()
+        pred = utils.DLcalculate(model, test_x, 1024)
+        logging.info(f'cost of QPE: {datetime.datetime.now()-t0}')
+        '''tensor-re'''
+        pred = utils.toarray(pred, 1)
+        '''scaler-re'''
+        pred[:,0] = utils.scaler(pred[:,0], 'rr', 1)
+        rainrate = np.zeros(len(data))
+        rainrate[loc] = pred[:,0]
+        rainrate = mask_rr(rainrate)
+    else:
+        rainrate = np.zeros(len(data))
+    return rainrate
+
 def apply_ResQPE(data, model, device, center = 4, mode='fast_test'):
+    # data: n,9,9,9
     if mode != 'fast_test':
         datatemp = np.zeros((len(data), 9,9,9))
         datatemp[:, [0,3,6]] = data[:,0,:]
