@@ -44,8 +44,18 @@ def qpe_3ele(ref, zdr, kdp):
 
     rr1 = a1*refup**b1
     rr2 = a2*kdp**b2
-    rr3 = a3*refup**b3*zdrup**c3
-    rr4 = a4*kdp**b4*zdrup**c4
+
+    locp = zdr >= 0
+    locn = zdr <  0
+
+    rr3 = np.zeros_like(rr1)
+    rr3[locp] = a3*refup[locp]**b3*zdrup[locp]**c3
+    rr3[locn] = a1*refup[locn]**b1
+
+    rr4 = np.zeros_like(rr1)
+    rr4[locp] = a4*kdp[locp]**b4*zdrup[locp]**c4
+    rr4[locn] = a2*kdp[locn]**b2
+
 
     rr1 = mask_rr(rr1)
     rr2 = mask_rr(rr2)
