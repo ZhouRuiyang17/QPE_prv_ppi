@@ -8,7 +8,7 @@ import matplotlib.colors as colors
 # plt.rcParams['font.family'] = 'Microsoft YaHei'
 plt.rcParams['font.size'] = 12
 
-path = '/home/zry/code/QPE_prv_ppi/dataset/20240909eval_2models'
+path = '/home/zry/code/QPE_prv_ppi/dataset/20240916eval_2models'
 
 
 aaa = mt.readcsv(f"{path}/example-res.csv", 0, isrr=3, mask=1, acc='H')
@@ -37,7 +37,7 @@ zzz = zzz.loc[index, columns]
 
 '''scatters'''
 def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
-                      fig_path, met_path, box_path):
+                      fig_path, met_path, box_path,):
     loc = (zzz>=0.1) & (aaa>=0.1) & (bbb>=0.1) & (ccc>=0.1) & (eee>=0.1) & (fff>=0.1) & (ddd>=0.1)
     
     aaa = aaa[loc].values.flatten()
@@ -48,33 +48,33 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
     fff = fff[loc].values.flatten()
     zzz = zzz[loc].values.flatten()
     
-        
-    # # 创建一个包含3个子图的图形
-    # fig, axs = plt.subplots(3, 2, figsize=(18, 10))
-    # # plt.subplots_adjust(hspace=0.5)
-    # # plt.subplots_adjust(wspace=0.5)
-    # plt.subplots_adjust(left=0, right=0.8, top=1.2, bottom=0)
+    # 创建一个包含3个子图的图形
+    fig, axs = plt.subplots(3, 2, figsize=(18, 10))
+    # plt.subplots_adjust(hspace=0.5)
+    # plt.subplots_adjust(wspace=0.5)
+    plt.subplots_adjust(left=0, right=0.8, top=1.2, bottom=0)
     
-    # hd1 = mt.plot_hist2d(axs[0][0], zzz, aaa, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd2 = mt.plot_hist2d(axs[0][1], zzz, bbb, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd3 = mt.plot_hist2d(axs[1][0], zzz, ccc, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd4 = mt.plot_hist2d(axs[1][1], zzz, ddd, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd5 = mt.plot_hist2d(axs[2][0], zzz, eee, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    # hd6 = mt.plot_hist2d(axs[2][1], zzz, fff, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd1 = mt.plot_hist2d(axs[0][0], zzz, aaa, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd2 = mt.plot_hist2d(axs[0][1], zzz, bbb, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd3 = mt.plot_hist2d(axs[1][0], zzz, ccc, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd4 = mt.plot_hist2d(axs[1][1], zzz, ddd, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd5 = mt.plot_hist2d(axs[2][0], zzz, eee, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd6 = mt.plot_hist2d(axs[2][1], zzz, fff, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
     
-    # '''cb'''
-    # fig.colorbar(hd1[3], ax=axs, location='right', pad=0.05)
-    # '''title'''
-    # count = 0
-    # for i in range(3):
-    #     for j in range(2):
-    #         axs[i][j].set_title(titles[count])
-    #         count += 1
-    # '''save'''
-    # fig.savefig(fig_path, transparent=0, dpi=600, bbox_inches='tight')
+    '''cb'''
+    fig.colorbar(hd1[3], ax=axs, location='right', pad=0.05)
+    '''title'''
+    count = 0
+    for i in range(3):
+        for j in range(2):
+            axs[i][j].set_title(titles[count])
+            count += 1
+    '''save'''
+    fig.savefig(fig_path, transparent=0, dpi=600, bbox_inches='tight')
 
     # '''boxplot'''
-    # mt.plot_boxplot(zzz,[aaa,bbb,ccc,ddd,eee,fff],titles,[0,10,20,30,40,50,100],box_path)
+    mt.plot_boxplot(zzz,[aaa,bbb,ccc,ddd,eee,fff],titles,[0,10,20,30,40,50,100],box_path)
+    # mt.plot_boxplot(zzz,[aaa,bbb,ccc,ddd,eee,fff],titles,[0,10,20,30,40,50,100],box_path+'fly.png',1)
 
     
     '''metrics'''
@@ -92,8 +92,9 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
 
 
 
-# plot_all_scatters(aaa, bbb, ccc, ddd,eee,fff, zzz, f"{path}/example-hour.png", f"{path}/example-hour.csv", f"{path}/example-hour-box.png")
-date = '20190729'
+plot_all_scatters(aaa, bbb, ccc, ddd,eee,fff, zzz, f"{path}/example-hour.png", f"{path}/example-hour.csv", f"{path}/example-hour-box.png")
+
+'''metrics vary with date'''
 met = pd.DataFrame(columns=['BIAS', 'MAE', 'RMSE', 'CC'])
 cases = [20190517, 20190722, 20190729, 20190804, 20190806, 20190809, 20190909, 20190912]
 zzzmeans = []
@@ -123,6 +124,54 @@ for i in range(3):
     axs[i].legend()  # 显示图例
     axs[i].grid(True)  # 显示网格
 plt.savefig(f"{path}/example-hour-cases.png")
+
+
+date = '20190804'
+'''timeseries'''
+def plot_timeseries():
+    zzz1 = zzz
+    aaa1 = aaa
+    bbb1 = bbb
+    ccc1 = ccc
+    ddd1 = ddd
+    eee1 = eee
+    fff1 = fff
+
+    loc = (zzz1>=0.1) & (aaa1>=0.1) & (bbb1>=0.1) & (ccc1>=0.1) & (ddd1>=0.1) & (eee1>=0.1) & (fff1>=0.1)
+    zzz1 = zzz1.where(loc, np.nan)
+    aaa1 = aaa1.where(loc, np.nan)
+    bbb1 = bbb1.where(loc, np.nan)
+    ccc1 = ccc1.where(loc, np.nan)
+    ddd1 = ddd1.where(loc, np.nan)
+    eee1 = eee1.where(loc, np.nan)
+    fff1 = fff1.where(loc, np.nan)
+
+    zzz1 = zzz1.mean(axis=1)
+    aaa1 = aaa1.mean(axis=1)
+    bbb1 = bbb1.mean(axis=1)
+    ccc1 = ccc1.mean(axis=1)
+    ddd1 = ddd1.mean(axis=1)
+    eee1 = eee1.mean(axis=1)
+    fff1 = fff1.mean(axis=1)
+
+    x = np.arange(24)
+    plt.bar(x, zzz1, label='Gauge',facecolor='none', edgecolor='black')
+    plt.plot(x, aaa1, label=titles[0],linestyle='--',marker='o')
+    plt.plot(x, bbb1, label=titles[1],linestyle='--',marker='o')
+    plt.plot(x, ccc1, label=titles[2],marker='o')
+    plt.plot(x, ddd1, label=titles[3],marker='o')
+    plt.plot(x, eee1, label=titles[4],marker='o')
+    plt.plot(x, fff1, label=titles[5],marker='o')
+    plt.xticks(x, [f'{hour:00}' for hour in x])
+
+    plt.legend()
+    plt.grid()
+    plt.savefig(f'{path}/{date}.png')
+
+
+# plot_timeseries()
+
+
 
 
 '''distribution'''
