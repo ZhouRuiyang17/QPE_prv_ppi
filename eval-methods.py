@@ -22,7 +22,7 @@ zzz = mt.readcsv(f"/home/zry/code/gauge_all.csv", 0, isrr=0, mask=1)
 titles = ['Res Model', 'CNN Model', 'R(Z)', 'R(kdp)', 'R(Z,zdr)', 'R(kdp,zdr)']
 
 '''match'''
-_, _, index, columns = mt.match_df(aaa, zzz)
+index, columns = mt.match_df(zzz, [aaa,bbb,ccc,ddd,eee,fff])
 aaa = aaa.loc[index, columns]
 bbb = bbb.loc[index, columns]
 ccc = ccc.loc[index, columns]
@@ -54,12 +54,12 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
     # plt.subplots_adjust(wspace=0.5)
     plt.subplots_adjust(left=0, right=0.8, top=1.2, bottom=0)
     
-    hd1 = mt.plot_hist2d(axs[0][0], zzz, aaa, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd2 = mt.plot_hist2d(axs[0][1], zzz, bbb, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd3 = mt.plot_hist2d(axs[1][0], zzz, ccc, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd4 = mt.plot_hist2d(axs[1][1], zzz, ddd, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd5 = mt.plot_hist2d(axs[2][0], zzz, eee, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
-    hd6 = mt.plot_hist2d(axs[2][1], zzz, fff, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1)
+    hd1 = mt.plot_hist2d(zzz, aaa, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[0][0])
+    hd2 = mt.plot_hist2d(zzz, bbb, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[0][1])
+    hd3 = mt.plot_hist2d(zzz, ccc, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[1][0])
+    hd4 = mt.plot_hist2d(zzz, ddd, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[1][1])
+    hd5 = mt.plot_hist2d(zzz, eee, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[2][0])
+    hd6 = mt.plot_hist2d(zzz, fff, bins=[np.arange(101)]*2, drawline=1, labels=['Gauge (mm)', 'Radar (mm)'], equal=1, showmet=1,ax=axs[2][1])
     
     '''cb'''
     fig.colorbar(hd1[3], ax=axs, location='right', pad=0.05)
@@ -72,9 +72,8 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
     '''save'''
     fig.savefig(fig_path, transparent=0, dpi=600, bbox_inches='tight')
 
-    # '''boxplot'''
+    '''boxplot'''
     mt.plot_boxplot(zzz,[aaa,bbb,ccc,ddd,eee,fff],titles,[0,10,20,30,40,50,100],box_path)
-    # mt.plot_boxplot(zzz,[aaa,bbb,ccc,ddd,eee,fff],titles,[0,10,20,30,40,50,100],box_path+'fly.png',1)
 
     
     '''metrics'''
@@ -89,10 +88,9 @@ def plot_all_scatters(aaa, bbb, ccc, ddd, eee, fff, zzz,
     # met.to_csv(met_path)
     # print(met)
     return met
-
-
-
 plot_all_scatters(aaa, bbb, ccc, ddd,eee,fff, zzz, f"{path}/example-hour.png", f"{path}/example-hour.csv", f"{path}/example-hour-box.png")
+
+
 
 '''metrics vary with date'''
 met = pd.DataFrame(columns=['BIAS', 'MAE', 'RMSE', 'CC'])
@@ -109,9 +107,10 @@ for date in cases:
     zzz1 = zzz.loc[date]
     met1 = plot_all_scatters(aaa1, bbb1, ccc1, ddd1,eee1,fff1, zzz1, f"{path}/example-hour-{date}.png", f"{path}/example-hour-{date}.csv", f"{path}/example-hour-box-{date}.png")
     met = pd.concat((met, met1))
-    zzzmeans += [zzz.loc[date].sum(axis=0).values.flatten().mean()]
+    zzzmeans += [zzz.loc[date].sum(axis=0).values.flatten().max()]
     print(date, 'done')
 print(met)
+
 fig, axs = plt.subplots(4,1,figsize=(12,10))
 for i in range(len(titles)):
     method = titles[i]
@@ -123,6 +122,7 @@ for i in range(len(titles)):
 for i in range(3):
     axs[i].legend()  # 显示图例
     axs[i].grid(True)  # 显示网格
+axs[3].set_ylabel('Max 1h rainfall (mm)')
 plt.savefig(f"{path}/example-hour-cases.png")
 
 

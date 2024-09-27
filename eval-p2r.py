@@ -3,7 +3,7 @@ import os
 
 siteinfo_path = '/home/zry/code/gauge2bjxsy_145.csv'
 path = '/data/zry/radar/Xradar_npy_qpe/run2019'
-savepath = '/home/zry/code/QPE_prv_ppi/dataset/20240909eval_2models'
+savepath = '/home/zry/code/QPE_prv_ppi/dataset/20240916eval_2models'
 if not os.path.exists(savepath):
     os.makedirs(savepath)
 
