@@ -184,7 +184,7 @@ def reshape_3399(data, extent = 4):
     new[:,:,-extent:] = data[:,:,:extent]
     return new
 
-def test(path_save, model, device):
+def test(path_save, model, model2, device):
     if not os.path.exists(path_save):
         os.makedirs(path_save)
 
@@ -265,7 +265,18 @@ def run2019(path_save, resnet, cnnnet, device):
                     ls += [f'{root}/{file}']
                     fpsave = path_save + '/' + file.replace('npz', 'npy')
                     lssave += [fpsave]
+    # df = pd.read_csv('/home/zry/code/QPE_prv_ppi/my/统计2019年的降雨-最大24小时-细化.csv')
+    # ls = []
+    # lssave = []
+    # for fp in df['fp']:
+    #     ls += [fp]
 
+    #     file = fp.split('/')[-1]
+    #     fpsave = path_save + '/' + file.replace('npz', 'npy')
+    #     lssave += [fpsave]
+    
+    
+    print(len(ls))
     for fp, fpsave in zip(ls, lssave):
         '''简单测试用'''
         # fp = '/data/zry/radar/Xradar_npz_qc/BJXSY/20180716/BJXSY.20180716.003600.npz'
@@ -340,16 +351,7 @@ def run2019(path_save, resnet, cnnnet, device):
 
 if __name__ == "__main__":
     # torch.backends.cuda.matmul.allow_tf32 = True # 加速：训练测试都行
-    # 配置日志记录器
-    logging.basicConfig(
-        filename='test-run2019.log',                  # 日志文件名
-        level=logging.INFO,                   # 记录 INFO 及以上级别的日志
-        format='%(asctime)s---%(message)s',   # 日志格式
-        datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
-    )
-    # 检查 GPU 是否可用
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("使用的设备:", device)
+
 
 
 
@@ -363,10 +365,19 @@ if __name__ == "__main__":
     '''快速测试'''
     # fast_test(path_save, model, device, 'res')
 
-    '''大量测试'''
-    # test('/data/zry/radar/Xradar_npy_qpe/BJXSY-test/{}'.format('ResQPE-3399-1-vlr-wmse'), model, device)
 
-    '''run2019'''
+
+    # 配置日志记录器
+    logging.basicConfig(
+        filename='test-run2019-纠正zdr算法后.log',                  # 日志文件名
+        level=logging.INFO,                   # 记录 INFO 及以上级别的日志
+        format='%(asctime)s---%(message)s',   # 日志格式
+        datefmt='%Y-%m-%d %H:%M:%S'           # 时间格式
+    )
+    # 检查 GPU 是否可用
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("使用的设备:", device)
+
     resnet = ResQPE().to(device)
     resnet.load_state_dict(torch.load("model/based_on_202407/ResQPE-3399-1-vlr-wmse-new_scaler-new_stop_3/model.pth"))
     cnnnet = CNNQPE(9,1).to(device)

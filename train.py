@@ -202,7 +202,7 @@ if __name__ == "__main__":
     logging.info("使用的设备:", device)
 
     # 配置路径
-    path_save = './model/based_on_202407/{}'.format('CNNQPE-999-1-vlr-wmse-new_stop_3')
+    path_save = './model/based_on_202407/{}'.format('CNNQPE-999-1-vlr-wmse-new_scaler-new_stop_3')
     if not os.path.exists(path_save):
         os.makedirs(path_save)
     
@@ -211,19 +211,19 @@ if __name__ == "__main__":
     # model = ResQPE().to(device)
     # train, vali = process_for_train_3399_1(device)
     model = CNNQPE(9,1).to(device)
-    train, vali = process_for_train_999_1(device)
-    logging.info('Model and Data loaded')
-    '''损失函数'''
-    # loss_func = torch.nn.MSELoss()
-    loss_func = WeightedMSELoss()
-    '''优化器'''
-    optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
-    '''变化学习率'''
-    from torch.optim.lr_scheduler import StepLR
-    scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
-    '''训练'''
-    utils.training_process(train, vali, model, loss_func, optimizer, path_save, scheduler)    
-    logging.info("Done!")
+    # train, vali = process_for_train_999_1(device)
+    # logging.info('Model and Data loaded')
+    # '''损失函数'''
+    # # loss_func = torch.nn.MSELoss()
+    # loss_func = WeightedMSELoss()
+    # '''优化器'''
+    # optimizer = torch.optim.Adam(model.parameters(),lr = 1e-4, weight_decay = 1e-4)
+    # '''变化学习率'''
+    # from torch.optim.lr_scheduler import StepLR
+    # scheduler = StepLR(optimizer, step_size=20, gamma=0.5)
+    # '''训练'''
+    # utils.training_process(train, vali, model, loss_func, optimizer, path_save, scheduler)    
+    # logging.info("Done!")
 
 
     '''快速测试'''
